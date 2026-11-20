@@ -1,0 +1,17 @@
+---
+// Phase 0 placeholder: proves the build, content pipeline and deployment work.
+// The real site is built in Phase 1.
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+
+const pages = await getCollection("pages");
+const projects = await getCollection("projects", ({ data }) => !data.draft);
+---
+
+<Base>
+  <h1>Franklin Paul Anand</h1>
+  <p class="muted">Coming soon. This is the Phase 0 foundation page.</p>
+  <p>
+    Content found: {pages.length} page(s), {projects.length} project(s).
+  </p>
+</Base>

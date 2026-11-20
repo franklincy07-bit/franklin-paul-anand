@@ -1,0 +1,20 @@
+/* Franklin Paul Anand – placeholder palette, to be replaced when the visual identity is designed. */
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #f5f7fa;
+  --color-fg: #111827;
+  --color-muted: #4b5563;
+  --color-accent: #1d4ed8;
+  --font-body: var(--font-sans);
+  --font-heading: var(--font-sans);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0b0f17;
+    --color-surface: #141a24;
+    --color-fg: #f3f4f6;
+    --color-muted: #9ca3af;
+    --color-accent: #7aa2ff;
+  }
+}
