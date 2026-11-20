@@ -1,20 +1,34 @@
-/* Franklin Paul Anand – placeholder palette, to be replaced when the visual identity is designed. */
+/*
+ * Franklin Paul Anand – "Editorial" identity (approved Option D).
+ * Warm paper ground, deep teal, soft apricot accent.
+ * Headings: Newsreader (serif). Body: Inter. Both self-hosted by the app.
+ *
+ * Accessibility: the apricot accent is decorative only (rules, underlines,
+ * button fills with dark text). Never use it for text on paper – it does not
+ * meet contrast requirements. Teal and ink pass AA on paper and white.
+ */
 :root {
-  --color-bg: #ffffff;
-  --color-surface: #f5f7fa;
-  --color-fg: #111827;
-  --color-muted: #4b5563;
-  --color-accent: #1d4ed8;
-  --font-body: var(--font-sans);
-  --font-heading: var(--font-sans);
-}
+  /* Required shared tokens */
+  --color-bg: #f6f1ea; /* paper */
+  --color-surface: #ffffff;
+  --color-fg: #1e2a30; /* ink */
+  --color-muted: #4a5a60;
+  --color-accent: #e07a4f; /* apricot – decorative */
+  --font-body: "Inter Variable", var(--font-sans);
+  --font-heading: "Newsreader Variable", var(--font-serif);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0b0f17;
-    --color-surface: #141a24;
-    --color-fg: #f3f4f6;
-    --color-muted: #9ca3af;
-    --color-accent: #7aa2ff;
-  }
+  /* Franklin Paul Anand palette */
+  --color-primary: #12343b; /* deep teal-navy: header, footer, dark panels */
+  --color-teal: #0f5257; /* links, labels, kickers */
+  --color-teal-dark: #0a3b3f;
+  --color-sand: #e9dfd2; /* soft panels */
+  --color-mist: #dce8e6; /* placeholder tiles */
+  --color-line: #ddd3c6; /* dividers */
+  --color-line-strong: #c9bba9;
+  --color-on-dark: #ffffff;
+  --color-on-dark-muted: #c9dedc;
+  --color-body: #2c3a40; /* long-form reading text */
+
+  --content-width: 1180px;
+  --reading-width: 720px;
 }

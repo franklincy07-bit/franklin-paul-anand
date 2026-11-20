@@ -1,0 +1,119 @@
+---
+import { getProfile } from "../lib/content";
+
+const profile = await getProfile();
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <div class="about">
+      <a href="/" class="wordmark">
+        {profile.name}
+      </a>
+      <p class="line">{profile.anchorLine}</p>
+    </div>
+    <nav aria-label="Footer">
+      <ul>
+        <li>
+          <a href="/writing/">Writing</a>
+        </li>
+        <li>
+          <a href="/videos/">Videos</a>
+        </li>
+        <li>
+          <a href="/lessons/">Lessons</a>
+        </li>
+        <li>
+          <a href="/about/">About</a>
+        </li>
+        <li>
+          <a href="/work-with-me/">Work With Me</a>
+        </li>
+        {profile.links.linkedin && (
+          <li>
+            <a href={profile.links.linkedin} rel="me noopener">
+              LinkedIn
+            </a>
+          </li>
+        )}
+        {profile.links.youtube && (
+          <li>
+            <a href={profile.links.youtube} rel="me noopener">
+              YouTube
+            </a>
+          </li>
+        )}
+      </ul>
+    </nav>
+  </div>
+  <div class="container legal">
+    <span>
+      © {year} {profile.name}. Views are my own.
+    </span>
+    <a href="/privacy/">Privacy</a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-primary);
+    color: var(--color-on-dark-muted);
+    margin-top: 5rem;
+    padding-block: 3rem 2rem;
+    font-size: 0.9rem;
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .about {
+    max-width: 28rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .wordmark {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-on-dark);
+    text-decoration: none;
+  }
+
+  .line {
+    line-height: 1.5;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, auto));
+    gap: 0.5rem 2.5rem;
+  }
+
+  a {
+    color: var(--color-on-dark);
+  }
+
+  a:hover {
+    color: var(--color-on-dark-muted);
+  }
+
+  .legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+</style>

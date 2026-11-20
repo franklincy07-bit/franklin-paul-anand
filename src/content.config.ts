@@ -1,28 +1,109 @@
-import { defineCollection } from "astro:content";
+import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { ARTICLE_TYPE_KEYS, TOPIC_KEYS } from "./lib/taxonomy";
 
-// Content lives in /content/franklin-paul-anand at the repository root.
-// See content/README.md.
+// All Franklin Paul Anand content lives in /content/franklin-paul-anand at the
+// repository root, so it can be edited without touching code.
+// See content/README.md and content/franklin-paul-anand/_templates/.
+// Files and folders starting with "_" are ignored.
 const CONTENT = "../../content/franklin-paul-anand";
 
-const pages = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: `${CONTENT}/pages` }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-  }),
+const topics = z.array(z.enum(TOPIC_KEYS)).default([]);
+
+/** Writing: Field Notes, Insights and How-To articles. */
+const articles = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `${CONTENT}/articles` }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      summary: z.string(),
+      date: z.coerce.date(),
+      type: z.enum(ARTICLE_TYPE_KEYS),
+      topics,
+      featured: z.boolean().default(false),
+      cover: image().optional(),
+      coverAlt: z.string().optional(),
+      video: reference("videos").optional(),
+      takeaways: z.array(z.string()).default([]),
+      draft: z.boolean().default(false),
+    }),
 });
 
-const projects = defineCollection({
-  loader: glob({ pattern: "**/*.{md,mdx}", base: `${CONTENT}/projects` }),
+/** Videos published on YouTube, each with its own page on the site. */
+const videos = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `${CONTENT}/videos` }),
   schema: z.object({
     title: z.string(),
-    date: z.coerce.date(),
     summary: z.string(),
-    link: z.url().optional(),
+    date: z.coerce.date(),
+    // The ID from the YouTube address, e.g. youtube.com/watch?v=THIS_PART.
+    // Leave empty until the channel exists – the site shows a placeholder.
+    youtubeId: z
+      .string()
+      .regex(/^[A-Za-z0-9_-]{11}$/)
+      .optional(),
+    duration: z.string().optional(),
+    topics,
+    series: reference("series").optional(),
+    lesson: z.number().int().positive().optional(),
+    takeaways: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
   }),
 });
 
-export const collections = { pages, projects };
+/** Lesson series: a group of videos taught in order. */
+const series = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: `${CONTENT}/series` }),
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    topics,
+    order: z.number().int().default(100),
+    draft: z.boolean().default(false),
+  }),
+});
+
+const year = z.union([z.number().int(), z.string()]);
+
+/** Profile facts used by the home, About and Work With Me pages. */
+const profile = defineCollection({
+  loader: glob({ pattern: "profile.yaml", base: `${CONTENT}/profile` }),
+  schema: z.object({
+    name: z.string(),
+    anchorLine: z.string(),
+    positioning: z.array(z.string()),
+    shortBio: z.array(z.string()),
+    levels: z.array(z.object({ title: z.string(), text: z.string() })),
+    links: z.object({
+      linkedin: z.url().optional(),
+      youtube: z.url().optional(),
+    }),
+    career: z.array(
+      z.object({
+        role: z.string(),
+        organisation: z.string(),
+        from: year,
+        to: year.optional(),
+      }),
+    ),
+    education: z.array(
+      z.object({
+        qualification: z.string(),
+        institution: z.string(),
+        from: year,
+        to: year,
+      }),
+    ),
+    recognition: z.array(
+      z.object({
+        title: z.string(),
+        year: year.optional(),
+        awardedBy: z.string().optional(),
+      }),
+    ),
+    languages: z.array(z.string()),
+  }),
+});
+
+export const collections = { articles, videos, series, profile };

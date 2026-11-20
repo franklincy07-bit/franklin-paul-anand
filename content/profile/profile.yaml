@@ -1,0 +1,78 @@
+# Franklin Paul Anand – profile facts used across the website.
+# Facts below come from the owner's LinkedIn profile (shared on 2026-11-20).
+# Anything not yet confirmed is left out rather than guessed.
+# Wording marked "draft wording" is a proposal for the owner to edit.
+
+name: Franklin Paul Anand
+
+# Masthead line (approved anchor line).
+anchorLine: Building organisations and movements that enable young people and communities to thrive.
+
+positioning:
+  - Youth Development
+  - Organisational Strategy
+  - Systems Change
+
+# Short bio for the home page sidebar (draft wording, based on profile facts).
+shortBio:
+  - I'm Franklin. For over 15 years I've worked in international development – from programme delivery in Bihar's districts to leading country operations across India and Nepal.
+  - Today my focus is helping organisations design, strengthen and scale initiatives that create meaningful social impact – and building the systems and movements that let young people lead.
+
+# The three levels of work (draft wording).
+levels:
+  - title: Young people & communities
+    text: Advancing young people as leaders, decision-makers and agents of change – not only as participants.
+  - title: Programmes & organisations
+    text: Helping organisations clarify strategy, strengthen institutional capability and turn vision into results.
+  - title: Partnerships & systems
+    text: Building the partnerships, evidence and collaboration that make change last beyond any one project.
+
+links:
+  linkedin: https://www.linkedin.com/in/franklin-paul-95a2294a/
+  # youtube: add the channel address once it exists
+
+career:
+  - role: Head of Country, India & Nepal
+    organisation: Restless Development
+    from: 2022
+  - role: Senior Monitoring, Evaluation & Learning Manager
+    organisation: Restless Development
+    from: 2019
+    to: 2022
+  - role: Monitoring, Evaluation & Research Manager
+    organisation: Restless Development
+    from: 2016
+    to: 2019
+  - role: Monitoring & Evaluation Coordinator
+    organisation: Student Partnership Worldwide India Project Trust
+    from: 2012
+    to: 2016
+  - role: Assistant Programme Coordinator
+    organisation: Student Partnership Worldwide India Project Trust
+    from: 2011
+    to: 2011
+
+education:
+  - qualification: Master of Social Work, Community Development
+    institution: Sacred Heart College
+    from: 2009
+    to: 2011
+  - qualification: BSc, Microbiology
+    institution: V.P. & R.P.T.P. Science College
+    from: 2006
+    to: 2009
+
+# Awarding bodies (and years where missing) still to be confirmed by the owner.
+recognition:
+  - title: Youth Champion
+  - title: Young Leader
+  - title: Values Champion
+    year: 2015–16
+  - title: World Contraception Day Ambassador
+    year: 2016
+
+languages:
+  - English
+  - Hindi
+  - Gujarati
+  - Tamil

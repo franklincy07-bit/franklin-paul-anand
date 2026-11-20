@@ -1,0 +1,222 @@
+---
+// Site header with main navigation. On small screens the links move into a
+// menu that opens with a button (built on <details>, so it works without
+// JavaScript and with the keyboard).
+export type NavKey =
+  "home" | "writing" | "videos" | "lessons" | "about" | "work";
+
+interface Props {
+  active?: NavKey;
+}
+
+const { active = "home" } = Astro.props;
+
+const links: { key: NavKey; href: string; label: string; quiet?: boolean }[] = [
+  { key: "writing", href: "/writing/", label: "Writing" },
+  { key: "videos", href: "/videos/", label: "Videos" },
+  { key: "lessons", href: "/lessons/", label: "Lessons" },
+  { key: "about", href: "/about/", label: "About" },
+  { key: "work", href: "/work-with-me/", label: "Work With Me", quiet: true },
+];
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a
+      href="/"
+      class="wordmark"
+      aria-current={active === "home" ? "page" : undefined}
+    >
+      Franklin Paul Anand
+    </a>
+
+    <nav class="nav-desktop" aria-label="Main">
+      <ul>
+        {links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class:list={{ quiet: l.quiet }}
+              aria-current={active === l.key ? "page" : undefined}
+            >
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <details class="nav-mobile">
+      <summary aria-label="Menu">
+        <svg
+          class="icon-open"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <line x1="4" y1="7" x2="20" y2="7"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="17" x2="20" y2="17"></line>
+        </svg>
+        <svg
+          class="icon-close"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+        </svg>
+      </summary>
+      <nav aria-label="Main (mobile)">
+        <ul>
+          <li>
+            <a href="/" aria-current={active === "home" ? "page" : undefined}>
+              Home
+            </a>
+          </li>
+          {links.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                aria-current={active === l.key ? "page" : undefined}
+              >
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--color-primary);
+    color: var(--color-on-dark);
+    position: relative;
+    z-index: 10;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 3.75rem;
+  }
+
+  .wordmark {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-on-dark);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .nav-desktop ul,
+  .nav-mobile ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-desktop ul {
+    display: flex;
+    gap: 1.9rem;
+  }
+
+  .nav-desktop a {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-on-dark);
+    text-decoration: none;
+    padding: 0.4rem 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav-desktop a.quiet {
+    color: var(--color-on-dark-muted);
+  }
+
+  .nav-desktop a:hover,
+  .nav-desktop a[aria-current="page"] {
+    color: var(--color-on-dark);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .nav-mobile {
+    display: none;
+  }
+
+  .nav-mobile summary {
+    list-style: none;
+    cursor: pointer;
+    width: 2.75rem;
+    height: 2.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-on-dark);
+  }
+
+  .nav-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .nav-mobile .icon-close,
+  .nav-mobile[open] .icon-open {
+    display: none;
+  }
+
+  .nav-mobile[open] .icon-close {
+    display: block;
+  }
+
+  .nav-mobile nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    background: var(--color-primary);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.5rem 1.25rem 1.25rem;
+  }
+
+  .nav-mobile a {
+    display: block;
+    padding: 0.85rem 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-on-dark);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-mobile a[aria-current="page"] {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 860px) {
+    .nav-desktop {
+      display: none;
+    }
+    .nav-mobile {
+      display: block;
+    }
+  }
+</style>

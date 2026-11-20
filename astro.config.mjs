@@ -9,5 +9,7 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: process.env.SITE_URL ?? "http://localhost:4321",
   trailingSlash: "ignore",
+  // Hide Astro's developer toolbar in local previews (it is never on the live site).
+  devToolbar: { enabled: false },
   integrations: [mdx(), sitemap()],
 });

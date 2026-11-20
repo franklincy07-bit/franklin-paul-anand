@@ -1,0 +1,110 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { ARTICLE_TYPES, TOPICS } from "../lib/taxonomy";
+import { articleUrl } from "../lib/content";
+
+interface Props {
+  article: CollectionEntry<"articles">;
+}
+
+const { article } = Astro.props;
+const { data } = article;
+const tint = {
+  "field-notes": "var(--color-mist)",
+  insight: "var(--color-sand)",
+  "how-to": "#d7dde8",
+}[data.type];
+const topic = data.topics[0] ? TOPICS[data.topics[0]] : undefined;
+---
+
+<article class="item">
+  <a
+    href={articleUrl(article)}
+    class:list={["thumb", { "no-cover": !data.cover }]}
+    style={`--tint: ${tint}`}
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    {data.cover && (
+      <Image src={data.cover} alt="" widths={[240, 480]} sizes="220px" />
+    )}
+  </a>
+  <div class="text">
+    <p class="kicker">
+      {ARTICLE_TYPES[data.type].label}
+      {topic && <span class="topic"> · {topic}</span>}
+      {data.draft && <span class="example-badge">Example</span>}
+    </p>
+    <h3>
+      <a href={articleUrl(article)}>{data.title}</a>
+    </h3>
+    <p class="summary">{data.summary}</p>
+  </div>
+</article>
+
+<style>
+  .item {
+    display: grid;
+    grid-template-columns: 13.75rem minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: center;
+  }
+
+  .thumb {
+    display: block;
+    aspect-ratio: 3 / 2;
+    background: var(--tint);
+    overflow: hidden;
+  }
+
+  .thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .topic {
+    color: var(--color-muted);
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 1.55rem;
+    line-height: 1.2;
+  }
+
+  h3 a {
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  h3 a:hover {
+    color: var(--color-teal);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .summary {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 640px) {
+    .item {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.9rem;
+    }
+    /* Until an article has its own image, skip the empty tile on phones. */
+    .thumb.no-cover {
+      display: none;
+    }
+  }
+</style>
