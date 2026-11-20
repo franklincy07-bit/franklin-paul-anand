@@ -90,9 +90,20 @@ const profile = defineCollection({
         ),
       }),
     ),
+    // Optional "Beyond the job title" text for the About page. The section
+    // stays hidden until this is written by the owner.
+    beyondTheTitle: z.array(z.string()).optional(),
+    workWithMe: z.object({
+      intro: z.string(),
+      opportunities: z.array(z.object({ title: z.string(), text: z.string() })),
+      note: z.string(),
+    }),
     links: z.object({
       linkedin: z.url().optional(),
       youtube: z.url().optional(),
+      // Formspree form address (https://formspree.io/f/...). The contact form
+      // appears only once this is set.
+      contactForm: z.url().optional(),
     }),
     career: z.array(
       z.object({

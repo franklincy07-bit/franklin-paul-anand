@@ -1,0 +1,315 @@
+---
+import Base from "../layouts/Base.astro";
+import { getProfile } from "../lib/content";
+
+const profile = await getProfile();
+const { workWithMe, links } = profile;
+---
+
+<Base
+  title="Work with me"
+  description="Leadership opportunities, advisory support, learning and facilitation, and speaking and writing."
+  active="work"
+>
+  <section class="container intro">
+    <p class="kicker">Work with me</p>
+    <h1>Where I can contribute</h1>
+    <p class="lead">{workWithMe.intro}</p>
+  </section>
+
+  <section class="container" aria-label="Opportunities">
+    <ol class="opportunities">
+      {workWithMe.opportunities.map((o, i) => (
+        <li>
+          <span class="no">0{i + 1}</span>
+          <h2>{o.title}</h2>
+          <p>{o.text}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="note">{workWithMe.note}</p>
+  </section>
+
+  <section class="container contact" aria-labelledby="contact-title">
+    <div class="contact-intro">
+      <h2 id="contact-title">Get in touch</h2>
+      <p>Tell me a little about what you're working on.</p>
+      {links.linkedin && (
+        <a class="caps-link" href={links.linkedin} rel="me noopener">
+          Connect on LinkedIn
+        </a>
+      )}
+    </div>
+
+    {links.contactForm ? (
+      <form class="form" action={links.contactForm} method="post">
+        <div class="field">
+          <label for="name">Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            required
+          />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+          />
+        </div>
+        <div class="field">
+          <label for="organisation">Organisation (optional)</label>
+          <input
+            id="organisation"
+            name="organisation"
+            type="text"
+            autocomplete="organization"
+          />
+        </div>
+        <div class="field">
+          <label for="topic">What's it about?</label>
+          <select id="topic" name="topic">
+            {workWithMe.opportunities.map((o) => (
+              <option>{o.title}</option>
+            ))}
+            <option>Something else</option>
+          </select>
+        </div>
+        <div class="field wide">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" required />
+        </div>
+        {/* Spam trap for bots: hidden from people and screen readers. */}
+        <input
+          type="text"
+          name="_gotcha"
+          tabindex="-1"
+          autocomplete="off"
+          class="trap"
+          aria-hidden="true"
+        />
+        <div class="field wide submit">
+          <span class="privacy">
+            Your details are used only to reply to you.
+          </span>
+          <button type="submit">Send message</button>
+        </div>
+      </form>
+    ) : (
+      <div class="form-soon">
+        <p class="kicker">Contact form</p>
+        <p>
+          A contact form is coming soon.
+          {links.linkedin && (
+            <>
+              {" "}
+              In the meantime, the best way to reach me is{" "}
+              <a href={links.linkedin} rel="me noopener">
+                on LinkedIn
+              </a>
+              .
+            </>
+          )}
+        </p>
+      </div>
+    )}
+  </section>
+</Base>
+
+<style>
+  .intro {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem) 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .intro .lead {
+    max-width: 46rem;
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 5vw, 3.3rem);
+  }
+
+  .lead {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    line-height: 1.55;
+    color: var(--color-body);
+  }
+
+  .opportunities {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--color-line);
+  }
+
+  .opportunities li {
+    padding: 1.75rem 2rem 1.75rem 0;
+    border-bottom: 1px solid var(--color-line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .opportunities li:nth-child(even) {
+    padding-left: 2rem;
+    border-left: 1px solid var(--color-line);
+  }
+
+  .no {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--color-teal);
+    line-height: 1;
+  }
+
+  .opportunities h2 {
+    font-size: 1.5rem;
+  }
+
+  .opportunities p {
+    color: var(--color-body);
+  }
+
+  .note {
+    margin-top: 1.25rem;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+
+  .contact {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: clamp(2rem, 5vw, 3.5rem);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    padding-block: clamp(1.75rem, 4vw, 3rem);
+  }
+
+  .contact-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .contact-intro h2 {
+    font-size: 1.9rem;
+  }
+
+  .contact-intro p {
+    color: var(--color-muted);
+  }
+
+  .caps-link {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .field.wide {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  input,
+  select,
+  textarea {
+    font: inherit;
+    font-size: 1rem;
+    border: 1px solid var(--color-line-strong);
+    background: #fff;
+    padding: 0.7rem 0.8rem;
+    min-height: 2.9rem;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+  }
+
+  .submit {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .privacy {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+
+  button {
+    font: inherit;
+    font-weight: 700;
+    background: var(--color-primary);
+    color: var(--color-on-dark);
+    border: 0;
+    padding: 0.9rem 1.6rem;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: var(--color-teal);
+  }
+
+  .form-soon {
+    background: var(--color-bg);
+    border: 1px dashed var(--color-line-strong);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-self: start;
+  }
+
+  @media (max-width: 760px) {
+    .opportunities,
+    .contact,
+    .form {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .opportunities li:nth-child(even) {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+</style>

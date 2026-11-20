@@ -1,0 +1,427 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import headshot from "../assets/franklin-headshot.webp";
+import candid from "../assets/franklin-candid.jpg";
+import { TOPICS } from "../lib/taxonomy";
+import { getProfile } from "../lib/content";
+
+const profile = await getProfile();
+const years = (from: string | number, to?: string | number) =>
+  to === undefined
+    ? `${from} – present`
+    : String(from) === String(to)
+      ? String(from)
+      : `${from} – ${to}`;
+---
+
+<Base
+  title="About"
+  description={`About ${profile.name}: ${profile.descriptor.join(" · ")}.`}
+  active="about"
+>
+  <!-- Introduction -->
+  <section class="container intro">
+    <Image
+      src={headshot}
+      alt={`Portrait of ${profile.name}`}
+      widths={[420, 840]}
+      sizes="(max-width: 860px) 100vw, 420px"
+      class="intro-photo"
+      loading="eager"
+    />
+    <div class="intro-text">
+      <p class="kicker">About</p>
+      <h1>Hi, I'm Franklin.</h1>
+      <ul class="descriptor" aria-label="Professional focus">
+        {profile.descriptor.map((d, i) => (
+          <li>
+            {d}
+            {i < profile.descriptor.length - 1 && "\u00a0·"}
+          </li>
+        ))}
+      </ul>
+      {profile.aboutIntro.map((para, i) => (
+        <p class:list={["para", { lead: i === 0 }]}>{para}</p>
+      ))}
+    </div>
+  </section>
+
+  <!-- Expertise -->
+  <section class="container expertise" aria-labelledby="expertise-title">
+    <div class="section-title">
+      <h2 id="expertise-title">Areas of expertise</h2>
+    </div>
+    <div class="expertise-grid">
+      {profile.expertise.map((area) => (
+        <article class="area">
+          <h3>{TOPICS[area.topic]}</h3>
+          <p class="area-summary">{area.summary}</p>
+          {area.details.map((group) => (
+            <div class="group">
+              {group.heading && <p class="group-heading">{group.heading}</p>}
+              <ul>
+                {group.points.map((point) => (
+                  <li>{point}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Career, education, recognition, languages -->
+  <section class="container record" aria-label="Career and education">
+    <div>
+      <div class="section-title">
+        <h2>Career</h2>
+      </div>
+      <ol class="timeline">
+        {profile.career.map((job) => (
+          <li>
+            <span class="when">{years(job.from, job.to)}</span>
+            <span>
+              <span class="role">{job.role}</span>
+              <span class="org">{job.organisation}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="side">
+      <div>
+        <h2 class="small-title">Education</h2>
+        <ul class="plain">
+          {profile.education.map((e) => (
+            <li>
+              <span class="role">{e.qualification}</span>
+              <span class="org">
+                {e.institution} · {years(e.from, e.to)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h2 class="small-title">Recognition</h2>
+        <ul class="plain">
+          {profile.recognition.map((r) => (
+            <li>
+              <span class="role">{r.title}</span>
+              {(r.awardedBy || r.year) && (
+                <span class="org">
+                  {[r.awardedBy, r.year].filter(Boolean).join(" · ")}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h2 class="small-title">Languages</h2>
+        <p>{profile.languages.join(" · ")}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Beyond the job title: shown only once the owner has written it -->
+  {profile.beyondTheTitle && profile.beyondTheTitle.length > 0 && (
+    <section class="container beyond" aria-labelledby="beyond-title">
+      <Image
+        src={candid}
+        alt="Franklin at a youth conference"
+        widths={[560, 1100]}
+        sizes="(max-width: 860px) 100vw, 560px"
+      />
+      <div class="beyond-text">
+        <p class="kicker light">Beyond the job title</p>
+        <h2 id="beyond-title">Serious about systems. Human about people.</h2>
+        {profile.beyondTheTitle.map((p) => (
+          <p>{p}</p>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Next step -->
+  <section class="container cta">
+    <div>
+      <h2>Ways we can work together</h2>
+      <p>
+        Leadership roles, advisory conversations, training and facilitation,
+        speaking and writing.
+      </p>
+    </div>
+    <a class="btn" href="/work-with-me/">
+      Work with me
+    </a>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .intro :global(.intro-photo) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .intro-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 5vw, 3.4rem);
+  }
+
+  .descriptor {
+    list-style: none;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .descriptor li:not(:last-child) {
+    margin-right: 0.65rem;
+  }
+
+  .para {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    line-height: 1.65;
+    color: var(--color-body);
+  }
+
+  .para.lead {
+    font-size: 1.35rem;
+    color: var(--color-fg);
+  }
+
+  /* Expertise */
+  .expertise {
+    padding-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .expertise-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.25rem 2rem;
+  }
+
+  .area {
+    border-top: 3px solid var(--color-primary);
+    padding-top: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .area:nth-child(4) {
+    border-top-color: var(--color-accent);
+  }
+
+  .area h3 {
+    font-size: 1.45rem;
+  }
+
+  .area-summary {
+    color: var(--color-body);
+  }
+
+  .group-heading {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+    margin-top: 0.3rem;
+  }
+
+  .area ul {
+    margin: 0.3rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--color-muted);
+    font-size: 0.93rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  /* Career and record */
+  .record {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2.5rem, 5vw, 4rem);
+    padding-top: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .timeline li {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .when {
+    color: var(--color-teal);
+    font-weight: 600;
+  }
+
+  .role {
+    display: block;
+    font-weight: 600;
+  }
+
+  .org {
+    display: block;
+    color: var(--color-muted);
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .small-title {
+    font-size: 1.55rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .plain {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Beyond the job title */
+  .beyond {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    background: var(--color-primary);
+    color: var(--color-on-dark-muted);
+    padding: 0;
+  }
+
+  .beyond :global(img) {
+    width: 100%;
+    height: 100%;
+    min-height: 20rem;
+    object-fit: cover;
+    object-position: center 25%;
+  }
+
+  .beyond-text {
+    padding: clamp(1.75rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .beyond-text h2 {
+    color: var(--color-on-dark);
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+  }
+
+  .kicker.light {
+    color: var(--color-accent);
+  }
+
+  /* Call to action */
+  .cta {
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: 2.5rem;
+  }
+
+  .cta h2 {
+    font-size: 1.9rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .cta p {
+    color: var(--color-muted);
+  }
+
+  .btn {
+    background: var(--color-primary);
+    color: var(--color-on-dark);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+  }
+
+  .btn:hover {
+    background: var(--color-teal);
+    color: var(--color-on-dark);
+  }
+
+  @media (max-width: 960px) {
+    .expertise-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 860px) {
+    .intro,
+    .record,
+    .beyond {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .intro :global(.intro-photo) {
+      max-width: 22rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .expertise-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .timeline li {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.2rem;
+    }
+  }
+</style>
