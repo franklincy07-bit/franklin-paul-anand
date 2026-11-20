@@ -1,7 +1,7 @@
 import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
-import { ARTICLE_TYPE_KEYS, TOPIC_KEYS } from "./lib/taxonomy";
+import { ARTICLE_TYPE_KEYS, THEME_KEYS, TOPIC_KEYS } from "./lib/taxonomy";
 
 // All Franklin Paul Anand content lives in /content/franklin-paul-anand at the
 // repository root, so it can be edited without touching code.
@@ -21,6 +21,8 @@ const articles = defineCollection({
       date: z.coerce.date(),
       type: z.enum(ARTICLE_TYPE_KEYS),
       topics,
+      // Optional writing themes, e.g. [ai-digital] shows "Exploring: AI & Digital".
+      themes: z.array(z.enum(THEME_KEYS)).default([]),
       featured: z.boolean().default(false),
       cover: image().optional(),
       coverAlt: z.string().optional(),
@@ -72,9 +74,22 @@ const profile = defineCollection({
   schema: z.object({
     name: z.string(),
     anchorLine: z.string(),
-    positioning: z.array(z.string()),
     shortBio: z.array(z.string()),
-    levels: z.array(z.object({ title: z.string(), text: z.string() })),
+    descriptor: z.array(z.string()),
+    supportingStatement: z.string(),
+    aboutIntro: z.array(z.string()),
+    expertise: z.array(
+      z.object({
+        topic: z.enum(TOPIC_KEYS),
+        summary: z.string(),
+        details: z.array(
+          z.object({
+            heading: z.string().optional(),
+            points: z.array(z.string()),
+          }),
+        ),
+      }),
+    ),
     links: z.object({
       linkedin: z.url().optional(),
       youtube: z.url().optional(),

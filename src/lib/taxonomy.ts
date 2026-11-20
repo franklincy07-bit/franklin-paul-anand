@@ -21,13 +21,14 @@ export const ARTICLE_TYPES = {
 
 export type ArticleType = keyof typeof ARTICLE_TYPES;
 
-// The five areas of expertise, used as topics across writing, videos and lessons.
+// The five areas of expertise. Used as topics across writing, videos and
+// lessons, and as the "Where I contribute" areas on the home page.
 export const TOPICS = {
-  "youth-power": "Youth Power & Leadership",
-  "strategy-institutions": "Strategy & Institutions",
-  "systems-partnerships": "Systems & Partnerships",
-  "programme-design": "Programme Design & Innovation",
-  "evidence-mel": "Evidence, MEL & Accountability",
+  "strategic-leadership": "Strategic Leadership",
+  "organisational-development": "Organisational Development",
+  "social-impact": "Social Impact",
+  "youth-leadership": "Youth Leadership",
+  "evidence-learning": "Evidence & Learning",
 } as const;
 
 export type Topic = keyof typeof TOPICS;
@@ -37,3 +38,13 @@ export const ARTICLE_TYPE_KEYS = Object.keys(ARTICLE_TYPES) as [
   ...ArticleType[],
 ];
 export const TOPIC_KEYS = Object.keys(TOPICS) as [Topic, ...Topic[]];
+
+// Writing themes: optional labels on individual articles. They are areas of
+// thought leadership and exploration, not core professional competencies.
+export const THEMES = {
+  "social-innovation": "Social Innovation",
+  "ai-digital": "Exploring: AI & Digital",
+} as const;
+
+export type Theme = keyof typeof THEMES;
+export const THEME_KEYS = Object.keys(THEMES) as [Theme, ...Theme[]];

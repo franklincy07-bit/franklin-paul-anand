@@ -3,7 +3,8 @@ title: Your article title
 summary: One or two sentences shown on the home page and in article lists.
 date: 2026-01-01
 type: field-notes # Field Notes use the "Field Journal" layout
-topics: [] # any of: youth-power, strategy-institutions, systems-partnerships, programme-design, evidence-mel
+topics: [] # any of: strategic-leadership, organisational-development, social-impact, youth-leadership, evidence-learning
+themes: [] # optional: social-innovation, ai-digital ("Exploring: AI & Digital")
 featured: false # true = shown large on the home page
 takeaways: [] # e.g. ["First takeaway", "Second takeaway"]
 draft: true # change to false when ready to publish

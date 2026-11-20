@@ -31,15 +31,16 @@ const lessonCount = (id: string) =>
 ---
 
 <Base active="home">
-  <!-- Masthead: the anchor line leads, the name sits above it quietly. -->
+  <!-- Masthead: name, professional descriptor, headline, supporting statement. -->
   <section class="masthead container">
     <p class="name">{profile.name}</p>
-    <h1>{profile.anchorLine}</h1>
-    <ul class="positioning" aria-label="Areas of work">
-      {profile.positioning.map((p) => (
+    <ul class="positioning" aria-label="Professional focus">
+      {profile.descriptor.map((p) => (
         <li>{p}</li>
       ))}
     </ul>
+    <h1>{profile.anchorLine}</h1>
+    <p class="statement">{profile.supportingStatement}</p>
   </section>
 
   <!-- Featured writing and lessons -->
@@ -93,7 +94,8 @@ const lessonCount = (id: string) =>
         <a class="tile tile-sand" href="/about/">
           <span class="tag tag-dark">About</span>
           <span class="tile-title dark">
-            From programmes to systems – read my story
+            From community programmes to organisational leadership – read my
+            story
           </span>
         </a>
       )}
@@ -108,19 +110,21 @@ const lessonCount = (id: string) =>
     </section>
   )}
 
-  <!-- Three levels of work -->
+  <!-- Where I contribute: the five areas of expertise -->
   <section class="levels-band" aria-labelledby="levels-title">
     <div class="container">
       <div class="levels-intro">
-        <p class="kicker light">From programmes to systems</p>
-        <h2 id="levels-title">Working across three levels</h2>
+        <p class="kicker light">Expertise</p>
+        <h2 id="levels-title">Where I contribute</h2>
       </div>
       <ol class="levels">
-        {profile.levels.map((level, i) => (
+        {profile.expertise.map((area, i) => (
           <li>
             <span class="level-no">0{i + 1}</span>
-            <h3>{level.title}</h3>
-            <p>{level.text}</p>
+            <h3>
+              <a href={`/writing/topic/${area.topic}/`}>{TOPICS[area.topic]}</a>
+            </h3>
+            <p>{area.summary}</p>
           </li>
         ))}
       </ol>
@@ -178,8 +182,7 @@ const lessonCount = (id: string) =>
       <div class="yt">
         <p class="yt-title">Watch &amp; learn</p>
         <p>
-          Short training lessons on organisations, youth power and systems
-          change.
+          Short training lessons on leadership, organisations and social impact.
         </p>
         {profile.links.youtube ? (
           <a class="btn" href={profile.links.youtube} rel="me noopener">
@@ -265,6 +268,13 @@ const lessonCount = (id: string) =>
     height: 3px;
     background: var(--color-accent);
     margin: 1.4rem auto 0;
+  }
+
+  .statement {
+    max-width: 46rem;
+    font-size: clamp(1.02rem, 1.6vw, 1.15rem);
+    line-height: 1.65;
+    color: var(--color-body);
   }
 
   .positioning {
@@ -452,8 +462,24 @@ const lessonCount = (id: string) =>
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+
+  .levels h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .levels h3 a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 1100px) {
+    .levels {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
   .levels li {
@@ -474,7 +500,7 @@ const lessonCount = (id: string) =>
 
   .levels h3 {
     color: var(--color-on-dark);
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
 
   .levels p {
