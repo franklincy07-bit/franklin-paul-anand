@@ -35,16 +35,22 @@ const policies = {
 
       <h2>No tracking or advertising</h2>
       <p>
-        This website does not use cookies, analytics, advertising or tracking
-        tools. The fonts are served from this website itself, not from a third
-        party.
+        This website does not use analytics, advertising or tracking tools, and
+        it does not set cookies of its own. The fonts are served from this
+        website itself, not from a third party.
       </p>
 
       <h2>Hosting</h2>
       <p>
         The website is hosted by Cloudflare. Like any web host, Cloudflare
         processes technical information such as your IP address and browser type
-        to deliver pages and protect the website from abuse.
+        to deliver pages and protect the website from abuse. Cloudflare may set
+        a strictly necessary security cookie for that purpose.
+      </p>
+      {/* Remove this paragraph at launch, when Cloudflare Access is switched off. */}
+      <p>
+        While the website is in private preview, only invited reviewers can open
+        it. They sign in through Cloudflare Access, which sets a sign-in cookie.
       </p>
       <p>
         More information:{" "}
@@ -58,11 +64,18 @@ const policies = {
       {hasForm ? (
         <>
           <p>
-            If you use the contact form, the details you enter (your name, email
-            address and message) are sent through Formspree, a form service, and
-            delivered to me by email. I use them only to reply to you. I don't
-            add you to a mailing list, and I don't share or sell your details.
-            You can ask me to delete your message at any time.
+            If you use the contact form, what you enter (your name, email
+            address, organisation if you give one, the topic and your message)
+            is sent to Formspree, an external form service, together with
+            technical information such as your IP address, which Formspree uses
+            to filter spam. Formspree emails the message to me and keeps a copy
+            in my Formspree account.
+          </p>
+          <p>
+            I use your details only to reply to you. I don't add you to a
+            mailing list, and I don't share or sell your details. Messages are
+            never stored on this website or in its code. You can ask me to
+            delete your message at any time.
           </p>
           <p>
             More information:{" "}
