@@ -179,6 +179,11 @@ p {
   color: var(--color-primary);
 }
 
+/* An empty pull quote (a lone ">") shows nothing rather than a bare rule. */
+.prose blockquote:not(:has(*)) {
+  display: none;
+}
+
 .prose blockquote p {
   margin: 0;
 }

@@ -79,6 +79,23 @@ test("published Field Notes have unique entry numbers", () => {
   }
 });
 
+test("published story cards are complete or empty", () => {
+  // The card shows only when all three parts are written. A half-filled card
+  // would silently disappear, so the build points it out instead.
+  for (const e of entries.filter((e) => e.data.draft !== true)) {
+    const card = e.data.storyCard;
+    if (!card) continue;
+    const parts = ["context", "happened", "learned"].map((k) =>
+      String(card[k] ?? "").trim(),
+    );
+    const filled = parts.filter((p) => p.length > 0).length;
+    assert.ok(
+      filled === 0 || filled === 3,
+      `${e.path}: fill in all three story card parts (context, happened, learned) or leave all three empty`,
+    );
+  }
+});
+
 test("the guard itself catches a published placeholder", () => {
   const fake = {
     path: "articles/fake.md",

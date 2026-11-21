@@ -27,7 +27,13 @@ const articles = defineCollection({
       cover: image().optional(),
       coverAlt: z.string().optional(),
       video: reference("videos").nullish(),
-      takeaways: z.array(z.string()).default([]),
+      // Optional. Blank lines are ignored, so an empty list hides the section.
+      takeaways: z
+        .array(z.string().nullish())
+        .default([])
+        .transform((list) =>
+          list.map((t) => (t ?? "").trim()).filter((t) => t.length > 0),
+        ),
       // Field Notes only: the permanent entry number (1, 2, 3 …). Set it once;
       // it never changes when other articles are added or removed.
       entry: z.number().int().positive().nullish(),
