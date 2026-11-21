@@ -52,10 +52,12 @@ h1,
 h2,
 h3 {
   font-family: var(--font-heading);
-  font-weight: 600;
-  line-height: 1.15;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
   color: var(--color-primary);
   margin: 0;
+  text-wrap: balance;
 }
 
 p {
@@ -71,14 +73,29 @@ p {
 
 /* Small uppercase label above titles ("FIELD NOTES", "INSIGHTS"). */
 .kicker {
+  font-family: var(--font-label);
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-teal);
 }
 
-/* Section heading with the apricot rule underneath. */
+/* Highlighter-pen mark behind a key phrase. */
+mark.hi {
+  background: linear-gradient(
+    transparent 52%,
+    var(--color-highlight) 52%,
+    var(--color-highlight) 92%,
+    transparent 92%
+  );
+  color: inherit;
+  padding: 0 0.08em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Section heading with the aqua rule underneath. */
 .section-title {
   display: flex;
   flex-direction: column;
@@ -92,8 +109,8 @@ p {
 
 .section-title::after {
   content: "";
-  width: 7rem;
-  height: 2px;
+  width: 4rem;
+  height: 4px;
   background: var(--color-accent);
 }
 
@@ -147,8 +164,8 @@ p {
 
 /* ---------- Long-form article text ---------- */
 .prose {
-  font-family: var(--font-heading);
-  font-size: 1.22rem;
+  font-family: var(--font-body);
+  font-size: 1.2rem;
   line-height: 1.75;
   color: var(--color-body);
 }
@@ -181,9 +198,11 @@ p {
   margin: 1.8em 0;
   padding: 0.2em 0 0.2em 1.4em;
   border-left: 3px solid var(--color-accent);
-  font-style: italic;
-  font-size: 1.45rem;
-  line-height: 1.45;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.4rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
   color: var(--color-primary);
 }
 
