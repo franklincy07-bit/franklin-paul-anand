@@ -2,11 +2,19 @@ import { getCollection, type CollectionEntry } from "astro:content";
 
 // Drafts (including the example placeholders) are visible only in local
 // development previews, never on the published site.
-const visible = ({ data }: { data: { draft: boolean } }) =>
-  import.meta.env.DEV || !data.draft;
+// Example files (named "example-…") are excluded from the live site even if
+// their draft flag were changed by mistake.
+const visible = ({ id, data }: { id: string; data: { draft: boolean } }) =>
+  import.meta.env.DEV || (!data.draft && !id.startsWith("example-"));
 
-const byDateDesc = (a: { data: { date: Date } }, b: { data: { date: Date } }) =>
-  b.data.date.getTime() - a.data.date.getTime();
+// Newest first; articles with the same date are ordered by title so the
+// order never changes between builds.
+const byDateDesc = (
+  a: { data: { date: Date; title: string } },
+  b: { data: { date: Date; title: string } },
+) =>
+  b.data.date.getTime() - a.data.date.getTime() ||
+  a.data.title.localeCompare(b.data.title);
 
 export async function getArticles(): Promise<CollectionEntry<"articles">[]> {
   return (await getCollection("articles", visible)).sort(byDateDesc);
@@ -53,3 +61,30 @@ export const videoUrl = (entry: CollectionEntry<"videos">) =>
   `/videos/${entry.id}/`;
 export const seriesUrl = (entry: CollectionEntry<"series">) =>
   `/lessons/${entry.id}/`;
+
+/**
+ * Field Notes in reading order: by entry number (oldest first), then by date
+ * for any without a number. Fails the build if two published Field Notes
+ * share an entry number.
+ */
+export function fieldNotesInOrder(articles: CollectionEntry<"articles">[]) {
+  const notes = articles.filter((a) => a.data.type === "field-notes");
+  const seen = new Map<number, string>();
+  for (const note of notes) {
+    const n = note.data.entry;
+    if (n == null || note.data.draft) continue;
+    if (seen.has(n)) {
+      throw new Error(
+        `Field Notes entry number ${n} is used twice: "${seen.get(n)}" and "${note.id}". Give each a different "entry".`,
+      );
+    }
+    seen.set(n, note.id);
+  }
+  return [...notes].sort(
+    (a, b) =>
+      (a.data.entry ?? Number.MAX_SAFE_INTEGER) -
+        (b.data.entry ?? Number.MAX_SAFE_INTEGER) ||
+      a.data.date.getTime() - b.data.date.getTime() ||
+      a.data.title.localeCompare(b.data.title),
+  );
+}

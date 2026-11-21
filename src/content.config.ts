@@ -28,6 +28,9 @@ const articles = defineCollection({
       coverAlt: z.string().optional(),
       video: reference("videos").nullish(),
       takeaways: z.array(z.string()).default([]),
+      // Field Notes only: the permanent entry number (1, 2, 3 …). Set it once;
+      // it never changes when other articles are added or removed.
+      entry: z.number().int().positive().nullish(),
       // Field Notes only: the three-part card at the top of the article.
       storyCard: z
         .object({
@@ -88,18 +91,27 @@ const profile = defineCollection({
     descriptor: z.array(z.string()),
     supportingStatement: z.string(),
     aboutIntro: z.array(z.string()),
-    expertise: z.array(
-      z.object({
-        topic: z.enum(TOPIC_KEYS),
-        summary: z.string(),
-        details: z.array(
-          z.object({
-            heading: z.string().optional(),
-            points: z.array(z.string()),
-          }),
-        ),
-      }),
-    ),
+    expertise: z
+      .array(
+        z.object({
+          topic: z.enum(TOPIC_KEYS),
+          summary: z.string(),
+          details: z.array(
+            z.object({
+              heading: z.string().optional(),
+              points: z.array(z.string()),
+            }),
+          ),
+        }),
+      )
+      .refine(
+        (areas) =>
+          areas.length === TOPIC_KEYS.length &&
+          TOPIC_KEYS.every(
+            (key) => areas.filter((a) => a.topic === key).length === 1,
+          ),
+        { message: "expertise must list each of the five topics exactly once" },
+      ),
     // Optional "Beyond the job title" text for the About page. The section
     // stays hidden until this is written by the owner.
     beyondTheTitle: z.array(z.string()).optional(),

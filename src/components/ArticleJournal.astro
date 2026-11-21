@@ -8,7 +8,7 @@ import { articleUrl, formatDate, readingMinutes } from "../lib/content";
 
 interface Props {
   article: CollectionEntry<"articles">;
-  entryNumber: number;
+  entryNumber?: number;
   Content: any;
   video?: CollectionEntry<"videos">;
   previous?: CollectionEntry<"articles">;
@@ -18,16 +18,31 @@ interface Props {
 const { article, entryNumber, Content, video, previous, next } = Astro.props;
 const { data } = article;
 const topicLabels = data.topics.map((t) => TOPICS[t]);
+// Optional sections show only when the writer has actually filled them in.
+const filled = (text?: string | null) =>
+  typeof text === "string" && text.trim().length > 0;
+const card = data.storyCard;
+const showCard =
+  !!card &&
+  filled(card.context) &&
+  filled(card.happened) &&
+  filled(card.learned);
+const showQuestion = filled(data.question);
 ---
 
 <article class="journal">
   <header class="container head">
     <div class="title-block">
       <p class="kicker">
-        Field Notes <span class="sep">/</span>{" "}
-        <span class="entry">
-          Entry No. {String(entryNumber).padStart(2, "0")}
-        </span>
+        Field Notes
+        {entryNumber && (
+          <>
+            <span class="sep">/</span>
+            <span class="entry">
+              Entry No. {String(entryNumber).padStart(2, "0")}
+            </span>
+          </>
+        )}
         {data.draft && <span class="example-badge">Example</span>}
       </p>
       <h1>{data.title}</h1>
@@ -60,20 +75,20 @@ const topicLabels = data.topics.map((t) => TOPICS[t]);
     </dl>
   </header>
 
-  {data.storyCard && (
+  {showCard && card && (
     <section class="container" aria-label="The story in brief">
       <div class="story-card">
         <div>
           <p class="label">The context</p>
-          <p>{data.storyCard.context}</p>
+          <p>{card.context}</p>
         </div>
         <div>
           <p class="label">What happened</p>
-          <p>{data.storyCard.happened}</p>
+          <p>{card.happened}</p>
         </div>
         <div class="learned">
           <p class="label">What I learned</p>
-          <p>{data.storyCard.learned}</p>
+          <p>{card.learned}</p>
         </div>
       </div>
     </section>
@@ -95,7 +110,7 @@ const topicLabels = data.topics.map((t) => TOPICS[t]);
       </section>
     )}
 
-    {data.question && (
+    {showQuestion && (
       <section class="question" aria-label="A question for you">
         <p class="label">A question for you</p>
         <p class="q">{data.question}</p>

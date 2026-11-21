@@ -3,15 +3,17 @@ title: Your article title
 summary: One or two sentences shown on the home page and in article lists.
 date: 2026-01-01
 type: field-notes # Field Notes use the "Field Journal" layout
+entry: # this note's permanent number: the last Field Notes entry number plus 1
 topics: [] # any of: strategic-leadership, organisational-development, social-impact, youth-leadership, evidence-learning
 themes: [] # optional: social-innovation, ai-digital ("Exploring: AI & Digital")
 featured: false # true = shown large on the home page
-takeaways: [] # e.g. ["First takeaway", "Second takeaway"]
-storyCard: # optional three-part card at the top – delete these four lines if not needed
-  context: Where and when – described without confidential details.
-  happened: The challenge or turning point, in one or two lines.
-  learned: The lesson, in one sentence.
-question: # optional – a reflective question for readers
+takeaways: [] # optional, e.g. ["First takeaway", "Second takeaway"]
+# Optional card at the top. Fill in all three, or leave all three as "" to hide it.
+storyCard:
+  context: ""
+  happened: ""
+  learned: ""
+question: "" # optional reflective question for readers; leave "" to hide it
 draft: true # change to false when ready to publish
 ---
 

@@ -4,7 +4,7 @@ import Base from "../../layouts/Base.astro";
 import ArticleJournal from "../../components/ArticleJournal.astro";
 import ArticleFeature from "../../components/ArticleFeature.astro";
 import { ARTICLE_TYPES } from "../../lib/taxonomy";
-import { getArticles } from "../../lib/content";
+import { fieldNotesInOrder, getArticles } from "../../lib/content";
 
 export async function getStaticPaths() {
   const articles = await getArticles();
@@ -27,10 +27,8 @@ const video = article.data.video
 const layout = ARTICLE_TYPES[article.data.type].layout;
 const pageUrl = new URL(Astro.url.pathname, Astro.site);
 
-// Field Journal: entries are numbered oldest-first; previous/next follow that order.
-const journalEntries = articles
-  .filter((a) => a.data.type === "field-notes")
-  .reverse();
+// Field Journal: previous/next follow the permanent entry numbers.
+const journalEntries = fieldNotesInOrder(articles);
 const position = journalEntries.findIndex((a) => a.id === article.id);
 
 // Feature: up to three related articles sharing a topic, then the newest others.
@@ -51,7 +49,7 @@ const related = [
   {layout === "journal" ? (
     <ArticleJournal
       article={article}
-      entryNumber={position + 1}
+      entryNumber={article.data.entry ?? undefined}
       Content={Content}
       video={video}
       previous={journalEntries[position - 1]}

@@ -51,7 +51,7 @@ const shareEmail = `mailto:?subject=${encodeURIComponent(data.title)}&body=${enc
   <div class="container layout">
     <aside class="side" aria-label="Article details">
       {sections.length > 1 && (
-        <nav aria-label="In this piece">
+        <nav class="toc" aria-label="In this piece">
           <p class="label">In this piece</p>
           <ol>
             {sections.map((h) => (
@@ -344,9 +344,24 @@ const shareEmail = `mailto:?subject=${encodeURIComponent(data.title)}&body=${enc
     .layout {
       grid-template-columns: minmax(0, 1fr);
     }
+    /* On phones: contents above the article, share and topics below it. */
     .side {
-      position: static;
+      display: contents;
+    }
+    .side > * {
       order: 2;
+      border-top: 1px solid var(--color-line);
+      padding-top: 1.25rem;
+    }
+    .side > .toc {
+      order: 0;
+      border-top: 0;
+      padding: 1rem 1.25rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-line);
+    }
+    .main {
+      order: 1;
     }
     .more-grid {
       grid-template-columns: minmax(0, 1fr);
