@@ -1,0 +1,380 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import AuthorBox from "../../components/AuthorBox.astro";
+import VideoPlayer from "../../components/VideoPlayer.astro";
+import { TOPICS } from "../../lib/taxonomy";
+import {
+  articleUrl,
+  formatDate,
+  getArticles,
+  getSeries,
+  getVideos,
+  lessonLabel,
+  lessonsInSeries,
+  seriesUrl,
+  videoUrl,
+} from "../../lib/content";
+
+export async function getStaticPaths() {
+  const videos = await getVideos();
+  return videos.map((video) => ({
+    params: { slug: video.id },
+    props: { video, videos },
+  }));
+}
+
+interface Props {
+  video: CollectionEntry<"videos">;
+  videos: CollectionEntry<"videos">[];
+}
+
+const { video, videos } = Astro.props;
+const { data } = video;
+const { Content } = await render(video);
+const hasNotes = (video.body ?? "").trim().length > 0;
+
+const series = (await getSeries()).find((s) => s.id === data.series?.id);
+const lessons = series ? lessonsInSeries(videos, series.id) : [];
+const position = lessons.findIndex((l) => l.id === video.id);
+const previous = position > 0 ? lessons[position - 1] : undefined;
+const next = position >= 0 ? lessons[position + 1] : undefined;
+
+// Writing that names this video as its companion.
+const companions = (await getArticles()).filter(
+  (a) => a.data.video?.id === video.id,
+);
+---
+
+<Base title={data.title} description={data.summary} active="videos">
+  <article>
+    <header class="container head">
+      <p class="kicker">
+        {series ? (
+          <>
+            <a href={seriesUrl(series)}>{series.data.title}</a>
+            {data.lesson && (
+              <>
+                <span class="sep">/</span>
+                <span class="muted">
+                  {lessonLabel(data.lesson)} of {lessons.length}
+                </span>
+              </>
+            )}
+          </>
+        ) : (
+          <a href="/videos/">Videos</a>
+        )}
+        {data.draft && <span class="example-badge">Example</span>}
+      </p>
+      <h1>{data.title}</h1>
+      <p class="standfirst">{data.summary}</p>
+    </header>
+
+    <div class="container stage">
+      <VideoPlayer youtubeId={data.youtubeId} title={data.title} />
+    </div>
+
+    <div class="container layout">
+      <div class="main">
+        {hasNotes && (
+          <section aria-label="Lesson notes">
+            <p class="label">Notes</p>
+            <div class="prose">
+              <Content />
+            </div>
+          </section>
+        )}
+
+        {data.takeaways.length > 0 && (
+          <section class="takeaways" aria-label="Key takeaways">
+            <p class="label">Key takeaways</p>
+            <ol>
+              {data.takeaways.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {companions.length > 0 && (
+          <section class="companions" aria-label="Read more">
+            <p class="label">Read the companion piece</p>
+            <ul>
+              {companions.map((a) => (
+                <li>
+                  <a href={articleUrl(a)}>{a.data.title}</a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <AuthorBox />
+      </div>
+
+      <aside class="side" aria-label="Video details">
+        <dl class="facts">
+          <div>
+            <dt>Published</dt>
+            <dd>{formatDate(data.date)}</dd>
+          </div>
+          {data.duration && (
+            <div>
+              <dt>Length</dt>
+              <dd>{data.duration}</dd>
+            </div>
+          )}
+          {data.topics.length > 0 && (
+            <div>
+              <dt>Topics</dt>
+              <dd>{data.topics.map((t) => TOPICS[t]).join(", ")}</dd>
+            </div>
+          )}
+        </dl>
+
+        {series && lessons.length > 1 && (
+          <nav class="series" aria-label={`Lessons in ${series.data.title}`}>
+            <p class="label">In this series</p>
+            <ol>
+              {lessons.map((l) => (
+                <li>
+                  <a
+                    href={videoUrl(l)}
+                    aria-current={l.id === video.id ? "page" : undefined}
+                  >
+                    {l.data.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+      </aside>
+    </div>
+
+    {(previous || next) && (
+      <nav class="container steps" aria-label="Previous and next lesson">
+        {previous ? (
+          <a href={videoUrl(previous)}>
+            <span class="label">← Previous lesson</span>
+            <span class="t">{previous.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )}
+        {next && (
+          <a href={videoUrl(next)} class="next">
+            <span class="label">Next lesson →</span>
+            <span class="t">{next.data.title}</span>
+          </a>
+        )}
+      </nav>
+    )}
+  </article>
+</Base>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .head > * {
+    max-width: 52rem;
+  }
+
+  .kicker a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .kicker a:hover {
+    text-decoration: underline;
+  }
+
+  .sep {
+    color: var(--color-line-strong);
+    margin-inline: 0.35rem;
+  }
+
+  .muted {
+    color: var(--color-muted);
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 5vw, 3.3rem);
+    line-height: 1.08;
+  }
+
+  .standfirst {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: clamp(2rem, 5vw, 3.5rem);
+    padding-top: clamp(2rem, 4vw, 3rem);
+  }
+
+  .main {
+    max-width: var(--reading-width);
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+  }
+
+  .main :global(.author) {
+    margin-top: 0.5rem;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+    margin-bottom: 0.6rem;
+  }
+
+  .takeaways {
+    border-top: 3px solid var(--color-accent);
+    padding-top: 1.25rem;
+  }
+
+  .takeaways ol,
+  .series ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    color: var(--color-body);
+  }
+
+  .companions ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .companions a {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    align-self: start;
+  }
+
+  .facts {
+    margin: 0;
+    border-left: 1px solid var(--color-line);
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+
+  .facts div {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .facts dt {
+    font-weight: 600;
+    color: var(--color-fg);
+  }
+
+  .facts dd {
+    margin: 0;
+  }
+
+  .series {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    padding: 1.1rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .series a {
+    color: var(--color-body);
+    text-decoration: none;
+  }
+
+  .series a:hover {
+    color: var(--color-teal);
+    text-decoration: underline;
+  }
+
+  .series a[aria-current="page"] {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  .steps {
+    margin-top: 3.5rem;
+    border-top: 1px solid var(--color-line);
+    padding-top: 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .steps a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    text-decoration: none;
+    max-width: 26rem;
+  }
+
+  .steps .next {
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .steps .label {
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .steps .t {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    color: var(--color-primary);
+  }
+
+  @media (max-width: 860px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    /* On phones: details above the notes, the series list after them. */
+    .side {
+      display: contents;
+    }
+    .facts {
+      order: -1;
+    }
+    .series {
+      order: 1;
+    }
+    .facts {
+      border-left: 0;
+      padding-left: 0;
+    }
+  }
+</style>

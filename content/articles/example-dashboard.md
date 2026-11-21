@@ -6,6 +6,7 @@ type: how-to
 topics: [evidence-learning, organisational-development]
 themes: [ai-digital]
 featured: false
+video: example-mel-basics-1
 draft: true # EXAMPLE – illustrates the design only; delete or replace with a real article
 ---
 

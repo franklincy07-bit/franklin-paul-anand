@@ -88,3 +88,37 @@ export function fieldNotesInOrder(articles: CollectionEntry<"articles">[]) {
       a.data.title.localeCompare(b.data.title),
   );
 }
+
+/**
+ * The lessons of one series, in teaching order: by lesson number, then by
+ * date for any without a number. Fails the build if two published lessons in
+ * the same series share a number.
+ */
+export function lessonsInSeries(
+  videos: CollectionEntry<"videos">[],
+  seriesId: string,
+) {
+  const lessons = videos.filter((v) => v.data.series?.id === seriesId);
+  const seen = new Map<number, string>();
+  for (const lesson of lessons) {
+    const n = lesson.data.lesson;
+    if (n == null || lesson.data.draft) continue;
+    if (seen.has(n)) {
+      throw new Error(
+        `Lesson number ${n} is used twice in series "${seriesId}": "${seen.get(n)}" and "${lesson.id}". Give each a different "lesson".`,
+      );
+    }
+    seen.set(n, lesson.id);
+  }
+  return [...lessons].sort(
+    (a, b) =>
+      (a.data.lesson ?? Number.MAX_SAFE_INTEGER) -
+        (b.data.lesson ?? Number.MAX_SAFE_INTEGER) ||
+      a.data.date.getTime() - b.data.date.getTime() ||
+      a.data.title.localeCompare(b.data.title),
+  );
+}
+
+/** "Lesson 01" style label. */
+export const lessonLabel = (n: number) =>
+  `Lesson ${String(n).padStart(2, "0")}`;

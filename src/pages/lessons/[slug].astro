@@ -1,0 +1,212 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import VideoThumb from "../../components/VideoThumb.astro";
+import { TOPICS } from "../../lib/taxonomy";
+import {
+  getSeries,
+  getVideos,
+  lessonLabel,
+  lessonsInSeries,
+  videoUrl,
+} from "../../lib/content";
+
+export async function getStaticPaths() {
+  const series = await getSeries();
+  const videos = await getVideos();
+  return series.map((s) => ({
+    params: { slug: s.id },
+    props: { series: s, lessons: lessonsInSeries(videos, s.id) },
+  }));
+}
+
+interface Props {
+  series: CollectionEntry<"series">;
+  lessons: CollectionEntry<"videos">[];
+}
+
+const { series, lessons } = Astro.props;
+const { data } = series;
+const { Content } = await render(series);
+const hasIntro = (series.body ?? "").trim().length > 0;
+---
+
+<Base title={data.title} description={data.summary} active="lessons">
+  <header class="container head">
+    <p class="kicker">
+      <a href="/lessons/">Lessons</a>
+      <span class="sep">/</span>
+      <span class="muted">
+        {lessons.length} {lessons.length === 1 ? "lesson" : "lessons"}
+      </span>
+      {data.draft && <span class="example-badge">Example</span>}
+    </p>
+    <h1>{data.title}</h1>
+    <p class="standfirst">{data.summary}</p>
+    {data.topics.length > 0 && (
+      <p class="topics">{data.topics.map((t) => TOPICS[t]).join(" · ")}</p>
+    )}
+    {lessons[0] && (
+      <a class="btn" href={videoUrl(lessons[0])}>
+        Start with lesson 1
+      </a>
+    )}
+  </header>
+
+  {hasIntro && (
+    <div class="container">
+      <div class="prose intro">
+        <Content />
+      </div>
+    </div>
+  )}
+
+  <section class="container" aria-label="Lessons in this series">
+    {lessons.length > 0 ? (
+      <ol class="lessons">
+        {lessons.map((l, i) => (
+          <li>
+            <a href={videoUrl(l)} class="lesson">
+              <VideoThumb
+                label={lessonLabel(l.data.lesson ?? i + 1)}
+                duration={l.data.duration}
+                published={!!l.data.youtubeId}
+              />
+              <span class="text">
+                <span class="kicker">
+                  {lessonLabel(l.data.lesson ?? i + 1)}
+                  {l.data.duration && (
+                    <span class="muted"> · {l.data.duration}</span>
+                  )}
+                </span>
+                <span class="title">{l.data.title}</span>
+                <span class="summary">{l.data.summary}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <div class="empty">
+        <p>The first lesson in this series is on its way.</p>
+      </div>
+    )}
+  </section>
+</Base>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 2.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .kicker a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .kicker a:hover {
+    text-decoration: underline;
+  }
+
+  .sep {
+    color: var(--color-line-strong);
+    margin-inline: 0.35rem;
+  }
+
+  .muted {
+    color: var(--color-muted);
+  }
+
+  h1 {
+    max-width: 52rem;
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.08;
+  }
+
+  .standfirst {
+    max-width: 44rem;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+  }
+
+  .topics {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+
+  .btn {
+    margin-top: 0.4rem;
+    background: var(--color-accent);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.1rem;
+    text-decoration: none;
+  }
+
+  .intro {
+    max-width: var(--reading-width);
+    margin-bottom: 2.5rem;
+  }
+
+  .lessons {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .lesson {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: center;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--color-line);
+    text-decoration: none;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    line-height: 1.22;
+    color: var(--color-fg);
+  }
+
+  .lesson:hover .title {
+    color: var(--color-teal);
+  }
+
+  .summary {
+    max-width: 42rem;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+
+  .empty {
+    background: var(--color-sand);
+    padding: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .lesson {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.9rem;
+    }
+  }
+</style>

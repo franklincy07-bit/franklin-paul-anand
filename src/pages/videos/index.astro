@@ -1,0 +1,185 @@
+---
+import Base from "../../layouts/Base.astro";
+import VideoThumb from "../../components/VideoThumb.astro";
+import { TOPICS } from "../../lib/taxonomy";
+import {
+  getProfile,
+  getSeries,
+  getVideos,
+  lessonLabel,
+  seriesUrl,
+  videoUrl,
+} from "../../lib/content";
+
+const profile = await getProfile();
+const videos = await getVideos();
+const series = await getSeries();
+const seriesTitle = (id?: string) =>
+  series.find((s) => s.id === id)?.data.title;
+---
+
+<Base
+  title="Videos"
+  description="Short videos on strategic leadership, organisational development and social impact."
+  active="videos"
+>
+  <section class="container head">
+    <p class="kicker">Videos</p>
+    <h1>Videos</h1>
+    <p class="intro">
+      Short videos on leadership, organisations and social impact – practical
+      ideas you can use with your team.
+    </p>
+    <p class="channel">
+      {profile.links.youtube ? (
+        <a class="btn" href={profile.links.youtube} rel="me noopener">
+          Subscribe on YouTube
+        </a>
+      ) : (
+        <span class="soon">YouTube channel coming soon</span>
+      )}
+      <a href="/lessons/">Browse lesson series →</a>
+    </p>
+  </section>
+
+  <section class="container" aria-label="All videos">
+    {videos.length > 0 ? (
+      <ul class="grid">
+        {videos.map((v) => {
+          const sTitle = seriesTitle(v.data.series?.id);
+          const label =
+            sTitle && v.data.lesson ? lessonLabel(v.data.lesson) : "Video";
+          const topic = v.data.topics[0];
+          return (
+            <li>
+              <a href={videoUrl(v)} class="card">
+                <VideoThumb
+                  label={label}
+                  duration={v.data.duration}
+                  published={!!v.data.youtubeId}
+                />
+                <span class="kicker">
+                  {sTitle
+                    ? `Series · ${sTitle}`
+                    : topic
+                      ? TOPICS[topic]
+                      : "Video"}
+                  {v.data.draft && <span class="example-badge">Example</span>}
+                </span>
+                <span class="title">{v.data.title}</span>
+                <span class="summary">{v.data.summary}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    ) : (
+      <div class="empty">
+        <p>
+          Videos will appear here once the YouTube channel launches. In the
+          meantime, the <a href="/writing/">writing</a> covers the same themes.
+        </p>
+      </div>
+    )}
+  </section>
+</Base>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+  }
+
+  .intro {
+    max-width: 44rem;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    line-height: 1.55;
+    color: var(--color-body);
+  }
+
+  .channel {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    font-weight: 600;
+  }
+
+  .btn {
+    background: var(--color-accent);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.1rem;
+    text-decoration: none;
+  }
+
+  .soon {
+    display: inline-block;
+    border: 1px dashed var(--color-line-strong);
+    padding: 0.5rem 0.85rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem 1.75rem;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    text-decoration: none;
+  }
+
+  .card .kicker {
+    margin-top: 0.4rem;
+  }
+
+  .title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    line-height: 1.25;
+    color: var(--color-fg);
+  }
+
+  .card:hover .title {
+    color: var(--color-teal);
+  }
+
+  .summary {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+  }
+
+  .empty {
+    background: var(--color-sand);
+    padding: 2rem;
+  }
+
+  @media (max-width: 960px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

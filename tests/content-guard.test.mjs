@@ -96,6 +96,22 @@ test("published story cards are complete or empty", () => {
   }
 });
 
+test("published lessons have unique numbers within each series", () => {
+  const seen = new Map();
+  for (const e of entries.filter(
+    (e) => e.path.startsWith("videos/") && e.data.draft !== true,
+  )) {
+    const { series, lesson } = e.data;
+    if (!series || lesson == null) continue;
+    const key = `${series}#${lesson}`;
+    assert.ok(
+      !seen.has(key),
+      `Lesson ${lesson} of series "${series}" is used by both ${seen.get(key)} and ${e.path}`,
+    );
+    seen.set(key, e.path);
+  }
+});
+
 test("the guard itself catches a published placeholder", () => {
   const fake = {
     path: "articles/fake.md",
