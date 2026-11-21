@@ -1,38 +1,33 @@
 /*
- * Franklin Paul Anand – "Bold teal" identity.
- * Clean white ground, deep teal bands, a bright aqua highlight.
- * Headings: Poppins. Body: Source Sans 3. Labels: IBM Plex Mono.
- * All fonts are self-hosted by the app (no requests to font services).
+ * Franklin Paul Anand – "Editorial" identity (approved Option D).
+ * Warm paper ground, deep teal, soft apricot accent.
+ * Headings: Newsreader (serif). Body: Inter. Both self-hosted by the app.
  *
- * Accessibility: aqua is for highlights on dark teal, highlighter marks
- * behind ink text, rules and button fills with dark text. Never use it for
- * text on white – it does not meet contrast requirements. Teal and ink pass
- * AA on white and on the mist panels.
+ * Accessibility: the apricot accent is decorative only (rules, underlines,
+ * button fills with dark text). Never use it for text on paper – it does not
+ * meet contrast requirements. Teal and ink pass AA on paper and white.
  */
 :root {
   /* Required shared tokens */
-  --color-bg: #ffffff;
+  --color-bg: #f6f1ea; /* paper */
   --color-surface: #ffffff;
-  --color-fg: #14262b; /* ink */
-  --color-muted: #4a5d62;
-  --color-accent: #8adcd2; /* aqua – highlights on teal, rules, buttons */
-  --font-body: "Source Sans 3 Variable", var(--font-sans);
-  --font-heading: "Poppins", var(--font-sans);
-  --font-label: "IBM Plex Mono", var(--font-mono);
+  --color-fg: #1e2a30; /* ink */
+  --color-muted: #4a5a60;
+  --color-accent: #e07a4f; /* apricot – decorative */
+  --font-body: "Inter Variable", var(--font-sans);
+  --font-heading: "Newsreader Variable", var(--font-serif);
 
   /* Franklin Paul Anand palette */
-  --color-primary: #12343b; /* deep teal: header, hero, dark bands */
-  --color-primary-deep: #0c262c; /* strip under the hero, footer */
-  --color-teal: #0f5257; /* links, labels */
+  --color-primary: #12343b; /* deep teal-navy: header, footer, dark panels */
+  --color-teal: #0f5257; /* links, labels, kickers */
   --color-teal-dark: #0a3b3f;
-  --color-highlight: #c9f0ea; /* highlighter mark behind ink text */
-  --color-sand: #eef5f4; /* soft panels (mist) */
-  --color-mist: #dcebe8; /* placeholder tiles */
-  --color-line: #d5e2e0; /* dividers */
-  --color-line-strong: #b4c9c6;
+  --color-sand: #e9dfd2; /* soft panels */
+  --color-mist: #dce8e6; /* placeholder tiles */
+  --color-line: #ddd3c6; /* dividers */
+  --color-line-strong: #c9bba9;
   --color-on-dark: #ffffff;
-  --color-on-dark-muted: #c6dedb;
-  --color-body: #26383d; /* long-form reading text */
+  --color-on-dark-muted: #c9dedc;
+  --color-body: #2c3a40; /* long-form reading text */
 
   --content-width: 1180px;
   --reading-width: 720px;
