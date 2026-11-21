@@ -1,6 +1,0 @@
-# Cloudflare Pages configuration for the franklin-paul-anand site.
-# Deployed by .github/workflows/deploy-franklin-paul-anand.yml (Direct Upload via Wrangler).
-# The Cloudflare project is created automatically on the first deploy.
-name = "franklin-paul-anand"
-pages_build_output_dir = "./dist"
-compatibility_date = "2026-11-01"

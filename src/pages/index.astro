@@ -1,9 +1,9 @@
 ---
+import { link } from "../lib/paths";
 import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import ArticleListItem from "../components/ArticleListItem.astro";
 import headshot from "../assets/franklin-headshot.webp";
-import candid from "../assets/franklin-candid.jpg";
 import { ARTICLE_TYPES, TOPICS } from "../lib/taxonomy";
 import {
   articleUrl,
@@ -35,7 +35,7 @@ const lessonCount = (id: string) =>
   jsonLd={{
     "@type": "Person",
     name: profile.name,
-    url: new URL("/", Astro.site).href,
+    url: new URL(link("/"), Astro.site).href,
     description: profile.anchorLine,
     sameAs: [profile.links.linkedin, profile.links.youtube].filter(Boolean),
   }}
@@ -76,13 +76,12 @@ const lessonCount = (id: string) =>
         </span>
       </a>
 
-      <a class="tile tile-photo" href="/lessons/">
-        <Image
-          src={candid}
-          alt="Franklin at a youth conference"
-          widths={[400, 800]}
-          sizes="(max-width: 860px) 100vw, 380px"
-        />
+      <a class="tile tile-teal" href={link("/lessons/")}>
+        <span class="tile-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="30" height="30" focusable="false">
+            <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
+          </svg>
+        </span>
         <span class="tile-overlay">
           <span class="tag">Lessons</span>
           <span class="tile-title">
@@ -100,7 +99,7 @@ const lessonCount = (id: string) =>
           <span class="tile-title dark">{secondary.data.title}</span>
         </a>
       ) : (
-        <a class="tile tile-sand" href="/about/">
+        <a class="tile tile-sand" href={link("/about/")}>
           <span class="tag tag-dark">About</span>
           <span class="tile-title dark">
             From community programmes to organisational leadership – read my
@@ -114,7 +113,7 @@ const lessonCount = (id: string) =>
       <p class="kicker">Writing</p>
       <p>
         The first articles are being written. In the meantime,{" "}
-        <a href="/about/">read my story</a>.
+        <a href={link("/about/")}>read my story</a>.
       </p>
     </section>
   )}
@@ -131,7 +130,9 @@ const lessonCount = (id: string) =>
           <li>
             <span class="level-no">0{i + 1}</span>
             <h3>
-              <a href={`/writing/topic/${area.topic}/`}>{TOPICS[area.topic]}</a>
+              <a href={link(`/writing/topic/${area.topic}/`)}>
+                {TOPICS[area.topic]}
+              </a>
             </h3>
             <p>{area.summary}</p>
           </li>
@@ -155,7 +156,7 @@ const lessonCount = (id: string) =>
       ) : (
         <p class="muted-note">More articles are on their way.</p>
       )}
-      <a class="more" href="/writing/">
+      <a class="more" href={link("/writing/")}>
         All writing →
       </a>
     </section>
@@ -172,7 +173,7 @@ const lessonCount = (id: string) =>
         {profile.shortBio.map((para) => (
           <p>{para}</p>
         ))}
-        <a class="caps-link" href="/about/">
+        <a class="caps-link" href={link("/about/")}>
           Read my story
         </a>
       </div>
@@ -182,7 +183,7 @@ const lessonCount = (id: string) =>
         <ul>
           {Object.entries(TOPICS).map(([key, label]) => (
             <li>
-              <a href={`/writing/topic/${key}/`}>{label}</a>
+              <a href={link(`/writing/topic/${key}/`)}>{label}</a>
             </li>
           ))}
         </ul>
@@ -391,13 +392,26 @@ const lessonCount = (id: string) =>
     min-height: 16.5rem;
   }
 
-  .tile-photo :global(img) {
+  .tile-teal {
+    background: var(--color-teal);
+  }
+
+  .tile-play {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 25%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -75%);
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 50%;
+    border: 2px solid var(--color-on-dark-muted);
+    color: var(--color-on-dark);
+  }
+
+  .tile-play svg {
+    margin-left: 4px;
   }
 
   .tile-overlay {

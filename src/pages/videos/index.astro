@@ -1,4 +1,5 @@
 ---
+import { link } from "../../lib/paths";
 import Base from "../../layouts/Base.astro";
 import VideoTile from "../../components/VideoTile.astro";
 import { TOPICS } from "../../lib/taxonomy";
@@ -59,7 +60,7 @@ const showLatest = videos.length > 3;
       ) : (
         <span class="soon">YouTube channel coming soon</span>
       )}
-      <a href="/lessons/">Browse lesson series →</a>
+      <a href={link("/lessons/")}>Browse lesson series →</a>
     </p>
   </section>
 
@@ -68,7 +69,8 @@ const showLatest = videos.length > 3;
       <div class="empty">
         <p>
           Videos will appear here once the YouTube channel launches. In the
-          meantime, the <a href="/writing/">writing</a> covers the same themes.
+          meantime, the <a href={link("/writing/")}>writing</a> covers the same
+          themes.
         </p>
       </div>
     </section>

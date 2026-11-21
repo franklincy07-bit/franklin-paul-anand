@@ -1,6 +1,7 @@
 ---
-import "@fde/brand/base.css";
-import "@fde/brand/franklin-paul-anand.css";
+import { link } from "../lib/paths";
+import "../styles/brand/base.css";
+import "../styles/brand/franklin-paul-anand.css";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/newsreader/opsz.css";
 import "@fontsource-variable/newsreader/opsz-italic.css";
@@ -38,12 +39,14 @@ const {
 } = Astro.props;
 const pageTitle = title ? `${title} · ${SITE_NAME}` : SITE_NAME;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+// The "page not found" page has no address of its own, so it declares none.
+const isNotFound = /\/404(\.html)?\/?$/.test(Astro.url.pathname);
 const shareImage = image
   ? new URL(
       (await getImage({ src: image, width: 1200, format: "jpeg" })).src,
       Astro.site,
     )
-  : new URL("/og-default.png", Astro.site);
+  : new URL(link("/og-default.png"), Astro.site);
 const shareAlt = image
   ? (imageAlt ?? "")
   : `${SITE_NAME}: ${DEFAULT_DESCRIPTION}`;
@@ -58,20 +61,20 @@ const shareAlt = image
     <meta name="description" content={description} />
     {/* Not launched yet: ALLOW_INDEXING in src/lib/site.ts keeps the site out of search engines. */}
     {!ALLOW_INDEXING && <meta name="robots" content="noindex, nofollow" />}
-    <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {!isNotFound && <link rel="canonical" href={canonical} />}
+    <link rel="icon" type="image/svg+xml" href={link("/favicon.svg")} />
     <link
       rel="alternate"
       type="application/rss+xml"
       title={`${SITE_NAME} – Writing`}
-      href={new URL("/rss.xml", Astro.site)}
+      href={new URL(link("/rss.xml"), Astro.site)}
     />
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:locale" content="en_GB" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
-    <meta property="og:url" content={canonical} />
+    {!isNotFound && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={shareImage} />
     <meta property="og:image:alt" content={shareAlt} />
     {published && (

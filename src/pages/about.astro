@@ -1,8 +1,8 @@
 ---
+import { link } from "../lib/paths";
 import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import headshot from "../assets/franklin-headshot.webp";
-import candid from "../assets/franklin-candid.jpg";
 import { TOPICS } from "../lib/taxonomy";
 import { getProfile } from "../lib/content";
 
@@ -130,12 +130,6 @@ const years = (from: string | number, to?: string | number) =>
   <!-- Beyond the job title: shown only once the owner has written it -->
   {profile.beyondTheTitle && profile.beyondTheTitle.length > 0 && (
     <section class="container beyond" aria-labelledby="beyond-title">
-      <Image
-        src={candid}
-        alt="Franklin at a youth conference"
-        widths={[560, 1100]}
-        sizes="(max-width: 860px) 100vw, 560px"
-      />
       <div class="beyond-text">
         <p class="kicker light">Beyond the job title</p>
         <h2 id="beyond-title">Serious about systems. Human about people.</h2>
@@ -155,7 +149,7 @@ const years = (from: string | number, to?: string | number) =>
         speaking and writing.
       </p>
     </div>
-    <a class="btn" href="/work-with-me/">
+    <a class="btn" href={link("/work-with-me/")}>
       Work with me
     </a>
   </section>
@@ -329,22 +323,13 @@ const years = (from: string | number, to?: string | number) =>
   /* Beyond the job title */
   .beyond {
     margin-top: clamp(3rem, 6vw, 4.5rem);
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     background: var(--color-primary);
     color: var(--color-on-dark-muted);
     padding: 0;
   }
 
-  .beyond :global(img) {
-    width: 100%;
-    height: 100%;
-    min-height: 20rem;
-    object-fit: cover;
-    object-position: center 25%;
-  }
-
   .beyond-text {
+    max-width: 46rem;
     padding: clamp(1.75rem, 4vw, 3rem);
     display: flex;
     flex-direction: column;
@@ -406,8 +391,7 @@ const years = (from: string | number, to?: string | number) =>
 
   @media (max-width: 860px) {
     .intro,
-    .record,
-    .beyond {
+    .record {
       grid-template-columns: minmax(0, 1fr);
     }
     .intro :global(.intro-photo) {

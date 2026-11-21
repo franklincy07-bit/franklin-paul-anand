@@ -1,4 +1,5 @@
 ---
+import { link } from "../lib/paths";
 // The Writing page and its filtered views (by type and by topic).
 import type { CollectionEntry } from "astro:content";
 import ArticleListItem from "./ArticleListItem.astro";
@@ -29,7 +30,7 @@ const topics = Object.entries(TOPICS);
       <ul>
         <li>
           <a
-            href="/writing/"
+            href={link("/writing/")}
             aria-current={activeKey === "all" ? "page" : undefined}
           >
             All writing
@@ -38,7 +39,7 @@ const topics = Object.entries(TOPICS);
         {types.map(([key, t]) => (
           <li>
             <a
-              href={`/writing/type/${key}/`}
+              href={link(`/writing/type/${key}/`)}
               aria-current={activeKey === key ? "page" : undefined}
             >
               {t.label}
@@ -53,7 +54,7 @@ const topics = Object.entries(TOPICS);
         {topics.map(([key, label]) => (
           <li>
             <a
-              href={`/writing/topic/${key}/`}
+              href={link(`/writing/topic/${key}/`)}
               aria-current={activeKey === key ? "page" : undefined}
             >
               {label}
@@ -81,7 +82,7 @@ const topics = Object.entries(TOPICS);
     ) : (
       <div class="empty">
         <p>Nothing here yet – new writing is on its way.</p>
-        {activeKey !== "all" && <a href="/writing/">See all writing</a>}
+        {activeKey !== "all" && <a href={link("/writing/")}>See all writing</a>}
       </div>
     )}
   </div>

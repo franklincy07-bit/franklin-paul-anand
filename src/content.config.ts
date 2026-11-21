@@ -3,11 +3,11 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { ARTICLE_TYPE_KEYS, THEME_KEYS, TOPIC_KEYS } from "./lib/taxonomy";
 
-// All Franklin Paul Anand content lives in /content/franklin-paul-anand at the
-// repository root, so it can be edited without touching code.
-// See content/README.md and content/franklin-paul-anand/_templates/.
+// All Franklin Paul Anand content lives in /content at the repository root,
+// so it can be edited without touching code.
+// See content/README.md and content/_templates/.
 // Files and folders starting with "_" are ignored.
-const CONTENT = "../../content/franklin-paul-anand";
+const CONTENT = "./content";
 
 const topics = z.array(z.enum(TOPIC_KEYS)).default([]);
 

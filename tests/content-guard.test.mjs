@@ -1,12 +1,12 @@
 // Guards against publishing placeholder content on the Franklin Paul Anand
-// site. Runs in CI via `pnpm verify:config`.
+// site. Runs in CI via `pnpm test`.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 
-const ROOT = "content/franklin-paul-anand";
+const ROOT = "content";
 const FOLDERS = ["articles", "videos", "series"];
 
 // Text that only appears in example files and templates.
@@ -124,11 +124,8 @@ test("the guard itself catches a published placeholder", () => {
 test("the Franklin Paul Anand site stays out of search engines until launch", () => {
   // Change ALLOW_INDEXING (and this test) only at launch, with the owner's
   // approval.
-  const site = readFileSync("apps/franklin-paul-anand/src/lib/site.ts", "utf8");
+  const site = readFileSync("src/lib/site.ts", "utf8");
   assert.match(site, /export const ALLOW_INDEXING = false;/);
-  const base = readFileSync(
-    "apps/franklin-paul-anand/src/layouts/Base.astro",
-    "utf8",
-  );
+  const base = readFileSync("src/layouts/Base.astro", "utf8");
   assert.ok(base.includes('content="noindex, nofollow"'));
 });

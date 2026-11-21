@@ -1,15 +1,22 @@
 {
-  "name": "@fde/franklin-paul-anand",
+  "name": "franklin-paul-anand",
   "version": "0.0.0",
   "private": true,
+  "description": "The Franklin Paul Anand website, built with Astro and hosted on GitHub Pages.",
   "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "typecheck": "astro check",
-    "deploy": "wrangler pages deploy --branch=main",
-    "preview:cloudflare": "wrangler pages dev"
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "pnpm format:check && pnpm test && pnpm typecheck && pnpm build"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.1.6",
@@ -21,8 +28,17 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
-    "@fde/brand": "workspace:*",
+    "@emnapi/core": "^1.11.3",
+    "@emnapi/runtime": "^1.11.3",
+    "prettier": "^3.10.1",
+    "prettier-plugin-astro": "^1.1.2",
     "typescript": "^6.0.3",
-    "wrangler": "4.165.0"
+    "yaml": "^2.9.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }

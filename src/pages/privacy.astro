@@ -1,4 +1,5 @@
 ---
+import { link } from "../lib/paths";
 import Base from "../layouts/Base.astro";
 import { getProfile } from "../lib/content";
 
@@ -117,7 +118,7 @@ const policies = {
       {hasForm ? (
         <p>
           If you have a question about your information, please use the{" "}
-          <a href="/work-with-me/#contact">contact form</a>.
+          <a href={link("/work-with-me/#contact")}>contact form</a>.
         </p>
       ) : profile.links.linkedin ? (
         <p>

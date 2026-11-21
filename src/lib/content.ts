@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from "astro:content";
+import { link } from "./paths";
 
 // Drafts (including the example placeholders) are visible only in local
 // development previews, never on the published site.
@@ -34,10 +35,7 @@ export async function getProfile(): Promise<
   CollectionEntry<"profile">["data"]
 > {
   const [entry] = await getCollection("profile");
-  if (!entry)
-    throw new Error(
-      "content/franklin-paul-anand/profile/profile.yaml is missing",
-    );
+  if (!entry) throw new Error("content/profile/profile.yaml is missing");
   return entry.data;
 }
 
@@ -56,11 +54,11 @@ export function formatDate(date: Date): string {
 }
 
 export const articleUrl = (entry: CollectionEntry<"articles">) =>
-  `/writing/${entry.id}/`;
+  link(`/writing/${entry.id}/`);
 export const videoUrl = (entry: CollectionEntry<"videos">) =>
-  `/videos/${entry.id}/`;
+  link(`/videos/${entry.id}/`);
 export const seriesUrl = (entry: CollectionEntry<"series">) =>
-  `/lessons/${entry.id}/`;
+  link(`/lessons/${entry.id}/`);
 
 /**
  * Field Notes in reading order: by entry number (oldest first), then by date

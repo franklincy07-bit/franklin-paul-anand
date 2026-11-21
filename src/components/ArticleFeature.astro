@@ -1,4 +1,5 @@
 ---
+import { link } from "../lib/paths";
 // "Feature" layout – used for Insights and How-To articles.
 import { Image } from "astro:assets";
 import type { MarkdownHeading } from "astro";
@@ -77,7 +78,7 @@ const shareEmail = `mailto:?subject=${encodeURIComponent(data.title)}&body=${enc
           <ul class="chips">
             {data.topics.map((t) => (
               <li>
-                <a href={`/writing/topic/${t}/`}>{TOPICS[t]}</a>
+                <a href={link(`/writing/topic/${t}/`)}>{TOPICS[t]}</a>
               </li>
             ))}
           </ul>

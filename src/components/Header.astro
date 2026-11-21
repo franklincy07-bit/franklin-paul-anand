@@ -1,4 +1,5 @@
 ---
+import { link } from "../lib/paths";
 // Site header with main navigation. On small screens the links move into a
 // menu that opens with a button (built on <details>, so it works without
 // JavaScript and with the keyboard).
@@ -14,19 +15,24 @@ const { active } = Astro.props;
 // Main navigation. Opportunities will sit between Lessons and About once that
 // section is built (a separate phase).
 const links: { key: NavKey; href: string; label: string; quiet?: boolean }[] = [
-  { key: "home", href: "/", label: "Home" },
-  { key: "writing", href: "/writing/", label: "Writing" },
-  { key: "videos", href: "/videos/", label: "Videos" },
-  { key: "lessons", href: "/lessons/", label: "Lessons" },
-  { key: "about", href: "/about/", label: "About" },
-  { key: "work", href: "/work-with-me/", label: "Work With Me", quiet: true },
+  { key: "home", href: link("/"), label: "Home" },
+  { key: "writing", href: link("/writing/"), label: "Writing" },
+  { key: "videos", href: link("/videos/"), label: "Videos" },
+  { key: "lessons", href: link("/lessons/"), label: "Lessons" },
+  { key: "about", href: link("/about/"), label: "About" },
+  {
+    key: "work",
+    href: link("/work-with-me/"),
+    label: "Work With Me",
+    quiet: true,
+  },
 ];
 ---
 
 <header class="site-header">
   <div class="container bar">
     <a
-      href="/"
+      href={link("/")}
       class="wordmark"
       aria-current={active === "home" ? "page" : undefined}
     >

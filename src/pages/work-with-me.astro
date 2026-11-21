@@ -1,4 +1,5 @@
 ---
+import { link } from "../lib/paths";
 import Base from "../layouts/Base.astro";
 import { getProfile } from "../lib/content";
 
@@ -101,7 +102,7 @@ const { workWithMe, links } = profile;
         <div class="field wide submit">
           <span class="privacy">
             Your details are used only to reply to you.{" "}
-            <a href="/privacy/">Privacy</a>
+            <a href={link("/privacy/")}>Privacy</a>
           </span>
           <button type="submit">Send message</button>
         </div>

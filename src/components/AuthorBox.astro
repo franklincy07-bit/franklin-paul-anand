@@ -1,4 +1,5 @@
 ---
+import { link } from "../lib/paths";
 import { Image } from "astro:assets";
 import headshot from "../assets/franklin-headshot.webp";
 import { getProfile } from "../lib/content";
@@ -30,8 +31,8 @@ const profile = await getProfile();
       organisational development and social impact. Views are my own.
     </p>
     <p class="links">
-      <a href="/about/">Read my story</a>
-      <a href="/work-with-me/">Ways to work together</a>
+      <a href={link("/about/")}>Read my story</a>
+      <a href={link("/work-with-me/")}>Ways to work together</a>
     </p>
   </div>
 </aside>

@@ -1,4 +1,5 @@
 ---
+import { link } from "../../lib/paths";
 import { getEntry, render, type CollectionEntry } from "astro:content";
 import Base from "../../layouts/Base.astro";
 import ArticleJournal from "../../components/ArticleJournal.astro";
@@ -58,7 +59,7 @@ const related = [
     author: {
       "@type": "Person",
       name: "Franklin Paul Anand",
-      url: new URL("/about/", Astro.site).href,
+      url: new URL(link("/about/"), Astro.site).href,
     },
   }}
 >
