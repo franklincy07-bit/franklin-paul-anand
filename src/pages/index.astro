@@ -1,6 +1,7 @@
 ---
 import { link } from "../lib/paths";
 import { Image } from "astro:assets";
+import candid from "../assets/franklin-candid.jpg";
 import Base from "../layouts/Base.astro";
 import ArticleListItem from "../components/ArticleListItem.astro";
 import headshot from "../assets/franklin-headshot.webp";
@@ -76,12 +77,13 @@ const lessonCount = (id: string) =>
         </span>
       </a>
 
-      <a class="tile tile-teal" href={link("/lessons/")}>
-        <span class="tile-play" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="30" height="30" focusable="false">
-            <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
-          </svg>
-        </span>
+      <a class="tile tile-photo" href={link("/lessons/")}>
+        <Image
+          src={candid}
+          alt="Franklin at a youth conference"
+          widths={[400, 800]}
+          sizes="(max-width: 860px) 100vw, 380px"
+        />
         <span class="tile-overlay">
           <span class="tag">Lessons</span>
           <span class="tile-title">
@@ -392,25 +394,13 @@ const lessonCount = (id: string) =>
     min-height: 16.5rem;
   }
 
-  .tile-teal {
-    background: var(--color-teal);
-  }
-
-  /* Centred in the space above the caption. */
-  .tile-play {
-    align-self: center;
-    margin: auto 0;
-    display: grid;
-    place-items: center;
-    width: 4.5rem;
-    height: 4.5rem;
-    border-radius: 50%;
-    border: 2px solid var(--color-on-dark-muted);
-    color: var(--color-on-dark);
-  }
-
-  .tile-play svg {
-    margin-left: 4px;
+  .tile-photo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
   }
 
   .tile-overlay {
