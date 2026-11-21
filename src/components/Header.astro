@@ -9,9 +9,12 @@ interface Props {
   active?: NavKey;
 }
 
-const { active = "home" } = Astro.props;
+const { active } = Astro.props;
 
+// Main navigation. Opportunities will sit between Lessons and About once that
+// section is built (a separate phase).
 const links: { key: NavKey; href: string; label: string; quiet?: boolean }[] = [
+  { key: "home", href: "/", label: "Home" },
   { key: "writing", href: "/writing/", label: "Writing" },
   { key: "videos", href: "/videos/", label: "Videos" },
   { key: "lessons", href: "/lessons/", label: "Lessons" },
@@ -80,11 +83,6 @@ const links: { key: NavKey; href: string; label: string; quiet?: boolean }[] = [
       </summary>
       <nav aria-label="Main (mobile)">
         <ul>
-          <li>
-            <a href="/" aria-current={active === "home" ? "page" : undefined}>
-              Home
-            </a>
-          </li>
           {links.map((l) => (
             <li>
               <a

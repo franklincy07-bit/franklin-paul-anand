@@ -45,6 +45,22 @@ const related = [
   title={article.data.title}
   description={article.data.summary}
   active="writing"
+  type="article"
+  published={article.data.date}
+  image={article.data.cover}
+  imageAlt={article.data.coverAlt}
+  jsonLd={{
+    "@type": "Article",
+    headline: article.data.title,
+    description: article.data.summary,
+    datePublished: article.data.date.toISOString(),
+    url: pageUrl.href,
+    author: {
+      "@type": "Person",
+      name: "Franklin Paul Anand",
+      url: new URL("/about/", Astro.site).href,
+    },
+  }}
 >
   {layout === "journal" ? (
     <ArticleJournal

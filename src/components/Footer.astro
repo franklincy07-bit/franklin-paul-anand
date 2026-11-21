@@ -51,7 +51,10 @@ const year = new Date().getFullYear();
     <span>
       © {year} {profile.name}. Views are my own.
     </span>
-    <a href="/privacy/">Privacy</a>
+    <span class="legal-links">
+      <a href="/rss.xml">RSS</a>
+      <a href="/privacy/">Privacy</a>
+    </span>
   </div>
 </footer>
 
@@ -105,6 +108,11 @@ const year = new Date().getFullYear();
 
   a:hover {
     color: var(--color-on-dark-muted);
+  }
+
+  .legal-links {
+    display: flex;
+    gap: 1.5rem;
   }
 
   .legal {

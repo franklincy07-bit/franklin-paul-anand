@@ -1,21 +1,42 @@
 ---
 import Base from "../../layouts/Base.astro";
-import VideoThumb from "../../components/VideoThumb.astro";
+import VideoTile from "../../components/VideoTile.astro";
 import { TOPICS } from "../../lib/taxonomy";
 import {
   getProfile,
   getSeries,
   getVideos,
-  lessonLabel,
+  lessonsInSeries,
   seriesUrl,
-  videoUrl,
 } from "../../lib/content";
 
 const profile = await getProfile();
-const videos = await getVideos();
+const videos = await getVideos(); // newest first
 const series = await getSeries();
+
+// 1. Latest: the newest few videos, for visitors looking for something recent.
+const latest = videos.slice(0, 3);
+// 2. Series: every series with its lessons in teaching order.
+const groups = series
+  .map((s) => ({ s, lessons: lessonsInSeries(videos, s.id) }))
+  .filter((g) => g.lessons.length > 0);
+// 3. Other videos that are not part of a series, newest first.
+const inSeries = new Set(groups.map((g) => g.s.id));
+const standalone = videos.filter(
+  (v) => !v.data.series || !inSeries.has(v.data.series.id),
+);
+
 const seriesTitle = (id?: string) =>
   series.find((s) => s.id === id)?.data.title;
+const kickerFor = (v: (typeof videos)[number]) => {
+  const t = seriesTitle(v.data.series?.id);
+  if (t) return t;
+  const topic = v.data.topics[0];
+  return topic ? TOPICS[topic] : "Video";
+};
+// Only show a separate "Latest" strip when it adds something: with three or
+// fewer videos in total, the full list below already shows everything.
+const showLatest = videos.length > 3;
 ---
 
 <Base
@@ -42,51 +63,83 @@ const seriesTitle = (id?: string) =>
     </p>
   </section>
 
-  <section class="container" aria-label="All videos">
-    {videos.length > 0 ? (
-      <ul class="grid">
-        {videos.map((v) => {
-          const sTitle = seriesTitle(v.data.series?.id);
-          const label =
-            sTitle && v.data.lesson ? lessonLabel(v.data.lesson) : "Video";
-          const topic = v.data.topics[0];
-          return (
-            <li>
-              <a href={videoUrl(v)} class="card">
-                <VideoThumb
-                  label={label}
-                  duration={v.data.duration}
-                  published={!!v.data.youtubeId}
-                />
-                <span class="kicker">
-                  {sTitle
-                    ? `Series · ${sTitle}`
-                    : topic
-                      ? TOPICS[topic]
-                      : "Video"}
-                  {v.data.draft && <span class="example-badge">Example</span>}
-                </span>
-                <span class="title">{v.data.title}</span>
-                <span class="summary">{v.data.summary}</span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    ) : (
+  {videos.length === 0 && (
+    <section class="container">
       <div class="empty">
         <p>
           Videos will appear here once the YouTube channel launches. In the
           meantime, the <a href="/writing/">writing</a> covers the same themes.
         </p>
       </div>
-    )}
-  </section>
+    </section>
+  )}
+
+  {showLatest && (
+    <section class="container block" aria-labelledby="latest-title">
+      <div class="section-title">
+        <h2 id="latest-title">Latest videos</h2>
+      </div>
+      <ul class="grid">
+        {latest.map((v) => (
+          <li>
+            <VideoTile video={v} kicker={kickerFor(v)} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {groups.map(({ s, lessons }) => (
+    <section class="container block" aria-labelledby={`series-${s.id}`}>
+      <div class="group-head">
+        <div>
+          <p class="kicker">
+            Series · {lessons.length}{" "}
+            {lessons.length === 1 ? "lesson" : "lessons"}
+            {s.data.draft && <span class="example-badge">Example</span>}
+          </p>
+          <h2 id={`series-${s.id}`}>{s.data.title}</h2>
+        </div>
+        <a href={seriesUrl(s)} class="all">
+          View the series →
+        </a>
+      </div>
+      <ol class="grid">
+        {lessons.map((v) => (
+          <li>
+            <VideoTile
+              video={v}
+              kicker={
+                v.data.topics[0] ? TOPICS[v.data.topics[0]] : s.data.title
+              }
+            />
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+
+  {standalone.length > 0 && (
+    <section class="container block" aria-labelledby="other-title">
+      <div class="section-title">
+        <h2 id="other-title">
+          {groups.length > 0 ? "More videos" : "All videos"}
+        </h2>
+      </div>
+      <ul class="grid">
+        {standalone.map((v) => (
+          <li>
+            <VideoTile video={v} kicker={kickerFor(v)} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 </Base>
 
 <style>
   .head {
-    padding-block: clamp(2.5rem, 6vw, 4rem) 2.25rem;
+    padding-block: clamp(2.5rem, 6vw, 4rem) 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.9rem;
@@ -130,6 +183,31 @@ const seriesTitle = (id?: string) =>
     font-weight: 500;
   }
 
+  .block {
+    padding-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .group-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem 2rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--color-line);
+    padding-bottom: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .group-head h2 {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    margin-top: 0.35rem;
+  }
+
+  .all {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
   .grid {
     list-style: none;
     margin: 0;
@@ -137,33 +215,6 @@ const seriesTitle = (id?: string) =>
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2.5rem 1.75rem;
-  }
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
-    text-decoration: none;
-  }
-
-  .card .kicker {
-    margin-top: 0.4rem;
-  }
-
-  .title {
-    font-family: var(--font-heading);
-    font-size: 1.35rem;
-    line-height: 1.25;
-    color: var(--color-fg);
-  }
-
-  .card:hover .title {
-    color: var(--color-teal);
-  }
-
-  .summary {
-    font-size: 0.95rem;
-    color: var(--color-muted);
   }
 
   .empty {

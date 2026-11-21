@@ -120,3 +120,15 @@ test("the guard itself catches a published placeholder", () => {
   };
   assert.ok(PLACEHOLDERS.some((p) => fake.text.includes(p)));
 });
+
+test("the Franklin Paul Anand site stays out of search engines until launch", () => {
+  // Change ALLOW_INDEXING (and this test) only at launch, with the owner's
+  // approval.
+  const site = readFileSync("apps/franklin-paul-anand/src/lib/site.ts", "utf8");
+  assert.match(site, /export const ALLOW_INDEXING = false;/);
+  const base = readFileSync(
+    "apps/franklin-paul-anand/src/layouts/Base.astro",
+    "utf8",
+  );
+  assert.ok(base.includes('content="noindex, nofollow"'));
+});

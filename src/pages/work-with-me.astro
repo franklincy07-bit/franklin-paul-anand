@@ -30,7 +30,11 @@ const { workWithMe, links } = profile;
     <p class="note">{workWithMe.note}</p>
   </section>
 
-  <section class="container contact" aria-labelledby="contact-title">
+  <section
+    class="container contact"
+    id="contact"
+    aria-labelledby="contact-title"
+  >
     <div class="contact-intro">
       <h2 id="contact-title">Get in touch</h2>
       <p>Tell me a little about what you're working on.</p>
@@ -96,7 +100,8 @@ const { workWithMe, links } = profile;
         />
         <div class="field wide submit">
           <span class="privacy">
-            Your details are used only to reply to you.
+            Your details are used only to reply to you.{" "}
+            <a href="/privacy/">Privacy</a>
           </span>
           <button type="submit">Send message</button>
         </div>

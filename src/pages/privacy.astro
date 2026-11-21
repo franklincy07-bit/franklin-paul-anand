@@ -1,0 +1,153 @@
+---
+import Base from "../layouts/Base.astro";
+import { getProfile } from "../lib/content";
+
+const profile = await getProfile();
+const hasForm = !!profile.links.contactForm;
+// Update this date whenever the wording below changes.
+const updated = "21 November 2026";
+const policies = {
+  cloudflare: "https://www.cloudflare.com/privacypolicy/",
+  formspree: "https://formspree.io/legal/privacy-policy/",
+  google: "https://policies.google.com/privacy",
+};
+---
+
+<Base title="Privacy" description="How this website handles your information.">
+  <article class="container page">
+    <header class="head">
+      <p class="kicker">Privacy</p>
+      <h1>Privacy</h1>
+      <p class="standfirst">
+        This is a personal website. It collects as little information as
+        possible.
+      </p>
+      <p class="updated">Last updated: {updated}</p>
+    </header>
+
+    <div class="prose">
+      <h2>Who runs this website</h2>
+      <p>
+        This website is run personally by {profile.name}. It is not run by, or
+        on behalf of, any employer or organisation, and the views on it are my
+        own.
+      </p>
+
+      <h2>No tracking or advertising</h2>
+      <p>
+        This website does not use cookies, analytics, advertising or tracking
+        tools. The fonts are served from this website itself, not from a third
+        party.
+      </p>
+
+      <h2>Hosting</h2>
+      <p>
+        The website is hosted by Cloudflare. Like any web host, Cloudflare
+        processes technical information such as your IP address and browser type
+        to deliver pages and protect the website from abuse.
+      </p>
+      <p>
+        More information:{" "}
+        <a href={policies.cloudflare} rel="noopener">
+          Cloudflare's privacy policy
+        </a>
+        .
+      </p>
+
+      <h2>Contact form</h2>
+      {hasForm ? (
+        <>
+          <p>
+            If you use the contact form, the details you enter (your name, email
+            address and message) are sent through Formspree, a form service, and
+            delivered to me by email. I use them only to reply to you. I don't
+            add you to a mailing list, and I don't share or sell your details.
+            You can ask me to delete your message at any time.
+          </p>
+          <p>
+            More information:{" "}
+            <a href={policies.formspree} rel="noopener">
+              Formspree's privacy policy
+            </a>
+            .
+          </p>
+        </>
+      ) : (
+        <p>
+          There is no contact form yet. When one is added, this page will
+          explain how messages are handled before the form goes live.
+        </p>
+      )}
+
+      <h2>Videos</h2>
+      <p>
+        Videos are hosted on YouTube. Nothing is loaded from YouTube until you
+        press play. The video then plays in YouTube's privacy-enhanced mode, and
+        Google's privacy policy applies to what happens next.
+      </p>
+      <p>
+        More information:{" "}
+        <a href={policies.google} rel="noopener">
+          Google's privacy policy
+        </a>
+        .
+      </p>
+
+      <h2>Links to other websites</h2>
+      <p>
+        Links to other websites, such as LinkedIn or the share buttons on
+        articles, take you to services with their own privacy policies. Nothing
+        is sent to them unless you click.
+      </p>
+
+      <h2>Questions</h2>
+      {hasForm ? (
+        <p>
+          If you have a question about your information, please use the{" "}
+          <a href="/work-with-me/#contact">contact form</a>.
+        </p>
+      ) : profile.links.linkedin ? (
+        <p>
+          If you have a question about your information, please message me on{" "}
+          <a href={profile.links.linkedin} rel="me noopener">
+            LinkedIn
+          </a>
+          .
+        </p>
+      ) : (
+        <p>
+          If you have a question about your information, please get in touch.
+        </p>
+      )}
+    </div>
+  </article>
+</Base>
+
+<style>
+  .page {
+    max-width: calc(var(--reading-width) + 2.5rem);
+  }
+
+  .head {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+  }
+
+  .standfirst {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--color-muted);
+  }
+
+  .updated {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+</style>

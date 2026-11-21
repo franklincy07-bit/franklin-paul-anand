@@ -131,7 +131,13 @@ const profile = defineCollection({
       youtube: z.url().optional(),
       // Formspree form address (https://formspree.io/f/...). The contact form
       // appears only once this is set.
-      contactForm: z.url().optional(),
+      contactForm: z
+        .string()
+        .regex(/^https:\/\/formspree\.io\/f\/[A-Za-z0-9]+$/, {
+          message:
+            "contactForm must be a Formspree form address like https://formspree.io/f/abcd1234",
+        })
+        .optional(),
     }),
     career: z.array(
       z.object({
