@@ -6,6 +6,7 @@ import Base from "../layouts/Base.astro";
 import ArticleListItem from "../components/ArticleListItem.astro";
 import headshot from "../assets/franklin-headshot.webp";
 import { ARTICLE_TYPES, TOPICS } from "../lib/taxonomy";
+import { areaStyle } from "../lib/areas";
 import {
   articleUrl,
   formatDate,
@@ -29,46 +30,6 @@ const secondary = rest[0];
 const latest = rest.slice(1, 5);
 const lessonCount = (id: string) =>
   videos.filter((v) => v.data.series?.id === id).length;
-
-// Each area of expertise gets its own colour and icon, so the five read as
-// distinct. Colours are chosen to stay readable on the dark teal band.
-const AREA_STYLE: Record<string, { color: string; icon: string[] }> = {
-  "strategic-leadership": {
-    color: "#f0956b", // apricot
-    icon: [
-      "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18Z",
-      "M15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5Z",
-    ],
-  },
-  "organisational-development": {
-    color: "#7fcfc9", // aqua
-    icon: ["M12 3 3 8l9 5 9-5-9-5Z", "M3 12.5l9 5 9-5", "M3 16.5l9 5 9-5"],
-  },
-  "social-impact": {
-    color: "#ecc15a", // gold
-    icon: [
-      "M12 10a2 2 0 1 0 0 4a2 2 0 1 0 0-4Z",
-      "M12 6a6 6 0 1 0 0 12a6 6 0 1 0 0-12Z",
-      "M12 2.5a9.5 9.5 0 1 0 0 19a9.5 9.5 0 1 0 0-19Z",
-    ],
-  },
-  "youth-leadership": {
-    color: "#a9d38e", // sage
-    icon: [
-      "M12 21v-9",
-      "M12 12C12 8 9 5 4 5c0 4 3 7 8 7Z",
-      "M12 14.5c0-3 2.5-5.5 7-5.5 0 3-2.5 5.5-7 5.5Z",
-    ],
-  },
-  "evidence-learning": {
-    color: "#bfb0f0", // lavender
-    icon: ["M4 20h16", "M7 16v-4", "M12 16V8", "M17 16V5"],
-  },
-};
-const FALLBACK_STYLE = {
-  color: "#f0956b",
-  icon: ["M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18Z"],
-};
 ---
 
 <Base
@@ -169,7 +130,7 @@ const FALLBACK_STYLE = {
       </div>
       <ol class="levels">
         {profile.expertise.map((area, i) => {
-          const style = AREA_STYLE[area.topic] ?? FALLBACK_STYLE;
+          const style = areaStyle(area.topic);
           return (
             <li style={`--area: ${style.color}`}>
               <span class="level-top">

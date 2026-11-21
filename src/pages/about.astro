@@ -6,6 +6,7 @@ import headshot from "../assets/franklin-headshot.webp";
 import { TOPICS } from "../lib/taxonomy";
 import { getProfile } from "../lib/content";
 import candid from "../assets/franklin-candid.jpg";
+import { areaStyle } from "../lib/areas";
 
 const profile = await getProfile();
 const years = (from: string | number, to?: string | number) =>
@@ -54,22 +55,47 @@ const years = (from: string | number, to?: string | number) =>
       <h2 id="expertise-title">Areas of expertise</h2>
     </div>
     <div class="expertise-grid">
-      {profile.expertise.map((area) => (
-        <article class="area">
-          <h3>{TOPICS[area.topic]}</h3>
-          <p class="area-summary">{area.summary}</p>
-          {area.details.map((group) => (
-            <div class="group">
-              {group.heading && <p class="group-heading">{group.heading}</p>}
-              <ul>
-                {group.points.map((point) => (
-                  <li>{point}</li>
-                ))}
-              </ul>
+      {profile.expertise.map((area, i) => {
+        const style = areaStyle(area.topic);
+        return (
+          <article
+            class="area"
+            style={`--area: ${style.color}; --area-ink: ${style.ink}; --area-tint: ${style.tint}`}
+          >
+            <div class="area-head">
+              <span class="area-icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  {style.icon.map((d) => (
+                    <path d={d} />
+                  ))}
+                </svg>
+              </span>
+              <span class="area-no">0{i + 1}</span>
             </div>
-          ))}
-        </article>
-      ))}
+            <h3>{TOPICS[area.topic]}</h3>
+            <p class="area-summary">{area.summary}</p>
+            {area.details.map((group) => (
+              <div class="group">
+                {group.heading && <p class="group-heading">{group.heading}</p>}
+                <ul>
+                  {group.points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </article>
+        );
+      })}
     </div>
   </section>
 
@@ -224,22 +250,55 @@ const years = (from: string | number, to?: string | number) =>
     padding-top: clamp(2rem, 5vw, 3rem);
   }
 
+  /* Three cards on top, two below; both rows fill the width. */
   .expertise-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2.25rem 2rem;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1.25rem;
   }
 
+  .expertise-grid > .area {
+    grid-column: span 2;
+  }
+
+  .expertise-grid > .area:nth-child(n + 4) {
+    grid-column: span 3;
+  }
+
+  /* Each area has its own colour (--area, --area-ink, --area-tint). */
   .area {
-    border-top: 3px solid var(--color-primary);
-    padding-top: 1.1rem;
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
+    padding: 1.4rem 1.5rem 1.6rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-top: 5px solid var(--area);
+    box-shadow: 0 14px 30px -26px rgba(18, 52, 59, 0.6);
   }
 
-  .area:nth-child(4) {
-    border-top-color: var(--color-accent);
+  .area-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .area-icon {
+    display: grid;
+    place-items: center;
+    width: 2.9rem;
+    height: 2.9rem;
+    border-radius: 50%;
+    background: var(--area-tint);
+    color: var(--area-ink);
+  }
+
+  .area-no {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--area-ink);
   }
 
   .area h3 {
@@ -247,15 +306,27 @@ const years = (from: string | number, to?: string | number) =>
   }
 
   .area-summary {
+    padding-left: 0.85rem;
+    border-left: 3px solid var(--area);
+  }
+
+  .area li::marker {
+    color: var(--area-ink);
+  }
+
+  .area-summary {
     color: var(--color-body);
   }
 
   .group-heading {
-    font-size: 0.75rem;
+    display: inline-block;
+    font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-teal);
+    color: var(--area-ink);
+    background: var(--area-tint);
+    padding: 0.2rem 0.5rem;
     margin-top: 0.3rem;
   }
 
@@ -403,6 +474,13 @@ const years = (from: string | number, to?: string | number) =>
     .expertise-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    .expertise-grid > .area,
+    .expertise-grid > .area:nth-child(n + 4) {
+      grid-column: auto;
+    }
+    .expertise-grid > .area:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
   }
 
   @media (max-width: 860px) {
@@ -419,6 +497,9 @@ const years = (from: string | number, to?: string | number) =>
   @media (max-width: 600px) {
     .expertise-grid {
       grid-template-columns: minmax(0, 1fr);
+    }
+    .expertise-grid > .area:last-child:nth-child(odd) {
+      grid-column: auto;
     }
     .timeline li {
       grid-template-columns: minmax(0, 1fr);
