@@ -8,7 +8,8 @@ const hasForm = !!profile.links.contactForm;
 // Update this date whenever the wording below changes.
 const updated = "21 November 2026";
 const policies = {
-  cloudflare: "https://www.cloudflare.com/privacypolicy/",
+  github:
+    "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
   formspree: "https://formspree.io/legal/privacy-policy/",
   google: "https://policies.google.com/privacy",
 };
@@ -43,20 +44,15 @@ const policies = {
 
       <h2>Hosting</h2>
       <p>
-        The website is hosted by Cloudflare. Like any web host, Cloudflare
-        processes technical information such as your IP address and browser type
-        to deliver pages and protect the website from abuse. Cloudflare may set
-        a strictly necessary security cookie for that purpose.
-      </p>
-      {/* Remove this paragraph at launch, when Cloudflare Access is switched off. */}
-      <p>
-        While the website is in private preview, only invited reviewers can open
-        it. They sign in through Cloudflare Access, which sets a sign-in cookie.
+        The website is hosted by GitHub Pages, a service of GitHub. Like any web
+        host, GitHub processes technical information such as your IP address and
+        browser type to deliver pages and keep the service secure. GitHub Pages
+        does not set cookies on this website.
       </p>
       <p>
         More information:{" "}
-        <a href={policies.cloudflare} rel="noopener">
-          Cloudflare's privacy policy
+        <a href={policies.github} rel="noopener">
+          GitHub's privacy statement
         </a>
         .
       </p>
