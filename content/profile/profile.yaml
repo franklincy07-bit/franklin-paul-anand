@@ -96,7 +96,7 @@ workWithMe:
 links:
   linkedin: https://www.linkedin.com/in/franklin-paul-95a2294a/
   # youtube: add the channel address once it exists
-  # contactForm: add the Formspree form address once the account exists
+  contactForm: https://formspree.io/f/mjywewrr # Formspree form address (not secret; messages go to Formspree, never to this repository)
 
 career:
   - role: Head of Country, India & Nepal
