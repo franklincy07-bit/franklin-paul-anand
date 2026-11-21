@@ -1,0 +1,89 @@
+---
+// Companion video card shown at the end of an article.
+import type { CollectionEntry } from "astro:content";
+import { videoUrl } from "../lib/content";
+
+interface Props {
+  video: CollectionEntry<"videos">;
+}
+
+const { video } = Astro.props;
+---
+
+<a class="video-card" href={videoUrl(video)}>
+  <span class="thumb" aria-hidden="true">
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <circle cx="12" cy="12" r="10"></circle>
+      <polygon points="10 8 16 12 10 16 10 8"></polygon>
+    </svg>
+  </span>
+  <span class="text">
+    <span class="label">Watch the lesson</span>
+    <span class="title">{video.data.title}</span>
+    <span class="meta">
+      {video.data.duration ? `${video.data.duration} · ` : ""}
+      {video.data.youtubeId ? "on YouTube" : "coming soon"}
+    </span>
+  </span>
+</a>
+
+<style>
+  .video-card {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: center;
+    background: var(--color-sand);
+    padding: 1.1rem;
+    text-decoration: none;
+  }
+
+  .thumb {
+    aspect-ratio: 16 / 9;
+    background: var(--color-fg);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .meta {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+
+  @media (max-width: 560px) {
+    .video-card {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

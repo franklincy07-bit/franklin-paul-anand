@@ -7,6 +7,11 @@ topics: [] # any of: strategic-leadership, organisational-development, social-im
 themes: [] # optional: social-innovation, ai-digital ("Exploring: AI & Digital")
 featured: false # true = shown large on the home page
 takeaways: [] # e.g. ["First takeaway", "Second takeaway"]
+storyCard: # optional three-part card at the top – delete these four lines if not needed
+  context: Where and when – described without confidential details.
+  happened: The challenge or turning point, in one or two lines.
+  learned: The lesson, in one sentence.
+question: # optional – a reflective question for readers
 draft: true # change to false when ready to publish
 ---
 

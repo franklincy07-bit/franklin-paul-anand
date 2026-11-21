@@ -1,0 +1,19 @@
+---
+import Base from "../../layouts/Base.astro";
+import WritingIndex from "../../components/WritingIndex.astro";
+import { getArticles } from "../../lib/content";
+
+const articles = await getArticles();
+---
+
+<Base
+  title="Writing"
+  description="Field notes, insights and practical guides on strategic leadership, organisational development and social impact."
+  active="writing"
+>
+  <WritingIndex
+    heading="Writing"
+    intro="Field notes, insights and practical guides on strategic leadership, organisational development and social impact – drawn from experience."
+    articles={articles}
+  />
+</Base>

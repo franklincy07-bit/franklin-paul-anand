@@ -1,0 +1,27 @@
+---
+import Base from "../../../layouts/Base.astro";
+import WritingIndex from "../../../components/WritingIndex.astro";
+import {
+  ARTICLE_TYPES,
+  ARTICLE_TYPE_KEYS,
+  type ArticleType,
+} from "../../../lib/taxonomy";
+import { getArticles } from "../../../lib/content";
+
+export function getStaticPaths() {
+  return ARTICLE_TYPE_KEYS.map((type) => ({ params: { type } }));
+}
+
+const type = Astro.params.type as ArticleType;
+const info = ARTICLE_TYPES[type];
+const articles = (await getArticles()).filter((a) => a.data.type === type);
+---
+
+<Base title={info.label} description={info.description} active="writing">
+  <WritingIndex
+    heading={info.label}
+    intro={`${info.description}.`}
+    articles={articles}
+    activeKey={type}
+  />
+</Base>

@@ -26,8 +26,18 @@ const articles = defineCollection({
       featured: z.boolean().default(false),
       cover: image().optional(),
       coverAlt: z.string().optional(),
-      video: reference("videos").optional(),
+      video: reference("videos").nullish(),
       takeaways: z.array(z.string()).default([]),
+      // Field Notes only: the three-part card at the top of the article.
+      storyCard: z
+        .object({
+          context: z.string(),
+          happened: z.string(),
+          learned: z.string(),
+        })
+        .nullish(),
+      // Field Notes only: a reflective question shown near the end.
+      question: z.string().nullish(),
       draft: z.boolean().default(false),
     }),
 });
@@ -44,11 +54,11 @@ const videos = defineCollection({
     youtubeId: z
       .string()
       .regex(/^[A-Za-z0-9_-]{11}$/)
-      .optional(),
-    duration: z.string().optional(),
+      .nullish(),
+    duration: z.string().nullish(),
     topics,
-    series: reference("series").optional(),
-    lesson: z.number().int().positive().optional(),
+    series: reference("series").nullish(),
+    lesson: z.number().int().positive().nullish(),
     takeaways: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
   }),

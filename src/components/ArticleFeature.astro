@@ -1,0 +1,355 @@
+---
+// "Feature" layout – used for Insights and How-To articles.
+import { Image } from "astro:assets";
+import type { MarkdownHeading } from "astro";
+import type { CollectionEntry } from "astro:content";
+import AuthorBox from "./AuthorBox.astro";
+import VideoCard from "./VideoCard.astro";
+import { ARTICLE_TYPES, THEMES, TOPICS } from "../lib/taxonomy";
+import { articleUrl, formatDate, readingMinutes } from "../lib/content";
+
+interface Props {
+  article: CollectionEntry<"articles">;
+  headings: MarkdownHeading[];
+  Content: any;
+  video?: CollectionEntry<"videos">;
+  related: CollectionEntry<"articles">[];
+  pageUrl: URL;
+}
+
+const { article, headings, Content, video, related, pageUrl } = Astro.props;
+const { data } = article;
+const sections = headings.filter((h) => h.depth === 2);
+const shareLinkedIn = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl.href)}`;
+const shareEmail = `mailto:?subject=${encodeURIComponent(data.title)}&body=${encodeURIComponent(pageUrl.href)}`;
+---
+
+<article class="feature">
+  <header class="hero">
+    {data.cover && (
+      <Image
+        src={data.cover}
+        alt={data.coverAlt ?? ""}
+        widths={[1200, 2000]}
+        sizes="100vw"
+        class="cover"
+        loading="eager"
+      />
+    )}
+    <div class="hero-inner">
+      <span class="tag">
+        {ARTICLE_TYPES[data.type].label}
+        {data.draft && <span class="example-badge">Example</span>}
+      </span>
+      <h1>{data.title}</h1>
+      <p class="meta">
+        {formatDate(data.date)} · {readingMinutes(article.body)} min read
+      </p>
+    </div>
+  </header>
+
+  <div class="container layout">
+    <aside class="side" aria-label="Article details">
+      {sections.length > 1 && (
+        <nav aria-label="In this piece">
+          <p class="label">In this piece</p>
+          <ol>
+            {sections.map((h) => (
+              <li>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+      <div>
+        <p class="label">Share</p>
+        <p class="share">
+          <a href={shareLinkedIn} rel="noopener" target="_blank">
+            LinkedIn
+          </a>
+          <a href={shareEmail}>Email</a>
+        </p>
+      </div>
+      {data.topics.length > 0 && (
+        <div>
+          <p class="label">Topics</p>
+          <ul class="chips">
+            {data.topics.map((t) => (
+              <li>
+                <a href={`/writing/topic/${t}/`}>{TOPICS[t]}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {data.themes.length > 0 && (
+        <div>
+          <p class="label">Themes</p>
+          <p class="themes">{data.themes.map((t) => THEMES[t]).join(" · ")}</p>
+        </div>
+      )}
+    </aside>
+
+    <div class="main">
+      <div class="short">
+        <p class="label">The short version</p>
+        <p>{data.summary}</p>
+      </div>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {data.takeaways.length > 0 && (
+        <section class="takeaways" aria-label="Key takeaways">
+          <p class="label">Key takeaways</p>
+          <ol>
+            {data.takeaways.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {video && <VideoCard video={video} />}
+
+      <AuthorBox />
+    </div>
+  </div>
+
+  {related.length > 0 && (
+    <section class="container more" aria-labelledby="more-title">
+      <div class="section-title">
+        <h2 id="more-title">Keep reading</h2>
+      </div>
+      <div class="more-grid">
+        {related.map((r) => (
+          <a href={articleUrl(r)} class="more-item">
+            <span class="kicker">
+              {ARTICLE_TYPES[r.data.type].label}
+              {r.data.draft && <span class="example-badge">Example</span>}
+            </span>
+            <span class="more-title">{r.data.title}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+</article>
+
+<style>
+  .hero {
+    position: relative;
+    background: var(--color-teal);
+    color: var(--color-on-dark);
+    min-height: clamp(20rem, 45vw, 32rem);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .hero :global(.cover) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+  }
+
+  .hero-inner {
+    position: relative;
+    max-width: 56rem;
+    padding: 3rem clamp(1.25rem, 5vw, 2rem) clamp(2.5rem, 5vw, 3.5rem);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+  }
+
+  .tag {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    background: var(--color-surface);
+    color: var(--color-primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.7rem;
+  }
+
+  h1 {
+    color: var(--color-on-dark);
+    font-size: clamp(2.1rem, 5vw, 3.6rem);
+    line-height: 1.08;
+  }
+
+  .meta {
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-on-dark-muted);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    gap: clamp(2rem, 5vw, 3.5rem);
+    padding-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    font-size: 0.95rem;
+    align-self: start;
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .side > * + * {
+    border-top: 1px solid var(--color-line);
+    padding-top: 1.25rem;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 0.6rem;
+  }
+
+  .side ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .side ol a {
+    color: var(--color-body);
+    text-decoration: none;
+  }
+
+  .side ol a:hover {
+    color: var(--color-teal);
+    text-decoration: underline;
+  }
+
+  .share {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .share a {
+    font-weight: 600;
+  }
+
+  .chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .chips a {
+    display: inline-block;
+    border: 1px solid var(--color-line-strong);
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  .themes {
+    color: var(--color-muted);
+  }
+
+  .main {
+    max-width: var(--reading-width);
+  }
+
+  .short {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 2.25rem;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    line-height: 1.5;
+  }
+
+  .short .label {
+    color: var(--color-teal);
+    font-family: var(--font-body);
+  }
+
+  .takeaways {
+    margin-top: 2.5rem;
+    border-top: 3px solid var(--color-accent);
+    padding-top: 1.25rem;
+  }
+
+  .takeaways ol {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: var(--color-body);
+  }
+
+  .more {
+    padding-top: clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .more-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+
+  .more-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-decoration: none;
+    border-top: 1px solid var(--color-line);
+    padding-top: 1rem;
+  }
+
+  .more-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    line-height: 1.3;
+    color: var(--color-fg);
+  }
+
+  .more-item:hover .more-title {
+    color: var(--color-teal);
+  }
+
+  @media (max-width: 860px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .side {
+      position: static;
+      order: 2;
+    }
+    .more-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
