@@ -18,3 +18,10 @@ published with GitHub Pages).
   `docs/publishing-checklist.md` before anything is published.
 - Run `pnpm check` before proposing changes.
 - Explain things to the owner in plain, non-technical language.
+- **Opportunities.** Only list an opportunity after checking it on the
+  organisation's official page; `link` is that page, never an aggregator.
+  Never guess a fact: leave unstated fields empty. Exclude opportunities from
+  the owner's current employer unless the owner approves an exception with an
+  `employerDisclosure`. At most 10 new listings per session, shown to the
+  owner for approval first; the owner's merge publishes them. Don't set up
+  scheduled or automatic research.

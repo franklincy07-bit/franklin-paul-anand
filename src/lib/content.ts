@@ -53,6 +53,23 @@ export function formatDate(date: Date): string {
   });
 }
 
+/** Opportunities, most urgent first: by deadline, then those with none. */
+export async function getOpportunities(): Promise<
+  CollectionEntry<"opportunities">[]
+> {
+  const byDeadline = (
+    a: CollectionEntry<"opportunities">,
+    b: CollectionEntry<"opportunities">,
+  ) =>
+    (a.data.deadline?.getTime() ?? Infinity) -
+      (b.data.deadline?.getTime() ?? Infinity) ||
+    a.data.title.localeCompare(b.data.title);
+  return (await getCollection("opportunities", visible)).sort(byDeadline);
+}
+
+export const opportunityUrl = (entry: CollectionEntry<"opportunities">) =>
+  link(`/opportunities/${entry.id}/`);
+
 export const articleUrl = (entry: CollectionEntry<"articles">) =>
   link(`/writing/${entry.id}/`);
 export const videoUrl = (entry: CollectionEntry<"videos">) =>

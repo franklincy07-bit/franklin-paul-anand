@@ -1,0 +1,19 @@
+---
+import Base from "../../layouts/Base.astro";
+import OpportunityIndex from "../../components/OpportunityIndex.astro";
+import { getOpportunities } from "../../lib/content";
+
+const opportunities = await getOpportunities();
+---
+
+<Base
+  title="Opportunities"
+  description="Grants, funding, jobs and career opportunities for people creating change – checked against each official source."
+  active="opportunities"
+>
+  <OpportunityIndex
+    heading="Opportunities for people creating change"
+    intro="Grants and funding, jobs and career opportunities in development and social impact – India first, then Asia, Africa and global opportunities open to applicants from India. Every listing is checked against its official source."
+    opportunities={opportunities}
+  />
+</Base>

@@ -19,6 +19,7 @@ written in **Markdown**, a simple way of formatting text.
 | `videos/`     | One file per YouTube video                      | Videos              |
 | `series/`     | Lesson series (groups of videos)                | Lessons             |
 | `profile/`    | Your career, education, awards, short bio       | Home, About, Work With Me |
+| `opportunities/` | Grants, funding, jobs and career opportunities | Opportunities       |
 | `_templates/` | Templates to copy (never published)             | Nowhere             |
 
 ## Adding something new (in the GitHub website)
@@ -153,6 +154,51 @@ The same file also holds:
   About page stays hidden until you write it;
 - `links.contactForm`: the Formspree address. The contact form appears only
   once this is set. Until then, the page points people to LinkedIn.
+
+### Opportunities (`opportunities/`)
+
+"Opportunities for people creating change": grants and funding, and jobs
+and career opportunities in development and social impact. India first,
+then Asia, Africa and global opportunities open to applicants from India.
+
+**The rules for every listing:**
+
+1. **Check it on the official page.** Find the organisation's own page for
+   the opportunity, even if you first saw it on another website, and check
+   every detail there. The `link` must be that official page.
+2. **Never guess.** If the official page doesn't state something (age limit,
+   amount, geography), leave that field empty. The site then shows "Not
+   specified – see the official page".
+3. **Say who applies.** `applicant` is `individual` or `organisation`, and
+   `audience` must match it. The site refuses an organisational grant
+   labelled for individuals, and the reverse.
+4. **Not from organisations you work for.** Opportunities from your current
+   employer are left out. If you ever decide to make an exception, add an
+   `employerDisclosure` sentence; the site's checks fail without one.
+5. **Record when you checked.** Set `published` to the day you add it and
+   `lastVerified` to the day you last checked the official page.
+
+**Adding one:** copy `_templates/opportunity.md` into `opportunities/`, name
+the file with the month and a short title (for example
+`2026-12-youth-climate-fund.md`), fill it in, set `draft: false` and open a
+pull request. It appears on the site only after you merge it.
+
+**Status is automatic.** Open, Closing soon (within 14 days of the deadline)
+and Closed are worked out from `deadline`, and are rechecked in each
+visitor's browser, so nothing shows as open after it closes. Leave
+`deadline` empty for rolling applications (add a `deadlineNote` such as
+"Rolling – applications reviewed monthly"). To take a listing off the lists
+altogether, set `archived: true`.
+
+**Categories and types:**
+
+| `category` | `subcategory` choices |
+| --- | --- |
+| `grants-funding` | `ngo-grants`, `youth-led-funding`, `innovation-challenges`, `research-grants`, `funding-fellowships` |
+| `jobs-careers` | `jobs-internships`, `early-career`, `scholarships`, `career-fellowships`, `volunteering`, `consulting` |
+
+Funding fellowships go under Grants & Funding; career and leadership
+fellowships under Jobs & Careers.
 
 ### Example files
 

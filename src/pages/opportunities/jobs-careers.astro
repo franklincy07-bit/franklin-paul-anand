@@ -1,0 +1,24 @@
+---
+import Base from "../../layouts/Base.astro";
+import OpportunityIndex from "../../components/OpportunityIndex.astro";
+import { getOpportunities } from "../../lib/content";
+import { CATEGORIES } from "../../lib/opportunities";
+
+const category = CATEGORIES["jobs-careers"];
+const opportunities = (await getOpportunities()).filter(
+  (o) => o.data.category === "jobs-careers",
+);
+---
+
+<Base
+  title={category.label}
+  description={category.intro}
+  active="opportunities"
+>
+  <OpportunityIndex
+    heading={category.label}
+    intro={category.intro}
+    opportunities={opportunities}
+    activeCategory="jobs-careers"
+  />
+</Base>
