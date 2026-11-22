@@ -204,19 +204,28 @@ const shareEmail = `mailto:?subject=${encodeURIComponent(data.title)}&body=${enc
     padding-top: clamp(2.5rem, 5vw, 3.5rem);
   }
 
+  /* Article details: a teal panel, clearly set apart from the article. */
   .side {
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
+    gap: 1.5rem;
     font-size: 0.95rem;
     align-self: start;
     position: sticky;
     top: 1.5rem;
+    padding: 1.5rem 1.4rem;
+    background: var(--color-teal);
+    color: var(--color-on-dark-muted);
+    border-top: 4px solid var(--color-accent);
   }
 
   .side > * + * {
-    border-top: 1px solid var(--color-line);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
     padding-top: 1.25rem;
+  }
+
+  .side .label {
+    color: var(--color-accent);
   }
 
   .label {
@@ -236,14 +245,20 @@ const shareEmail = `mailto:?subject=${encodeURIComponent(data.title)}&body=${enc
     gap: 0.45rem;
   }
 
+  .side ol {
+    color: var(--color-accent);
+  }
+
   .side ol a {
-    color: var(--color-body);
+    color: var(--color-on-dark);
     text-decoration: none;
+    line-height: 1.4;
   }
 
   .side ol a:hover {
-    color: var(--color-teal);
+    color: var(--color-on-dark);
     text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .share {
@@ -253,6 +268,10 @@ const shareEmail = `mailto:?subject=${encodeURIComponent(data.title)}&body=${enc
 
   .share a {
     font-weight: 600;
+  }
+
+  .side .share a {
+    color: var(--color-on-dark);
   }
 
   .chips {
@@ -275,6 +294,19 @@ const shareEmail = `mailto:?subject=${encodeURIComponent(data.title)}&body=${enc
 
   .themes {
     color: var(--color-muted);
+  }
+
+  .side .chips a {
+    border-color: rgba(255, 255, 255, 0.35);
+    color: var(--color-on-dark);
+  }
+
+  .side .chips a:hover {
+    border-color: var(--color-on-dark);
+  }
+
+  .side .themes {
+    color: var(--color-on-dark-muted);
   }
 
   .main {
@@ -349,17 +381,16 @@ const shareEmail = `mailto:?subject=${encodeURIComponent(data.title)}&body=${enc
     .side {
       display: contents;
     }
-    .side > * {
+    .side > *,
+    .side > * + * {
       order: 2;
-      border-top: 1px solid var(--color-line);
-      padding-top: 1.25rem;
+      padding: 1rem 1.25rem;
+      background: var(--color-teal);
+      border-top: 0;
     }
     .side > .toc {
       order: 0;
-      border-top: 0;
-      padding: 1rem 1.25rem;
-      background: var(--color-surface);
-      border: 1px solid var(--color-line);
+      border-top: 4px solid var(--color-accent);
     }
     .main {
       order: 1;
