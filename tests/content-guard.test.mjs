@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { parse } from "yaml";
 
 const ROOT = "content";
-const FOLDERS = ["articles", "videos", "series"];
+const FOLDERS = ["articles", "videos", "series", "opportunities"];
 
 // Text that only appears in example files and templates.
 const PLACEHOLDERS = [
@@ -23,6 +23,10 @@ const PLACEHOLDERS = [
   "Series title",
   "[Step one]",
   "[Title to be confirmed]",
+  "Opportunity title",
+  "Offering organisation",
+  "official-website.example",
+  "https://example.org",
 ];
 
 function readEntries() {
@@ -109,6 +113,45 @@ test("published lessons have unique numbers within each series", () => {
       `Lesson ${lesson} of series "${series}" is used by both ${seen.get(key)} and ${e.path}`,
     );
     seen.set(key, e.path);
+  }
+});
+
+test("published opportunities from my current employer carry a disclosure", () => {
+  // Opportunities from organisations I work for are excluded by default. An
+  // exception needs the owner's approval and a visible disclosure. The current
+  // employer is read from profile.yaml (career entries with no end year).
+  const profile = parse(
+    readFileSync(join(ROOT, "profile/profile.yaml"), "utf8"),
+  );
+  const norm = (t) =>
+    String(t ?? "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  const employers = (profile.career ?? [])
+    .filter((c) => c.to == null || c.to === "")
+    .map((c) => norm(c.organisation))
+    .filter(Boolean);
+  for (const e of entries.filter(
+    (e) => e.path.startsWith("opportunities/") && e.data.draft !== true,
+  )) {
+    const org = norm(e.data.organisation);
+    const fromEmployer = employers.some((name) => org.includes(name));
+    if (!fromEmployer) continue;
+    assert.ok(
+      String(e.data.employerDisclosure ?? "").trim().length > 0,
+      `${e.path} is from your current employer: add an employerDisclosure (with the owner's approval) or remove the listing`,
+    );
+  }
+});
+
+test("opportunity file names don't clash with the category pages", () => {
+  for (const e of entries.filter((e) => e.path.startsWith("opportunities/"))) {
+    const slug = e.name.replace(/\.mdx?$/, "");
+    assert.ok(
+      !["grants-funding", "jobs-careers"].includes(slug),
+      `${e.path}: rename this file; its address would clash with a category page`,
+    );
   }
 });
 

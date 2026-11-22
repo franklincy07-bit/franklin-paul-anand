@@ -1,0 +1,207 @@
+---
+// One opportunity in a list. The data-* attributes drive the filters and the
+// in-browser status check on the Opportunities pages.
+import type { CollectionEntry } from "astro:content";
+import { opportunityUrl } from "../lib/content";
+import {
+  APPLICANTS,
+  AUDIENCES,
+  CATEGORIES,
+  REGIONS,
+  STATUS_LABELS,
+  SUBCATEGORIES,
+  daysLeft,
+  formatDeadline,
+  statusOf,
+} from "../lib/opportunities";
+
+interface Props {
+  opportunity: CollectionEntry<"opportunities">;
+  headingLevel?: "h2" | "h3";
+}
+
+const { opportunity, headingLevel = "h3" } = Astro.props;
+const d = opportunity.data;
+const status = statusOf(d);
+const left = d.deadline ? daysLeft(d.deadline) : null;
+const Heading = headingLevel;
+const deadlineIso = d.deadline ? d.deadline.toISOString().slice(0, 10) : "";
+---
+
+<article
+  class="opp"
+  data-opp
+  data-category={d.category}
+  data-subcategory={d.subcategory}
+  data-audience={d.audience.join(" ")}
+  data-regions={d.regions.join(" ")}
+  data-deadline={deadlineIso}
+  data-status={status}
+>
+  <div class="top">
+    <span class={`status status-${status}`} data-status-label>
+      {STATUS_LABELS[status]}
+    </span>
+    <span class="kind">
+      {CATEGORIES[d.category].short} · {SUBCATEGORIES[d.subcategory].label}
+      {d.draft && <span class="example-badge">Example</span>}
+    </span>
+  </div>
+
+  <Heading class="title">
+    <a href={opportunityUrl(opportunity)}>{d.title}</a>
+  </Heading>
+  <p class="org">{d.organisation}</p>
+  <p class="summary">{d.summary}</p>
+
+  <dl class="facts">
+    <div>
+      <dt>Who can apply</dt>
+      <dd>
+        {APPLICANTS[d.applicant]}:{" "}
+        {d.audience.map((a) => AUDIENCES[a].label).join(", ")}
+      </dd>
+    </div>
+    <div>
+      <dt>Where</dt>
+      <dd>{d.regions.map((r) => REGIONS[r]).join(", ")}</dd>
+    </div>
+    <div>
+      <dt>Deadline</dt>
+      <dd>
+        {d.deadline ? (
+          <>
+            {formatDeadline(d.deadline)}
+            {left !== null && left >= 0 && (
+              <span class="left" data-days-left>
+                {" "}
+                · {left === 0 ? "closes today" : `${left} days left`}
+              </span>
+            )}
+          </>
+        ) : (
+          (d.deadlineNote ?? "No fixed deadline")
+        )}
+      </dd>
+    </div>
+    {d.amount && (
+      <div>
+        <dt>{d.category === "grants-funding" ? "Funding" : "Pay"}</dt>
+        <dd>{d.amount}</dd>
+      </div>
+    )}
+  </dl>
+</article>
+
+<style>
+  .opp {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 1.4rem 1.5rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+  }
+
+  .opp[data-status="closed"],
+  .opp[data-status="archived"] {
+    background: transparent;
+  }
+
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.9rem;
+  }
+
+  .status {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.55rem;
+    background: var(--color-mist);
+    color: var(--color-teal-dark);
+  }
+
+  .status-closing-soon {
+    background: var(--color-accent);
+    color: var(--color-primary);
+  }
+
+  .status-closed,
+  .status-archived {
+    background: transparent;
+    border: 1px solid var(--color-line-strong);
+    color: var(--color-muted);
+  }
+
+  .kind {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .kind :global(.example-badge) {
+    margin-left: 0.5rem;
+  }
+
+  .title {
+    font-size: 1.45rem;
+    line-height: 1.2;
+  }
+
+  .title a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .org {
+    font-weight: 600;
+    color: var(--color-fg);
+  }
+
+  .summary {
+    color: var(--color-body);
+    max-width: 68ch;
+  }
+
+  .facts {
+    margin: 0.5rem 0 0;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--color-line);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    gap: 0.75rem 1.5rem;
+  }
+
+  .facts div {
+    min-width: 0;
+  }
+
+  .facts dt {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .facts dd {
+    margin: 0.15rem 0 0;
+    font-size: 0.92rem;
+    color: var(--color-fg);
+  }
+
+  .left {
+    color: var(--color-muted);
+  }
+</style>

@@ -1,0 +1,419 @@
+---
+import { link } from "../../lib/paths";
+import { render, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import OpportunityCard from "../../components/OpportunityCard.astro";
+import { formatDate, getOpportunities } from "../../lib/content";
+import {
+  APPLICANTS,
+  AUDIENCES,
+  CATEGORIES,
+  INDIA_ELIGIBLE,
+  NOT_SPECIFIED,
+  REGIONS,
+  STATUS_LABELS,
+  SUBCATEGORIES,
+  daysLeft,
+  formatDeadline,
+  statusOf,
+} from "../../lib/opportunities";
+
+export async function getStaticPaths() {
+  const opportunities = await getOpportunities();
+  return opportunities.map((opportunity) => ({
+    params: { slug: opportunity.id },
+    props: { opportunity, opportunities },
+  }));
+}
+
+interface Props {
+  opportunity: CollectionEntry<"opportunities">;
+  opportunities: CollectionEntry<"opportunities">[];
+}
+
+const { opportunity, opportunities } = Astro.props;
+const d = opportunity.data;
+const { Content } = await render(opportunity);
+const hasNotes = (opportunity.body ?? "").trim().length > 0;
+const status = statusOf(d);
+const left = d.deadline ? daysLeft(d.deadline) : null;
+const isCurrent = ["open", "closing-soon", "rolling"].includes(status);
+const category = CATEGORIES[d.category];
+const deadlineIso = d.deadline ? d.deadline.toISOString().slice(0, 10) : "";
+
+// Up to three other current listings in the same category.
+const more = opportunities
+  .filter(
+    (o) =>
+      o.id !== opportunity.id &&
+      o.data.category === d.category &&
+      ["open", "closing-soon", "rolling"].includes(statusOf(o.data)),
+  )
+  .slice(0, 3);
+
+const or = (value: string | null | undefined) =>
+  value && value.trim().length > 0 ? value : NOT_SPECIFIED;
+
+const facts: [string, string][] = [
+  ["Offered by", d.organisation],
+  ["Category", `${category.label} · ${SUBCATEGORIES[d.subcategory].label}`],
+  [
+    "Who can apply",
+    `${APPLICANTS[d.applicant]}: ${d.audience.map((a) => AUDIENCES[a].label).join(", ")}`,
+  ],
+  ["Eligibility", or(d.eligibility)],
+  ["Age requirements", or(d.age)],
+  ["Geographic eligibility", or(d.geography)],
+  ["Open to applicants from India", INDIA_ELIGIBLE[d.indiaEligible]],
+  [d.category === "grants-funding" ? "Funding amount" : "Pay", or(d.amount)],
+  [
+    "Deadline",
+    d.deadline
+      ? formatDeadline(d.deadline)
+      : (d.deadlineNote ?? "No fixed deadline"),
+  ],
+];
+---
+
+<Base title={d.title} description={d.summary} active="opportunities">
+  <article
+    class="container detail"
+    data-opp
+    data-deadline={deadlineIso}
+    data-status={status}
+  >
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href={link("/opportunities/")}>Opportunities</a>
+      <span aria-hidden="true">/</span>
+      <a href={link(`/opportunities/${d.category}/`)}>{category.label}</a>
+    </nav>
+
+    <header class="head">
+      <div class="top">
+        <span class={`status status-${status}`} data-status-label>
+          {STATUS_LABELS[status]}
+        </span>
+        {left !== null && left >= 0 && (
+          <span class="left" data-days-left>
+            {left === 0 ? "Closes today" : `${left} days left`}
+          </span>
+        )}
+        {d.draft && <span class="example-badge">Example</span>}
+      </div>
+      <h1>{d.title}</h1>
+      <p class="org">{d.organisation}</p>
+      <p class="summary">{d.summary}</p>
+    </header>
+
+    <div class="layout">
+      <div class="main">
+        <dl class="facts">
+          {facts.map(([label, value]) => (
+            <div>
+              <dt>{label}</dt>
+              <dd class={value === NOT_SPECIFIED ? "unstated" : undefined}>
+                {value}
+              </dd>
+            </div>
+          ))}
+          <div>
+            <dt>Region</dt>
+            <dd>{d.regions.map((r) => REGIONS[r]).join(", ")}</dd>
+          </div>
+        </dl>
+
+        {hasNotes && (
+          <section class="notes prose" aria-label="More about this opportunity">
+            <Content />
+          </section>
+        )}
+
+        {d.employerDisclosure && (
+          <p class="disclosure">
+            <strong>Disclosure:</strong> {d.employerDisclosure}
+          </p>
+        )}
+      </div>
+
+      <aside class="side">
+        <div class="apply">
+          {isCurrent ? (
+            <a class="btn" href={d.link} rel="noopener" target="_blank">
+              Apply on the official website ↗
+            </a>
+          ) : (
+            <p class="shut">
+              This opportunity has{" "}
+              {status === "archived" ? "been archived" : "closed"}. The official
+              page may have details of future rounds.
+            </p>
+          )}
+          {!isCurrent && (
+            <a class="official" href={d.link} rel="noopener" target="_blank">
+              Official page ↗
+            </a>
+          )}
+          <p class="checked">
+            Checked against the official page on {formatDate(d.lastVerified)}.
+            Listed on {formatDate(d.published)}.
+          </p>
+          <p class="note">
+            Always confirm the details and deadline on the official page before
+            you apply. I'm not involved in selection, and you should never pay a
+            fee to apply.
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    {more.length > 0 && (
+      <section class="more" aria-labelledby="more-title">
+        <h2 id="more-title">More in {category.label}</h2>
+        <div class="more-list">
+          {more.map((o) => (
+            <OpportunityCard opportunity={o} headingLevel="h3" />
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+</Base>
+
+<script>
+  import { STATUS_LABELS, statusOf } from "../../lib/opportunities";
+
+  // Recheck the status against today's date in the visitor's browser.
+  for (const card of document.querySelectorAll<HTMLElement>("[data-opp]")) {
+    const iso = card.dataset.deadline;
+    if (!iso || card.dataset.status === "archived") continue;
+    const status = statusOf({ deadline: new Date(iso), archived: false });
+    if (status === card.dataset.status) continue;
+    card.dataset.status = status;
+    const label = card.querySelector<HTMLElement>("[data-status-label]");
+    if (label) {
+      label.textContent = STATUS_LABELS[status];
+      label.className = label.className.replace(
+        /status-[a-z-]+/,
+        `status-${status}`,
+      );
+    }
+    if (status === "closed") card.querySelector("[data-days-left]")?.remove();
+  }
+</script>
+
+<style>
+  .detail {
+    padding-top: clamp(2rem, 5vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    max-width: 52rem;
+  }
+
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.9rem;
+  }
+
+  .status {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    background: var(--color-mist);
+    color: var(--color-teal-dark);
+  }
+
+  .status-closing-soon {
+    background: var(--color-accent);
+    color: var(--color-primary);
+  }
+
+  .status-closed,
+  .status-archived {
+    background: transparent;
+    border: 1px solid var(--color-line-strong);
+    color: var(--color-muted);
+  }
+
+  .left {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+
+  .head h1 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+  }
+
+  .org {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .summary {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: var(--color-body);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+    gap: clamp(1.75rem, 4vw, 3rem);
+    align-items: start;
+  }
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+  }
+
+  .facts {
+    margin: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+  }
+
+  .facts div {
+    display: grid;
+    grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+    gap: 0.25rem 1.5rem;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .facts div:last-child {
+    border-bottom: 0;
+  }
+
+  .facts dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    padding-top: 0.15rem;
+  }
+
+  .facts dd {
+    margin: 0;
+    color: var(--color-fg);
+  }
+
+  .facts dd.unstated {
+    color: var(--color-muted);
+    font-style: italic;
+  }
+
+  .notes {
+    font-size: 1.1rem;
+  }
+
+  .disclosure {
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-sand);
+  }
+
+  .side {
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .apply {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.5rem;
+    background: var(--color-primary);
+    color: var(--color-on-dark-muted);
+  }
+
+  .btn {
+    display: block;
+    text-align: center;
+    background: var(--color-accent);
+    color: var(--color-primary);
+    font-weight: 700;
+    padding: 0.85rem 1rem;
+    text-decoration: none;
+  }
+
+  .btn:hover {
+    background: var(--color-surface);
+    color: var(--color-primary);
+  }
+
+  .official {
+    color: var(--color-on-dark);
+    font-weight: 600;
+  }
+
+  .shut {
+    color: var(--color-on-dark);
+  }
+
+  .checked {
+    font-size: 0.9rem;
+    color: var(--color-on-dark);
+  }
+
+  .note {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .more {
+    margin-top: 1.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-line);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .more h2 {
+    font-size: 1.6rem;
+  }
+
+  .more-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  @media (max-width: 860px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .side {
+      position: static;
+      order: -1;
+    }
+    .facts div {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

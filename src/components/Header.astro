@@ -4,7 +4,13 @@ import { link } from "../lib/paths";
 // menu that opens with a button (built on <details>, so it works without
 // JavaScript and with the keyboard).
 export type NavKey =
-  "home" | "writing" | "videos" | "lessons" | "about" | "work";
+  | "home"
+  | "writing"
+  | "videos"
+  | "lessons"
+  | "opportunities"
+  | "about"
+  | "work";
 
 interface Props {
   active?: NavKey;
@@ -12,13 +18,17 @@ interface Props {
 
 const { active } = Astro.props;
 
-// Main navigation. Opportunities will sit between Lessons and About once that
-// section is built (a separate phase).
+// Main navigation.
 const links: { key: NavKey; href: string; label: string; quiet?: boolean }[] = [
   { key: "home", href: link("/"), label: "Home" },
   { key: "writing", href: link("/writing/"), label: "Writing" },
   { key: "videos", href: link("/videos/"), label: "Videos" },
   { key: "lessons", href: link("/lessons/"), label: "Lessons" },
+  {
+    key: "opportunities",
+    href: link("/opportunities/"),
+    label: "Opportunities",
+  },
   { key: "about", href: link("/about/"), label: "About" },
   {
     key: "work",
@@ -215,7 +225,7 @@ const links: { key: NavKey; href: string; label: string; quiet?: boolean }[] = [
     color: var(--color-accent);
   }
 
-  @media (max-width: 860px) {
+  @media (max-width: 960px) {
     .nav-desktop {
       display: none;
     }

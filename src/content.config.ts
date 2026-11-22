@@ -2,6 +2,16 @@ import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { ARTICLE_TYPE_KEYS, THEME_KEYS, TOPIC_KEYS } from "./lib/taxonomy";
+import {
+  APPLICANT_KEYS,
+  AUDIENCES,
+  AUDIENCE_KEYS,
+  CATEGORY_KEYS,
+  INDIA_ELIGIBLE_KEYS,
+  REGION_KEYS,
+  SUBCATEGORIES,
+  SUBCATEGORY_KEYS,
+} from "./lib/opportunities";
 
 // All Franklin Paul Anand content lives in /content at the repository root,
 // so it can be edited without touching code.
@@ -85,6 +95,64 @@ const series = defineCollection({
   }),
 });
 
+/**
+ * Opportunities: grants and funding; jobs and careers. Every listing is
+ * checked against its official page before it is published. Facts the
+ * official page doesn't state are left empty and shown as "Not specified –
+ * see the official page"; nothing is guessed. See content/README.md.
+ */
+const opportunities = defineCollection({
+  loader: glob({
+    pattern: "**/[^_]*.{md,mdx}",
+    base: `${CONTENT}/opportunities`,
+  }),
+  schema: z
+    .object({
+      title: z.string(),
+      organisation: z.string(),
+      category: z.enum(CATEGORY_KEYS),
+      subcategory: z.enum(SUBCATEGORY_KEYS),
+      // One or two sentences: what it is and what it offers.
+      summary: z.string(),
+      // Who applies: individuals, or organisations.
+      applicant: z.enum(APPLICANT_KEYS),
+      audience: z.array(z.enum(AUDIENCE_KEYS)).min(1),
+      // As stated on the official page. Leave empty if it isn't stated.
+      eligibility: z.string().nullish(),
+      age: z.string().nullish(),
+      geography: z.string().nullish(),
+      regions: z.array(z.enum(REGION_KEYS)).min(1),
+      indiaEligible: z.enum(INDIA_ELIGIBLE_KEYS),
+      amount: z.string().nullish(),
+      // Leave empty for rolling applications or when no deadline is stated.
+      deadline: z.coerce.date().nullish(),
+      deadlineNote: z.string().nullish(),
+      // The original official page, never an aggregator.
+      link: z.url().refine((u) => u.startsWith("https://"), {
+        message: "link must be the official page's https:// address",
+      }),
+      published: z.coerce.date(),
+      lastVerified: z.coerce.date(),
+      // Set by hand to take a listing off the main lists.
+      archived: z.boolean().default(false),
+      // Required wording if a listing is from an organisation I work for.
+      employerDisclosure: z.string().nullish(),
+      draft: z.boolean().default(false),
+    })
+    .refine((d) => SUBCATEGORIES[d.subcategory].category === d.category, {
+      message: "subcategory does not belong to this category",
+      path: ["subcategory"],
+    })
+    .refine(
+      (d) => d.audience.every((a) => AUDIENCES[a].applicant === d.applicant),
+      {
+        message:
+          "audience doesn't match applicant: an organisational grant can't be listed for individuals, and an individual opportunity can't be listed for organisations",
+        path: ["audience"],
+      },
+    ),
+});
+
 const year = z.union([z.number().int(), z.string()]);
 
 /** Profile facts used by the home, About and Work With Me pages. */
@@ -166,4 +234,10 @@ const profile = defineCollection({
   }),
 });
 
-export const collections = { articles, videos, series, profile };
+export const collections = {
+  articles,
+  videos,
+  series,
+  profile,
+  opportunities,
+};

@@ -1,0 +1,461 @@
+---
+// The Opportunities page and its two category pages.
+import type { CollectionEntry } from "astro:content";
+import { link } from "../lib/paths";
+import OpportunityCard from "./OpportunityCard.astro";
+import {
+  AUDIENCES,
+  CATEGORIES,
+  REGIONS,
+  SUBCATEGORIES,
+  statusOf,
+  type Category,
+} from "../lib/opportunities";
+
+interface Props {
+  heading: string;
+  intro: string;
+  opportunities: CollectionEntry<"opportunities">[];
+  activeCategory?: Category | "all";
+}
+
+const { heading, intro, opportunities, activeCategory = "all" } = Astro.props;
+
+const current = opportunities.filter((o) =>
+  ["open", "closing-soon", "rolling"].includes(statusOf(o.data)),
+);
+const closed = opportunities
+  .filter((o) => statusOf(o.data) === "closed")
+  .reverse();
+
+// Filter choices: only the types that belong to this page's category.
+const types = (
+  Object.entries(SUBCATEGORIES) as [
+    string,
+    { category: string; label: string },
+  ][]
+).filter(([, s]) => activeCategory === "all" || s.category === activeCategory);
+const audiences = Object.entries(AUDIENCES);
+const regions = Object.entries(REGIONS);
+const tabs: { key: Category | "all"; label: string; href: string }[] = [
+  { key: "all", label: "All opportunities", href: link("/opportunities/") },
+  ...(Object.entries(CATEGORIES) as [Category, { label: string }][]).map(
+    ([key, c]) => ({
+      key,
+      label: c.label,
+      href: link(`/opportunities/${key}/`),
+    }),
+  ),
+];
+---
+
+<section class="container head">
+  <p class="kicker">Opportunities</p>
+  <h1>{heading}</h1>
+  <p class="intro">{intro}</p>
+</section>
+
+<nav class="container tabs" aria-label="Opportunity categories">
+  <ul>
+    {tabs.map((t) => (
+      <li>
+        <a
+          href={t.href}
+          aria-current={activeCategory === t.key ? "page" : undefined}
+        >
+          {t.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<div class="container body" data-opp-index>
+  {current.length > 0 ? (
+    <>
+      <form
+        class="filters"
+        data-filters
+        hidden
+        aria-label="Filter opportunities"
+      >
+        <label>
+          <span>Who it's for</span>
+          <select name="audience">
+            <option value="">Anyone</option>
+            {audiences.map(([key, a]) => (
+              <option value={key}>{a.label}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          <span>Type</span>
+          <select name="type">
+            <option value="">All types</option>
+            {types.map(([key, s]) => (
+              <option value={key}>{s.label}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          <span>Where</span>
+          <select name="region">
+            <option value="">Anywhere</option>
+            {regions.map(([key, label]) => (
+              <option value={key}>{label}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          <span>Deadline</span>
+          <select name="deadline">
+            <option value="">Any deadline</option>
+            <option value="closing-soon">Closing within 14 days</option>
+            <option value="dated">Has a deadline</option>
+            <option value="rolling">No fixed deadline</option>
+          </select>
+        </label>
+        <div class="filter-foot">
+          <p class="count" data-count aria-live="polite" />
+          <button type="reset" class="clear">
+            Clear filters
+          </button>
+        </div>
+      </form>
+
+      <div class="list" data-list>
+        {current.map((o) => (
+          <OpportunityCard opportunity={o} headingLevel="h2" />
+        ))}
+      </div>
+      <p class="no-match" data-no-match hidden>
+        No opportunities match these filters right now. Try clearing one of
+        them.
+      </p>
+    </>
+  ) : (
+    <div class="empty">
+      <p class="empty-title">The first opportunities are on their way.</p>
+      <p>
+        Each listing is checked against the organisation's official page before
+        it appears here, so this takes a little time. Please check back soon.
+      </p>
+    </div>
+  )}
+
+  {closed.length > 0 && (
+    <details class="closed">
+      <summary>Recently closed ({closed.length})</summary>
+      <div class="list">
+        {closed.map((o) => (
+          <OpportunityCard opportunity={o} headingLevel="h3" />
+        ))}
+      </div>
+    </details>
+  )}
+
+  <aside class="how" aria-labelledby="how-title">
+    <h2 id="how-title">How listings are chosen</h2>
+    <ul>
+      <li>
+        Every listing is checked against the organisation's official page, and
+        links straight to it.
+      </li>
+      <li>
+        Each listing says who can apply: individuals or organisations, and
+        whether applicants from India are eligible.
+      </li>
+      <li>
+        Where the official page doesn't state something, the listing says “Not
+        specified – see the official page”. Nothing is guessed.
+      </li>
+      <li>
+        Opportunities from organisations I work for are not listed, unless a
+        listing clearly says so.
+      </li>
+      <li>
+        I'm not involved in any selection. Always confirm the details and
+        deadline on the official page before you apply, and never pay a fee to
+        apply.
+      </li>
+    </ul>
+  </aside>
+</div>
+
+<script>
+  import { STATUS_LABELS, statusOf } from "../lib/opportunities";
+
+  const index = document.querySelector<HTMLElement>("[data-opp-index]");
+  const cards = [...document.querySelectorAll<HTMLElement>("[data-opp]")];
+
+  // Recheck each listing's status against today's date, so a listing never
+  // shows as open after its deadline, even before the site is rebuilt.
+  for (const card of cards) {
+    const iso = card.dataset.deadline;
+    if (!iso || card.dataset.status === "archived") continue;
+    const status = statusOf({ deadline: new Date(iso), archived: false });
+    if (status === card.dataset.status) continue;
+    card.dataset.status = status;
+    const label = card.querySelector<HTMLElement>("[data-status-label]");
+    if (label) {
+      label.textContent = STATUS_LABELS[status];
+      label.className = label.className.replace(
+        /status-[a-z-]+/,
+        `status-${status}`,
+      );
+    }
+    if (status === "closed") {
+      card.querySelector("[data-days-left]")?.remove();
+      if (card.closest("[data-list]") && !card.closest("details")) {
+        card.hidden = true;
+        card.dataset.expired = "true";
+      }
+    }
+  }
+
+  // Filters (shown only when this script runs; without it, every listing
+  // stays visible).
+  const form = index?.querySelector<HTMLFormElement>("[data-filters]");
+  const list = index?.querySelector<HTMLElement>("[data-list]");
+  if (form && list) {
+    form.hidden = false;
+    const current = [
+      ...list.querySelectorAll<HTMLElement>("[data-opp]"),
+    ].filter((c) => c.dataset.expired !== "true");
+    const count = form.querySelector<HTMLElement>("[data-count]");
+    const noMatch = index?.querySelector<HTMLElement>("[data-no-match]");
+
+    const apply = () => {
+      const f = new FormData(form);
+      const audience = String(f.get("audience") ?? "");
+      const type = String(f.get("type") ?? "");
+      const region = String(f.get("region") ?? "");
+      const deadline = String(f.get("deadline") ?? "");
+      let shown = 0;
+      for (const c of current) {
+        const s = c.dataset.status ?? "";
+        const ok =
+          (!audience ||
+            (c.dataset.audience ?? "").split(" ").includes(audience)) &&
+          (!type || c.dataset.subcategory === type) &&
+          (!region || (c.dataset.regions ?? "").split(" ").includes(region)) &&
+          (!deadline ||
+            (deadline === "closing-soon" && s === "closing-soon") ||
+            (deadline === "dated" && (s === "open" || s === "closing-soon")) ||
+            (deadline === "rolling" && s === "rolling"));
+        c.hidden = !ok;
+        if (ok) shown++;
+      }
+      if (count)
+        count.textContent = `Showing ${shown} of ${current.length} ${
+          current.length === 1 ? "opportunity" : "opportunities"
+        }`;
+      if (noMatch) noMatch.hidden = shown > 0;
+    };
+    form.addEventListener("change", apply);
+    form.addEventListener("reset", () => setTimeout(apply));
+    apply();
+  }
+</script>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .head h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    line-height: 1.08;
+    max-width: 24ch;
+  }
+
+  .intro {
+    font-size: 1.15rem;
+    color: var(--color-body);
+    max-width: 60ch;
+  }
+
+  .tabs ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.75rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .tabs a {
+    display: inline-block;
+    padding: 0.75rem 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+  }
+
+  .tabs a:hover,
+  .tabs a[aria-current="page"] {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .body {
+    padding-top: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.9rem 1.1rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--color-sand);
+  }
+
+  .filters[hidden] {
+    display: none;
+  }
+
+  .filters label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .filters label span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .filters select {
+    width: 100%;
+    font: inherit;
+    font-size: 0.92rem;
+    padding: 0.55rem 0.6rem;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-surface);
+    color: var(--color-fg);
+    border-radius: 0;
+  }
+
+  .filter-foot {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  .count {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+
+  .clear {
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--color-teal);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .list > [hidden] {
+    display: none;
+  }
+
+  .no-match,
+  .empty {
+    background: var(--color-sand);
+    padding: 1.75rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 48rem;
+  }
+
+  .no-match[hidden] {
+    display: none;
+  }
+
+  .empty-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .closed summary {
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: 0.5rem 0;
+  }
+
+  .closed .list {
+    margin-top: 0.75rem;
+  }
+
+  .how {
+    margin-top: 1rem;
+    padding: 1.5rem 1.75rem;
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-surface);
+    max-width: 52rem;
+  }
+
+  .how h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .how ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: var(--color-body);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 900px) {
+    .filters {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 520px) {
+    .filters {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
