@@ -26,6 +26,9 @@ const articles = defineCollection({
       featured: z.boolean().default(false),
       cover: image().optional(),
       coverAlt: z.string().optional(),
+      // Optional tall illustration shown beside a Field Note on wide screens.
+      sideImage: image().optional(),
+      sideImageAlt: z.string().optional(),
       video: reference("videos").nullish(),
       // Optional. Blank lines are ignored, so an empty list hides the section.
       takeaways: z

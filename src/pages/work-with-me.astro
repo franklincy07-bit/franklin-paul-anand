@@ -2,6 +2,8 @@
 import { link } from "../lib/paths";
 import Base from "../layouts/Base.astro";
 import { getProfile } from "../lib/content";
+import { Image } from "astro:assets";
+import teaching from "../assets/photos/franklin-teaching.jpg";
 
 const profile = await getProfile();
 const { workWithMe, links } = profile;
@@ -17,6 +19,19 @@ const { workWithMe, links } = profile;
     <h1>Where I can contribute</h1>
     <p class="lead">{workWithMe.intro}</p>
   </section>
+
+  <figure class="container photo">
+    <Image
+      src={teaching}
+      alt="Franklin teaching a class, pointing to a slide on the results chain: inputs, activities, outputs, outcomes and impact."
+      widths={[640, 1100, 1600]}
+      sizes="(max-width: 1200px) 100vw, 1200px"
+      loading="eager"
+    />
+    <figcaption>
+      Teaching the results chain at the Indian School of Public Policy.
+    </figcaption>
+  </figure>
 
   <section class="container" aria-label="Opportunities">
     <ol class="opportunities">
@@ -149,6 +164,26 @@ const { workWithMe, links } = profile;
     font-size: 1.35rem;
     line-height: 1.55;
     color: var(--color-body);
+  }
+
+  .photo {
+    margin-block: 0 clamp(2rem, 5vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .photo :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1600 / 686;
+    object-fit: cover;
+  }
+
+  .photo figcaption {
+    font-size: 0.9rem;
+    color: var(--color-muted);
   }
 
   .opportunities {
