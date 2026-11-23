@@ -93,7 +93,25 @@ const lessonCount = (id: string) =>
         </span>
       </a>
 
-      {secondary ? (
+      {secondary && secondary.data.cover ? (
+        <a class="tile tile-photo" href={articleUrl(secondary)}>
+          <Image
+            src={secondary.data.cover}
+            alt=""
+            widths={[400, 800]}
+            sizes="(max-width: 860px) 100vw, 380px"
+          />
+          <span class="tile-overlay">
+            <span class="tag">
+              {ARTICLE_TYPES[secondary.data.type].label}
+              {secondary.data.draft && (
+                <span class="example-badge">Example</span>
+              )}
+            </span>
+            <span class="tile-title">{secondary.data.title}</span>
+          </span>
+        </a>
+      ) : secondary ? (
         <a class="tile tile-sand" href={articleUrl(secondary)}>
           <span class="tag tag-dark">
             {ARTICLE_TYPES[secondary.data.type].label}
