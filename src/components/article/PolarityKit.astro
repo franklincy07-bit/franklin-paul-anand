@@ -1,0 +1,364 @@
+---
+// "Try it yourself" for the polarities guide: map a polarity, place
+// yourself on it and plan small moves, then reflect with What? So what?
+// Now what? Everything stays in the reader's browser.
+import "../../styles/kit.css";
+
+const PRESETS = [
+  ["Scale", "Depth"],
+  ["Global priorities", "Local priorities"],
+  ["Advocacy", "Compliance"],
+  ["Founder vision", "Collective leadership"],
+  ["Short-term survival", "Long-term transformation"],
+  ["Tradition", "Innovation"],
+  ["Centralisation", "Decentralisation"],
+];
+---
+
+<section class="kit" aria-labelledby="pkit-title" data-pkit>
+  <header class="kit-head">
+    <p class="kit-label">Try it yourself</p>
+    <h2 id="pkit-title" class="kit-title">
+      Map a polarity you are living with
+    </h2>
+    <p class="kit-intro">
+      Pick a tension you face, map the upsides and downsides of both sides, see
+      where you are leaning, and plan small moves to keep both.
+    </p>
+    <p class="kit-privacy">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <path
+          d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+      Private: what you write stays on this device. Nothing is sent or stored on
+      this website.
+    </p>
+    <button
+      type="button"
+      class="solid kit-open"
+      aria-expanded="false"
+      aria-controls="pkit-body"
+      data-open
+    >
+      <span data-open-label>Open the exercises</span>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path
+          d="M6 9l6 6 6-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+        ></path>
+      </svg>
+    </button>
+  </header>
+
+  <div id="pkit-body" class="kit-body" hidden data-body>
+    <div class="tabs" role="tablist" aria-label="Exercises">
+      <button role="tab" id="pt-1" aria-controls="pp-1" aria-selected="true">
+        <span>1</span> Map it
+      </button>
+      <button
+        role="tab"
+        id="pt-2"
+        aria-controls="pp-2"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        <span>2</span> Where you lean
+      </button>
+      <button
+        role="tab"
+        id="pt-3"
+        aria-controls="pp-3"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        <span>3</span> What? So what? Now what?
+      </button>
+    </div>
+
+    <!-- 1. Map -->
+    <div role="tabpanel" id="pp-1" aria-labelledby="pt-1" class="panel">
+      <p class="how">
+        Choose a polarity, or write your own. Then fill in each box – one point
+        per line.
+      </p>
+      <div class="presets" role="group" aria-label="Common polarities">
+        {PRESETS.map(([l, r]) => (
+          <button type="button" class="preset" data-l={l} data-r={r}>
+            {l} / {r}
+          </button>
+        ))}
+      </div>
+      <div class="fields two">
+        <label>
+          One side <input type="text" data-k="left" placeholder="e.g. Scale" />
+        </label>
+        <label>
+          The other side{" "}
+          <input type="text" data-k="right" placeholder="e.g. Depth" />
+        </label>
+        <label>
+          <span data-lbl="lu">What the first side gives us</span>
+          <textarea data-k="lu" rows="3"></textarea>
+        </label>
+        <label>
+          <span data-lbl="ru">What the other side gives us</span>
+          <textarea data-k="ru" rows="3"></textarea>
+        </label>
+        <label>
+          <span data-lbl="ld">What goes wrong with too much of the first</span>
+          <textarea data-k="ld" rows="3"></textarea>
+        </label>
+        <label>
+          <span data-lbl="rd">What goes wrong with too much of the other</span>
+          <textarea data-k="rd" rows="3"></textarea>
+        </label>
+      </div>
+      <div class="out">
+        <p class="out-label">Your polarity map</p>
+        <div data-out="map"></div>
+      </div>
+    </div>
+
+    <!-- 2. Lean -->
+    <div role="tabpanel" id="pp-2" aria-labelledby="pt-2" class="panel" hidden>
+      <p class="how">Where is your team leaning right now?</p>
+      <div class="lean">
+        <span data-out="lean-l">One side</span>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+          aria-label="Where your team is leaning"
+          data-lean
+        />
+        <span data-out="lean-r">The other side</span>
+      </div>
+      <p class="result" data-out="lean-text"></p>
+      <div class="fields two">
+        <label>
+          <span data-lbl="wl">
+            Early warning signs we are leaning too far one way
+          </span>
+          <textarea data-k="wl" rows="3"></textarea>
+        </label>
+        <label>
+          <span data-lbl="wr">
+            Early warning signs we are leaning too far the other way
+          </span>
+          <textarea data-k="wr" rows="3"></textarea>
+        </label>
+        <label>
+          <span data-lbl="ml">One small move to protect the first upside</span>
+          <textarea data-k="ml" rows="3"></textarea>
+        </label>
+        <label>
+          <span data-lbl="mr">One small move to protect the other upside</span>
+          <textarea data-k="mr" rows="3"></textarea>
+        </label>
+      </div>
+    </div>
+
+    <!-- 3. Reflect -->
+    <div role="tabpanel" id="pp-3" aria-labelledby="pt-3" class="panel" hidden>
+      <p class="how">
+        Think of a recent decision where you felt this tension. Answer Rolfe's
+        three questions.
+      </p>
+      <div class="fields">
+        <label>
+          What? What happened, and what did we do?{" "}
+          <textarea data-k="what" rows="3"></textarea>
+        </label>
+        <label>
+          So what? What does it tell us – about the situation, about us, about
+          the tension? <textarea data-k="sowhat" rows="3"></textarea>
+        </label>
+        <label>
+          Now what? What will we do differently, and what will we watch for?{" "}
+          <textarea data-k="nowwhat" rows="3"></textarea>
+        </label>
+      </div>
+    </div>
+
+    <footer class="kit-foot">
+      <button type="button" class="solid" data-print>
+        Save my reflection as PDF
+      </button>
+      <button type="button" class="ghost" data-clear>
+        Clear everything
+      </button>
+    </footer>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-pkit]");
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const KEY = "fpa-polarity-kit-v1";
+    type State = { f: Record<string, string>; lean: number };
+    const blank = (): State => ({ f: {}, lean: 50 });
+    let state = blank();
+    try {
+      const s = localStorage.getItem(KEY);
+      if (s) state = { ...blank(), ...JSON.parse(s) };
+    } catch {
+      /* storage unavailable */
+    }
+    const save = () => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(state));
+      } catch {
+        /* ignore */
+      }
+    };
+    const $ = <T extends Element = HTMLElement>(sel: string) =>
+      root.querySelector<T>(sel)!;
+    const $$ = <T extends Element = HTMLElement>(sel: string) => [
+      ...root.querySelectorAll<T>(sel),
+    ];
+    const esc = (s: string) =>
+      s.replace(
+        /[&<>"]/g,
+        (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!,
+      );
+
+    // open / close
+    const body = $("[data-body]");
+    const openBtn = $<HTMLButtonElement>("[data-open]");
+    openBtn.addEventListener("click", () => {
+      const open = body.hidden;
+      body.hidden = !open;
+      openBtn.setAttribute("aria-expanded", String(open));
+      $("[data-open-label]").textContent = open
+        ? "Close the exercises"
+        : "Open the exercises";
+    });
+
+    // tabs
+    const tabs = $$<HTMLButtonElement>('[role="tab"]');
+    const select = (i: number) =>
+      tabs.forEach((t, j) => {
+        t.setAttribute("aria-selected", String(i === j));
+        t.tabIndex = i === j ? 0 : -1;
+        $("#" + t.getAttribute("aria-controls")).hidden = i !== j;
+      });
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        const n =
+          (i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+        select(n);
+        tabs[n].focus();
+      });
+    });
+
+    // fields
+    const fields = $$<HTMLInputElement | HTMLTextAreaElement>("[data-k]");
+    fields.forEach((el) => {
+      el.value = state.f[el.dataset.k!] ?? "";
+      el.addEventListener("input", () => {
+        state.f[el.dataset.k!] = el.value;
+        save();
+        render();
+      });
+    });
+
+    $$<HTMLButtonElement>(".preset").forEach((b) =>
+      b.addEventListener("click", () => {
+        state.f.left = b.dataset.l!;
+        state.f.right = b.dataset.r!;
+        $<HTMLInputElement>('[data-k="left"]').value = state.f.left;
+        $<HTMLInputElement>('[data-k="right"]').value = state.f.right;
+        save();
+        render();
+      }),
+    );
+
+    const lean = $<HTMLInputElement>("[data-lean]");
+    lean.value = String(state.lean);
+    lean.addEventListener("input", () => {
+      state.lean = Number(lean.value);
+      save();
+      render();
+    });
+
+    function render() {
+      const L = (state.f.left || "").trim() || "One side";
+      const R = (state.f.right || "").trim() || "The other side";
+      const l = esc(L),
+        r = esc(R);
+      const labels: Record<string, string> = {
+        lu: `What ${l} gives us`,
+        ru: `What ${r} gives us`,
+        ld: `What goes wrong with too much ${l.toLowerCase()}`,
+        rd: `What goes wrong with too much ${r.toLowerCase()}`,
+        wl: `Early warning signs of too much ${l.toLowerCase()}`,
+        wr: `Early warning signs of too much ${r.toLowerCase()}`,
+        ml: `One small move to protect the upside of ${l.toLowerCase()}`,
+        mr: `One small move to protect the upside of ${r.toLowerCase()}`,
+      };
+      for (const k in labels) $(`[data-lbl="${k}"]`).innerHTML = labels[k];
+      const list = (k: string) => {
+        const items = (state.f[k] || "")
+          .split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean);
+        return items.length
+          ? `<ul>${items.map((s) => `<li>${esc(s)}</li>`).join("")}</ul>`
+          : `<ul><li class="ph">…</li></ul>`;
+      };
+      $('[data-out="map"]').innerHTML = `
+        <div class="pmap">
+          <div class="pm-cell up l"><span class="pm-tag">+ Upside of ${l}</span>${list("lu")}</div>
+          <div class="pm-cell up r"><span class="pm-tag">+ Upside of ${r}</span>${list("ru")}</div>
+          <div class="pm-poles"><span class="pm-pole">${l}</span>
+            <svg viewBox="0 0 120 40" aria-hidden="true" class="pm-loop"><path d="M60 20 C 40 0, 10 0, 10 20 C 10 40, 40 40, 60 20 C 80 0, 110 0, 110 20 C 110 40, 80 40, 60 20 Z" fill="none" stroke="currentColor" stroke-width="3"></path></svg>
+            <span class="pm-pole">${r}</span></div>
+          <div class="pm-cell down l"><span class="pm-tag">– Too much ${l.toLowerCase()}</span>${list("ld")}</div>
+          <div class="pm-cell down r"><span class="pm-tag">– Too much ${r.toLowerCase()}</span>${list("rd")}</div>
+        </div>`;
+      $('[data-out="lean-l"]').textContent = L;
+      $('[data-out="lean-r"]').textContent = R;
+      const v = state.lean;
+      $('[data-out="lean-text"]').innerHTML =
+        v < 35
+          ? `You are leaning towards <b>${l}</b>. Watch for its downside, and protect what <b>${r}</b> gives you.`
+          : v > 65
+            ? `You are leaning towards <b>${r}</b>. Watch for its downside, and protect what <b>${l}</b> gives you.`
+            : `You are holding both sides fairly evenly. Agree the signs that would tell you the balance is slipping.`;
+    }
+
+    // footer
+    $("[data-print]").addEventListener("click", () => {
+      body.hidden = false;
+      $$('[role="tabpanel"]').forEach((p) => (p.hidden = false));
+      document.body.classList.add("printing-kit");
+      window.print();
+      document.body.classList.remove("printing-kit");
+      select(tabs.findIndex((t) => t.getAttribute("aria-selected") === "true"));
+    });
+    $("[data-clear]").addEventListener("click", () => {
+      if (!confirm("Clear everything you have written in these exercises?"))
+        return;
+      state = blank();
+      try {
+        localStorage.removeItem(KEY);
+      } catch {
+        /* ignore */
+      }
+      fields.forEach((el) => (el.value = ""));
+      lean.value = "50";
+      render();
+    });
+
+    render();
+  }
+</script>
