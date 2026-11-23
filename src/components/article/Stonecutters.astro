@@ -1,0 +1,152 @@
+---
+// The three stonecutters: the same work seen three ways – a stone, a wall,
+// a cathedral.
+interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+---
+
+<figure class="art-fig">
+  <svg viewBox="0 0 720 360" role="img" aria-labelledby="sc-title sc-desc">
+    <title id="sc-title">The three stonecutters</title>
+    <desc id="sc-desc">
+      Three panels. A single stone block: "I am cutting a stone." A neat wall of
+      blocks: "I am making it fit the wall." A cathedral with towers and a rose
+      window: "I am building a cathedral."
+    </desc>
+    <rect width="720" height="360" fill="#f6f1ea"></rect>
+    <!-- panel 1: a stone -->
+    <g>
+      <rect
+        x="10"
+        y="14"
+        width="220"
+        height="332"
+        fill="#fff"
+        stroke="#ddd3c6"
+      ></rect>
+      <path d="M70 230 L170 230 L180 200 L80 200 Z" fill="#c9bba9"></path>
+      <path d="M70 230 L170 230 L170 260 L70 260 Z" fill="#a89a88"></path>
+      <path d="M170 230 L180 200 L180 230 L170 260 Z" fill="#8f826f"></path>
+      <path
+        d="M150 140 L176 190"
+        stroke="#12343b"
+        stroke-width="5"
+        stroke-linecap="round"
+      ></path>
+      <rect
+        x="140"
+        y="128"
+        width="22"
+        height="14"
+        transform="rotate(-30 151 135)"
+        fill="#12343b"
+      ></rect>
+    </g>
+    <!-- panel 2: a wall -->
+    <g>
+      <rect
+        x="250"
+        y="14"
+        width="220"
+        height="332"
+        fill="#fff"
+        stroke="#ddd3c6"
+      ></rect>
+      {[0, 1, 2, 3].map((row) =>
+        [0, 1, 2].map((col) => (
+          <rect
+            x={280 + col * 54 + (row % 2) * 27 - (row % 2 && col === 2 ? 0 : 0)}
+            y={260 - row * 30}
+            width="50"
+            height="26"
+            fill={row === 3 && col === 1 ? "#e07a4f" : "#c9bba9"}
+            stroke="#a89a88"
+          />
+        )),
+      )}
+    </g>
+    <!-- panel 3: a cathedral -->
+    <g>
+      <rect
+        x="490"
+        y="14"
+        width="220"
+        height="332"
+        fill="#0f5257"
+        stroke="#0f5257"
+      ></rect>
+      <path
+        d="M520 290 L520 150 L540 110 L560 150 L560 290 Z"
+        fill="#f6f1ea"
+      ></path>
+      <path
+        d="M640 290 L640 150 L660 110 L680 150 L680 290 Z"
+        fill="#f6f1ea"
+      ></path>
+      <path
+        d="M560 290 L560 175 L600 120 L640 175 L640 290 Z"
+        fill="#e9dfd2"
+      ></path>
+      <circle cx="600" cy="190" r="18" fill="#e07a4f"></circle>
+      <path
+        d="M588 290 L588 240 Q 600 222 612 240 L612 290 Z"
+        fill="#12343b"
+      ></path>
+      <path
+        d="M534 180 L546 180 L546 210 L534 210 Z M654 180 L666 180 L666 210 L654 210 Z"
+        fill="#12343b"
+      ></path>
+      <line
+        x1="505"
+        y1="290"
+        x2="695"
+        y2="290"
+        stroke="#c9dedc"
+        stroke-width="2"
+      ></line>
+    </g>
+    <g
+      font-family="Newsreader, Georgia, serif"
+      font-style="italic"
+      font-size="17"
+      text-anchor="middle"
+    >
+      <text x="120" y="312" fill="#12343b">
+        “I am cutting a stone.”
+      </text>
+      <text x="360" y="312" fill="#12343b">
+        “I am making it fit.”
+      </text>
+      <text x="600" y="312" fill="#f6f1ea">
+        “I am building
+      </text>
+      <text x="600" y="333" fill="#f6f1ea">
+        a cathedral.”
+      </text>
+    </g>
+  </svg>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .art-fig {
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-bottom: 4px solid var(--color-accent);
+  }
+  figcaption {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--color-muted);
+  }
+</style>
