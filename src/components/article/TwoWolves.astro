@@ -1,0 +1,105 @@
+---
+// "The two wolves": two geometric wolf heads facing each other – fear and
+// control (apricot) and trust and care (teal) – with the closing line.
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+
+// One wolf head (front view), built from simple facets, centred on 0,0.
+const head = (fill: string, shade: string, light: string) => `
+  <path d="M-62 -70 L-38 -128 L-14 -66 Z" fill="${shade}"/>
+  <path d="M62 -70 L38 -128 L14 -66 Z" fill="${shade}"/>
+  <path d="M-52 -76 L-38 -112 L-24 -70 Z" fill="${light}"/>
+  <path d="M52 -76 L38 -112 L24 -70 Z" fill="${light}"/>
+  <path d="M0 -84 L-66 -66 L-84 -6 L-40 44 L0 92 L40 44 L84 -6 L66 -66 Z" fill="${fill}"/>
+  <path d="M0 -84 L-66 -66 L-84 -6 L-40 44 L0 20 Z" fill="${shade}" opacity="0.35"/>
+  <path d="M-84 -6 L-108 22 L-40 44 Z" fill="${shade}"/>
+  <path d="M84 -6 L108 22 L40 44 Z" fill="${shade}"/>
+  <path d="M0 -20 L-26 34 L0 92 L26 34 Z" fill="${light}"/>
+  <path d="M-12 74 L12 74 L0 90 Z" fill="#12343b"/>
+  <path d="M-46 -22 L-22 -16 L-40 -8 Z" fill="#12343b"/>
+  <path d="M46 -22 L22 -16 L40 -8 Z" fill="#12343b"/>
+`;
+---
+
+<figure class="wolves-fig">
+  <svg viewBox="0 0 720 340" role="img" aria-labelledby="tw-title tw-desc">
+    <title id="tw-title">The two wolves</title>
+    <desc id="tw-desc">
+      Two wolves facing each other. On the left, an orange wolf labelled fear
+      and control. On the right, a teal wolf labelled trust and care. Between
+      them: which one wins? The one you feed.
+    </desc>
+    <rect width="720" height="340" fill="#12343b"></rect>
+    <circle cx="360" cy="70" r="34" fill="#f6f1ea" opacity="0.9"></circle>
+    <circle cx="372" cy="62" r="30" fill="#12343b"></circle>
+    <g
+      transform="translate(150 180) scale(0.92)"
+      set:html={head("#e07a4f", "#a94a22", "#f2c6a8")}
+    />
+    <g
+      transform="translate(570 180) scale(0.92)"
+      set:html={head("#3f8a86", "#0f5257", "#c9dedc")}
+    />
+    <g font-family="Inter, system-ui, sans-serif" text-anchor="middle">
+      <text
+        x="150"
+        y="318"
+        font-size="13"
+        font-weight="700"
+        letter-spacing="1.5"
+        fill="#f2c6a8"
+      >
+        FEAR · CONTROL · BLAME
+      </text>
+      <text
+        x="570"
+        y="318"
+        font-size="13"
+        font-weight="700"
+        letter-spacing="1.5"
+        fill="#c9dedc"
+      >
+        TRUST · CARE · DIGNITY
+      </text>
+    </g>
+    <g
+      font-family="Newsreader, Georgia, serif"
+      text-anchor="middle"
+      fill="#f6f1ea"
+    >
+      <text x="360" y="176" font-size="19" font-style="italic">
+        “Which wolf wins?”
+      </text>
+      <text x="360" y="214" font-size="25" font-weight="600">
+        The one you feed.
+      </text>
+    </g>
+  </svg>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .wolves-fig {
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-bottom: 4px solid var(--color-accent);
+  }
+
+  figcaption {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--color-muted);
+  }
+</style>

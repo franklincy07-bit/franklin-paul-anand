@@ -1,0 +1,502 @@
+---
+// "Try it yourself" for the power and ownership reflection: which drama
+// triangle role you slip into, how much ownership your team shows, and
+// which wolf you fed this week. Everything stays in the reader's browser.
+import "../../styles/kit.css";
+
+const ROLES = {
+  persecutor: {
+    name: "Persecutor",
+    way: "Be assertive without blaming. Say clearly what you need, and hold the line with respect.",
+  },
+  rescuer: {
+    name: "Rescuer",
+    way: "Coach instead of fixing. Ask “What do you think you could do?” and let people own their problems.",
+  },
+  victim: {
+    name: "Victim",
+    way: "Own what is yours. Name one small step that is within your control, and take it.",
+  },
+};
+
+const STATEMENTS: [keyof typeof ROLES, string][] = [
+  [
+    "persecutor",
+    "When something goes wrong, my first thought is who is to blame.",
+  ],
+  [
+    "rescuer",
+    "I step in and fix problems for people, even when they didn’t ask.",
+  ],
+  ["victim", "I feel that things happen to me, rather than because of me."],
+  ["persecutor", "I use criticism or pressure to get things done."],
+  ["rescuer", "I find it hard to say no when someone needs help."],
+  ["victim", "I often feel I have no real choice at work."],
+  ["persecutor", "I get frustrated quickly when others don’t deliver."],
+  [
+    "rescuer",
+    "I feel let down when people don’t appreciate what I did for them.",
+  ],
+  ["victim", "I wait for others to fix situations I’m unhappy with."],
+];
+
+const OWNERSHIP = [
+  "Living the values",
+  "Being emotionally present",
+  "Thinking like an entrepreneur",
+  "Working with passion",
+  "Asking the right questions",
+  "Putting their heart into the work",
+  "Honouring people’s dignity",
+];
+
+const FEAR = [
+  "Blaming someone",
+  "Checking up on every detail",
+  "Criticising in front of others",
+  "Avoiding a hard conversation",
+  "Taking credit for others’ work",
+  "Using fear to get results",
+];
+
+const TRUST = [
+  "Really listening",
+  "Thanking someone specifically",
+  "Sharing credit",
+  "Admitting a mistake",
+  "Asking for ideas before deciding",
+  "Protecting someone’s dignity",
+];
+---
+
+<section
+  class="kit"
+  aria-labelledby="okit-title"
+  data-okit
+  data-roles={JSON.stringify(ROLES)}
+>
+  <header class="kit-head">
+    <p class="kit-label">Try it yourself</p>
+    <h2 id="okit-title" class="kit-title">
+      Power, ownership and the wolf you feed
+    </h2>
+    <p class="kit-intro">
+      Three short exercises: find the drama triangle role you slip into, check
+      how much ownership your team shows, and see which wolf you fed this week.
+    </p>
+    <p class="kit-privacy">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <path
+          d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+      Private: what you write stays on this device. Nothing is sent or stored on
+      this website.
+    </p>
+    <button
+      type="button"
+      class="solid kit-open"
+      aria-expanded="false"
+      aria-controls="okit-body"
+      data-open
+    >
+      <span data-open-label>Open the exercises</span>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path
+          d="M6 9l6 6 6-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+        ></path>
+      </svg>
+    </button>
+  </header>
+
+  <div id="okit-body" class="kit-body" hidden data-body>
+    <div class="tabs" role="tablist" aria-label="Exercises">
+      <button role="tab" id="ot-1" aria-controls="op-1" aria-selected="true">
+        <span>1</span> Your triangle role
+      </button>
+      <button
+        role="tab"
+        id="ot-2"
+        aria-controls="op-2"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        <span>2</span> Ownership check
+      </button>
+      <button
+        role="tab"
+        id="ot-3"
+        aria-controls="op-3"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        <span>3</span> Which wolf?
+      </button>
+    </div>
+
+    <!-- 1. Drama triangle -->
+    <div role="tabpanel" id="op-1" aria-labelledby="ot-1" class="panel">
+      <p class="how">
+        Think about a recent tense moment at work. How true is each statement
+        for you, honestly?
+      </p>
+      <div class="quiz">
+        {STATEMENTS.map(([role, text], i) => (
+          <fieldset class="q-row">
+            <legend>{text}</legend>
+            <div class="q-opts">
+              {["Rarely", "Sometimes", "Often"].map((label, v) => (
+                <label class="q-opt">
+                  <input
+                    type="radio"
+                    name={`dt-${i}`}
+                    value={v}
+                    data-q={i}
+                    data-role={role}
+                  />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        ))}
+      </div>
+      <div class="out" aria-live="polite">
+        <p class="out-label">Where you tend to land</p>
+        <div class="bars" data-out="roles"></div>
+        <p class="result" data-out="role-text">
+          Answer the statements to see your pattern.
+        </p>
+      </div>
+      <label>
+        A recent moment when I played this role – and what I could have done
+        instead
+        <textarea data-k="dt.reflect" rows="3"></textarea>
+      </label>
+    </div>
+
+    <!-- 2. Ownership -->
+    <div role="tabpanel" id="op-2" aria-labelledby="ot-2" class="panel" hidden>
+      <p class="how">
+        You can hold people accountable for rules and results, but not for
+        these. How often do you see them in your team?
+      </p>
+      <div class="rates">
+        {OWNERSHIP.map((item, i) => (
+          <div class="rate-row">
+            <span class="rate-name" id={`own-${i}`}>
+              {item}
+            </span>
+            <input
+              type="range"
+              min="1"
+              max="5"
+              value="3"
+              aria-labelledby={`own-${i}`}
+              data-own={i}
+            />
+            <span class="rate-val" data-own-val={i}>
+              Sometimes
+            </span>
+          </div>
+        ))}
+      </div>
+      <div class="out" aria-live="polite">
+        <p class="out-label">Your team's ownership</p>
+        <div class="meter">
+          <span data-out="own-bar"></span>
+        </div>
+        <p class="result" data-out="own-text"></p>
+      </div>
+      <label>
+        One thing I will do this month to invite more ownership
+        <textarea data-k="own.commit" rows="3"></textarea>
+      </label>
+    </div>
+
+    <!-- 3. Two wolves -->
+    <div role="tabpanel" id="op-3" aria-labelledby="ot-3" class="panel" hidden>
+      <p class="how">
+        “Which wolf wins? The one you feed.” Tick what you did as a leader this
+        week.
+      </p>
+      <div class="wolves">
+        <fieldset class="wolf fear">
+          <legend>The wolf of fear and control</legend>
+          {FEAR.map((item, i) => (
+            <label class="check">
+              <input type="checkbox" data-wolf="fear" data-i={i} /> {item}
+            </label>
+          ))}
+        </fieldset>
+        <fieldset class="wolf trust">
+          <legend>The wolf of trust and care</legend>
+          {TRUST.map((item, i) => (
+            <label class="check">
+              <input type="checkbox" data-wolf="trust" data-i={i} /> {item}
+            </label>
+          ))}
+        </fieldset>
+      </div>
+      <div class="out" aria-live="polite">
+        <p class="out-label">This week you fed</p>
+        <div class="tug">
+          <span class="t-fear" data-out="fear-bar"></span>
+          <span class="t-trust" data-out="trust-bar"></span>
+        </div>
+        <p class="result" data-out="wolf-text">
+          Tick what you did to see the balance.
+        </p>
+      </div>
+      <label>
+        Next week, I will feed the wolf of trust by…
+        <textarea data-k="wolf.next" rows="3"></textarea>
+      </label>
+    </div>
+
+    <footer class="kit-foot">
+      <button type="button" class="solid" data-print>
+        Save my reflection as PDF
+      </button>
+      <button type="button" class="ghost" data-clear>
+        Clear everything
+      </button>
+    </footer>
+  </div>
+</section>
+
+<script>
+  type Role = "persecutor" | "rescuer" | "victim";
+  const root = document.querySelector<HTMLElement>("[data-okit]");
+  if (root) init(root);
+
+  function init(root: HTMLElement) {
+    const KEY = "fpa-ownership-kit-v1";
+    const ROLES = JSON.parse(root.dataset.roles!) as Record<
+      Role,
+      { name: string; way: string }
+    >;
+    type State = {
+      f: Record<string, string>;
+      q: Record<string, number>;
+      own: number[];
+      wolf: Record<string, boolean>;
+    };
+    const blank = (): State => ({
+      f: {},
+      q: {},
+      own: [3, 3, 3, 3, 3, 3, 3],
+      wolf: {},
+    });
+    let state = blank();
+    try {
+      const s = localStorage.getItem(KEY);
+      if (s) state = { ...blank(), ...JSON.parse(s) };
+    } catch {
+      /* storage unavailable */
+    }
+    const save = () => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(state));
+      } catch {
+        /* ignore */
+      }
+    };
+    const $ = <T extends Element = HTMLElement>(sel: string) =>
+      root.querySelector<T>(sel)!;
+    const $$ = <T extends Element = HTMLElement>(sel: string) => [
+      ...root.querySelectorAll<T>(sel),
+    ];
+
+    // open / close
+    const body = $("[data-body]");
+    const openBtn = $<HTMLButtonElement>("[data-open]");
+    openBtn.addEventListener("click", () => {
+      const open = body.hidden;
+      body.hidden = !open;
+      openBtn.setAttribute("aria-expanded", String(open));
+      $("[data-open-label]").textContent = open
+        ? "Close the exercises"
+        : "Open the exercises";
+    });
+
+    // tabs
+    const tabs = $$<HTMLButtonElement>('[role="tab"]');
+    const select = (i: number) =>
+      tabs.forEach((t, j) => {
+        t.setAttribute("aria-selected", String(i === j));
+        t.tabIndex = i === j ? 0 : -1;
+        $("#" + t.getAttribute("aria-controls")).hidden = i !== j;
+      });
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        const n =
+          (i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+        select(n);
+        tabs[n].focus();
+      });
+    });
+
+    // text fields
+    $$<HTMLTextAreaElement>("[data-k]").forEach((el) => {
+      el.value = state.f[el.dataset.k!] ?? "";
+      el.addEventListener("input", () => {
+        state.f[el.dataset.k!] = el.value;
+        save();
+      });
+    });
+
+    // 1. drama triangle
+    const radios = $$<HTMLInputElement>("[data-q]");
+    radios.forEach((r) => {
+      r.checked = state.q[r.dataset.q!] === Number(r.value);
+      r.addEventListener("change", () => {
+        state.q[r.dataset.q!] = Number(r.value);
+        save();
+        renderRoles();
+      });
+    });
+    function renderRoles() {
+      const totals: Record<Role, number> = {
+        persecutor: 0,
+        rescuer: 0,
+        victim: 0,
+      };
+      const answered = Object.keys(state.q).length;
+      radios.forEach((r) => {
+        if (r.checked) totals[r.dataset.role as Role] += Number(r.value);
+      });
+      $('[data-out="roles"]').innerHTML = (Object.keys(totals) as Role[])
+        .map(
+          (k) =>
+            `<div class="bar-row"><span>${ROLES[k].name}</span><span class="bar"><span style="width:${(totals[k] / 6) * 100}%"></span></span><b>${totals[k]}/6</b></div>`,
+        )
+        .join("");
+      const text = $('[data-out="role-text"]');
+      if (answered < 3) {
+        text.textContent = "Answer the statements to see your pattern.";
+        return;
+      }
+      const max = Math.max(...Object.values(totals));
+      if (max === 0) {
+        text.innerHTML =
+          "You rarely slip onto the triangle in these moments. Notice what helps you stay off it.";
+        return;
+      }
+      const top = (Object.keys(totals) as Role[]).filter(
+        (k) => totals[k] === max,
+      );
+      text.innerHTML =
+        `You most often slip into: <b>${top.map((k) => ROLES[k].name).join(" and ")}</b>.<br>` +
+        top
+          .map((k) => `<span class="way">The way out: ${ROLES[k].way}</span>`)
+          .join("<br>");
+    }
+
+    // 2. ownership
+    const words = [
+      "Rarely",
+      "Occasionally",
+      "Sometimes",
+      "Often",
+      "Almost always",
+    ];
+    const ranges = $$<HTMLInputElement>("[data-own]");
+    ranges.forEach((r) => {
+      const i = Number(r.dataset.own);
+      r.value = String(state.own[i] ?? 3);
+      r.addEventListener("input", () => {
+        state.own[i] = Number(r.value);
+        save();
+        renderOwn();
+      });
+    });
+    function renderOwn() {
+      ranges.forEach(
+        (r) =>
+          ($(`[data-own-val="${r.dataset.own}"]`).textContent =
+            words[Number(r.value) - 1]),
+      );
+      const total = state.own.reduce((a, b) => a + b, 0);
+      const pct = Math.round(((total - 7) / 28) * 100);
+      $('[data-out="own-bar"]').style.width = pct + "%";
+      const names = $$(".rate-name").map((n) => n.textContent!.trim());
+      const low = state.own
+        .map((v, i) => [v, i] as const)
+        .sort((a, b) => a[0] - b[0])
+        .slice(0, 2)
+        .map(([, i]) => names[i].toLowerCase());
+      $('[data-out="own-text"]').innerHTML =
+        `<b>${pct}%</b> ownership. Your weakest areas: <b>${low.join("</b> and <b>")}</b>. These cannot be enforced – only invited, modelled and protected.`;
+    }
+
+    // 3. wolves
+    const boxes = $$<HTMLInputElement>("[data-wolf]");
+    boxes.forEach((b) => {
+      const k = b.dataset.wolf + "-" + b.dataset.i;
+      b.checked = !!state.wolf[k];
+      b.addEventListener("change", () => {
+        state.wolf[k] = b.checked;
+        save();
+        renderWolves();
+      });
+    });
+    function renderWolves() {
+      const fear = boxes.filter(
+        (b) => b.checked && b.dataset.wolf === "fear",
+      ).length;
+      const trust = boxes.filter(
+        (b) => b.checked && b.dataset.wolf === "trust",
+      ).length;
+      const all = fear + trust;
+      $('[data-out="fear-bar"]').style.flexGrow = String(all ? fear : 1);
+      $('[data-out="trust-bar"]').style.flexGrow = String(all ? trust : 1);
+      $('[data-out="fear-bar"]').textContent = all ? `Fear ${fear}` : "";
+      $('[data-out="trust-bar"]').textContent = all ? `Trust ${trust}` : "";
+      $('[data-out="wolf-text"]').textContent = !all
+        ? "Tick what you did to see the balance."
+        : trust > fear
+          ? "You mostly fed the wolf of trust this week. What made that possible?"
+          : trust === fear
+            ? "An even week. Which one small habit would tip the balance towards trust?"
+            : "The wolf of fear ate well this week. That is worth noticing, not judging. What pressure was behind it?";
+    }
+
+    // footer
+    $("[data-print]").addEventListener("click", () => {
+      body.hidden = false;
+      $$('[role="tabpanel"]').forEach((p) => (p.hidden = false));
+      document.body.classList.add("printing-kit");
+      window.print();
+      document.body.classList.remove("printing-kit");
+      select(tabs.findIndex((t) => t.getAttribute("aria-selected") === "true"));
+    });
+    $("[data-clear]").addEventListener("click", () => {
+      if (!confirm("Clear everything you have written in these exercises?"))
+        return;
+      state = blank();
+      try {
+        localStorage.removeItem(KEY);
+      } catch {
+        /* ignore */
+      }
+      $$<HTMLTextAreaElement>("[data-k]").forEach((el) => (el.value = ""));
+      radios.forEach((r) => (r.checked = false));
+      ranges.forEach((r) => (r.value = "3"));
+      boxes.forEach((b) => (b.checked = false));
+      renderRoles();
+      renderOwn();
+      renderWolves();
+    });
+
+    renderRoles();
+    renderOwn();
+    renderWolves();
+  }
+</script>
