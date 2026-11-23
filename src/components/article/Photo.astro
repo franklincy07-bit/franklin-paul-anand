@@ -7,17 +7,23 @@ interface Props {
   image: ImageMetadata;
   alt: string;
   caption?: string;
+  /** "portrait": a tall photo shown narrow, with the caption beside it. */
+  layout?: "wide" | "portrait";
 }
 
-const { image, alt, caption } = Astro.props;
+const { image, alt, caption, layout = "wide" } = Astro.props;
 ---
 
-<figure class="photo">
+<figure class:list={["photo", layout]}>
   <Image
     src={image}
     alt={alt}
     widths={[480, 960, 1440]}
-    sizes="(max-width: 760px) 100vw, 720px"
+    sizes={
+      layout === "portrait"
+        ? "(max-width: 640px) 70vw, 280px"
+        : "(max-width: 760px) 100vw, 720px"
+    }
   />
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
@@ -35,6 +41,30 @@ const { image, alt, caption } = Astro.props;
     width: 100%;
     height: auto;
     border-bottom: 4px solid var(--color-accent);
+  }
+
+  .portrait {
+    display: grid;
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .portrait figcaption {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--color-primary);
+  }
+
+  @media (max-width: 640px) {
+    .portrait {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .portrait :global(img) {
+      max-width: 16rem;
+    }
   }
 
   figcaption {

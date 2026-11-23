@@ -1,0 +1,118 @@
+---
+// "The mountain of my life": an illustrated path from birth (C1) to today
+// (C5), with the moments the exercise asks you to mark along the way.
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+---
+
+<figure class="mountain">
+  <svg viewBox="0 0 720 360" role="img" aria-labelledby="lm-title lm-desc">
+    <title id="lm-title">The mountain of my life</title>
+    <desc id="lm-desc">
+      A mountain range drawn as a life path from C1, birth, to C5, today, with a
+      valley marked "the lowest point", a summit marked "the peak", a ledge
+      marked "held up" and a steep climb marked "the risk".
+    </desc>
+    <defs>
+      <linearGradient id="lm-sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#fbe9e0"></stop>
+        <stop offset="1" stop-color="#f6f1ea"></stop>
+      </linearGradient>
+    </defs>
+    <rect width="720" height="360" fill="url(#lm-sky)"></rect>
+    <circle cx="610" cy="70" r="34" fill="#f2c6a8"></circle>
+    <!-- far range -->
+    <path
+      d="M0 300 L90 190 L150 240 L250 120 L330 210 L430 90 L520 200 L600 140 L720 260 L720 360 L0 360 Z"
+      fill="#3f8a86"
+      opacity="0.35"
+    ></path>
+    <!-- the life path -->
+    <path
+      d="M0 330 L60 300 L150 215 L220 280 L300 150 L380 250 L470 105 L560 190 L640 160 L720 230 L720 360 L0 360 Z"
+      fill="#0f5257"
+    ></path>
+    <path
+      d="M60 300 L150 215 L220 280 L300 150 L380 250 L470 105 L560 190 L640 160"
+      fill="none"
+      stroke="#e07a4f"
+      stroke-width="3"
+      stroke-dasharray="7 7"
+      stroke-linecap="round"
+    ></path>
+    <g
+      font-family="Inter, system-ui, sans-serif"
+      font-size="13"
+      font-weight="700"
+    >
+      <g fill="#f6f1ea">
+        <circle cx="60" cy="300" r="7"></circle>
+        <circle cx="220" cy="280" r="7"></circle>
+        <circle cx="380" cy="250" r="7"></circle>
+        <circle cx="560" cy="190" r="7"></circle>
+        <circle cx="640" cy="160" r="7"></circle>
+      </g>
+      <g fill="#12343b">
+        <text x="40" y="330" fill="#f6f1ea">
+          C1 · birth
+        </text>
+        <text x="234" y="285" fill="#f6f1ea">
+          C2
+        </text>
+        <text x="356" y="278" fill="#f6f1ea">
+          C3
+        </text>
+        <text x="536" y="218" fill="#f6f1ea">
+          C4
+        </text>
+        <text x="586" y="188" fill="#f6f1ea">
+          C5 · today
+        </text>
+      </g>
+      <g fill="#a94a22" font-size="12" letter-spacing="0.06em">
+        <text x="120" y="196">
+          HELD UP
+        </text>
+        <text x="162" y="312" fill="#f2c6a8">
+          THE LOWEST POINT
+        </text>
+        <text x="258" y="136">
+          THE RISK
+        </text>
+        <text x="438" y="88">
+          THE PEAK
+        </text>
+        <text x="590" y="120">
+          WHAT NEXT?
+        </text>
+      </g>
+    </g>
+  </svg>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .mountain {
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-bottom: 4px solid var(--color-accent);
+  }
+
+  figcaption {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--color-muted);
+  }
+</style>
