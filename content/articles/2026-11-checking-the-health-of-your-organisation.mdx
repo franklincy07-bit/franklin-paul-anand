@@ -5,6 +5,8 @@ date: 2026-11-30
 type: how-to
 topics: [organisational-development, strategic-leadership]
 featured: false
+cover: ../../src/assets/reflections/iceberg.jpg
+coverAlt: "An iceberg floating in clear water, with its much larger underwater part visible below the surface."
 takeaways:
   - "Every organisation has spark plugs, race horses, zombies and vampires – including in each of us. The question is which behaviour our systems feed."
   - "Organisations move through a life cycle, and each stage needs a different kind of leadership."
@@ -13,7 +15,11 @@ draft: false
 ---
 
 import Iceberg from "../../src/components/article/Iceberg.astro";
-import FourEnergies from "../../src/components/article/FourEnergies.astro";
+import PhotoGrid from "../../src/components/article/PhotoGrid.astro";
+import sparkplug from "../../src/assets/reflections/sparkplug.jpg";
+import racehorse from "../../src/assets/reflections/racehorse.jpg";
+import zombie from "../../src/assets/reflections/zombie.jpg";
+import vampire from "../../src/assets/reflections/vampire.jpg";
 import Highlight from "../../src/components/article/Highlight.astro";
 import Quadrants from "../../src/components/article/Quadrants.astro";
 import LifeCycle from "../../src/components/article/LifeCycle.astro";
@@ -42,7 +48,15 @@ Conflicts and polarities sit across all three, which is why they are so hard to 
 
 One of the most memorable tools I know is a set of four metaphors for the energy people bring to an organisation.
 
-<FourEnergies caption="Four kinds of energy in any team. Nobody is only one – most of us move between them, depending on the day and the culture around us." />
+<PhotoGrid
+  items={[
+    { image: sparkplug, alt: "A spark plug close up.", label: "Spark plugs", text: "Create energy", credit: "Photo: Razor512, CC BY 2.0" },
+    { image: racehorse, alt: "A jockey on a race horse at full gallop.", label: "Race horses", text: "Deliver energy", credit: "Photo: Travis Isaacs, CC BY 2.0" },
+    { image: zombie, alt: "A zombie lunging at a car window in a black-and-white film still.", label: "Zombies", text: "Absorb energy", credit: "Night of the Living Dead (1968). Photo: twm1340, CC BY-SA 2.0" },
+    { image: vampire, alt: "Count Orlok, the vampire, standing on the deck of a ship in a black-and-white film still.", label: "Vampires", text: "Drain energy", credit: "Nosferatu (1922). Public domain" },
+  ]}
+  caption="Four kinds of energy in any team. Nobody is only one – most of us move between them, depending on the day and the culture around us."
+/>
 
 <Quadrants
   label="Four kinds of energy in any team"
@@ -122,3 +136,7 @@ Wheatley's wider call is for leaders to create **"islands of sanity"**: places w
 These five reflections have moved from the self, to power, to polarities, to the wider system, and finally to our own organisations. The thread running through all of them is a line from Dr B.R. Ambedkar: we have our liberty **in order to reform our social system**, which is full of inequality and discrimination.
 
 Leadership in civil society is not only about running good organisations. It is about using whatever power and freedom we have to make the system fairer – starting with ourselves.
+
+---
+
+_Image credits: cover – iceberg by NOAA’s National Ocean Service, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/), via Flickr. Four energies: spark plug by Razor512 and race horse by Travis Isaacs ([CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)); Night of the Living Dead still by twm1340 ([CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/)); Nosferatu (1922) still, public domain. Diagrams: Franklin Paul Anand._

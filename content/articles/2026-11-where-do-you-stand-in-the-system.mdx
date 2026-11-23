@@ -6,6 +6,8 @@ type: insight
 topics: [strategic-leadership, social-impact]
 themes: [social-innovation]
 featured: false
+cover: ../../src/assets/reflections/cathedral-cover.jpg
+coverAlt: "A large cathedral with golden domes, still under construction and wrapped in scaffolding."
 takeaways:
   - "Systems change means tackling root causes – structures, mindsets, power and policy – not only symptoms."
   - "Every organisation needs to decide where it stands: changing the system from within, from outside, by building alternatives, or across all three."
@@ -13,7 +15,10 @@ takeaways:
 draft: false
 ---
 
-import Stonecutters from "../../src/components/article/Stonecutters.astro";
+import PhotoGrid from "../../src/components/article/PhotoGrid.astro";
+import stonecutter from "../../src/assets/reflections/stonecutter.jpg";
+import cathedralCranes from "../../src/assets/reflections/cathedral-cranes.jpg";
+import well from "../../src/assets/reflections/well.jpg";
 import Highlight from "../../src/components/article/Highlight.astro";
 import Quadrants from "../../src/components/article/Quadrants.astro";
 import ChangeQuadrants from "../../src/components/article/ChangeQuadrants.astro";
@@ -42,6 +47,8 @@ The Truth and the Lie go bathing together in a well. The Lie climbs out first, p
 In a post-truth age, one of civil society's jobs is to help people face the naked truth – and to tell stories strong enough to compete with the well-dressed lie.
 
 </Sidenote>
+
+<Photo image={well} alt="Looking down into a deep stone well, with green water far below." caption="Where the truth hides. Photo: joegoauk73, CC BY-SA 2.0, via Flickr." />
 
 ## From projects to systems change
 
@@ -102,7 +109,13 @@ Systems change needs all three – the skill, the precision and the bigger pictu
 
 </Sidenote>
 
-<Stonecutters caption="Three people doing the same work. Only one of them can see the cathedral – and that is the one who keeps going through the hard years." />
+<PhotoGrid
+  items={[
+    { image: stonecutter, alt: "A stonecutter in India shaping blocks of red sandstone by hand with a hammer and chisel.", label: "“I am cutting a stone.”", text: "The skill and the daily work.", credit: "Photo: string_bass_dave, CC BY-SA 2.0" },
+    { image: cathedralCranes, alt: "A Gothic cathedral tower rising behind several construction cranes.", label: "“I am building a cathedral.”", text: "The bigger picture that keeps us going.", credit: "Photo: JT Graphics, CC BY-SA 2.0" },
+  ]}
+  caption="Same work, different meaning. Teams keep going through the hard years when they can see the cathedral."
+/>
 
 ## Strategy as craft
 
@@ -124,3 +137,7 @@ That feels like the right description of systems leadership.
 - Which zone do you work from – delivery, demonstration, demand, or a deliberate mix?
 - Which systems-change capabilities do you have, which do you borrow, and which are missing?
 - Which root cause are your projects actually changing?
+
+---
+
+_Image credits: cover – National Cathedral, Bucharest, under construction, by fusion-of-horizons, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Stonecutter by string_bass_dave, cathedral and cranes by JT Graphics, and well by joegoauk73, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/). All via Flickr. Salt March, 1930 – public domain, via Wikimedia Commons. Diagram: Franklin Paul Anand._
