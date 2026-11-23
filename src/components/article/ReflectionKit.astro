@@ -12,8 +12,8 @@
       Your own reflection
     </h2>
     <p class="kit-intro">
-      Three short exercises from the session. Take your time – there are no
-      right answers.
+      Three short exercises from the session: introduce yourself through your
+      mother's eyes, draw the mountain of your life, and name your values.
     </p>
     <p class="kit-privacy">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
@@ -25,183 +25,203 @@
       Private: what you write stays on this device. Nothing is sent or stored on
       this website.
     </p>
+    <button
+      type="button"
+      class="solid kit-open"
+      aria-expanded="false"
+      aria-controls="kit-body"
+      data-open
+    >
+      <span data-open-label>Open the exercises</span>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path
+          d="M6 9l6 6 6-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+        ></path>
+      </svg>
+    </button>
   </header>
 
-  <div class="tabs" role="tablist" aria-label="Exercises">
-    <button role="tab" id="kt-1" aria-controls="kp-1" aria-selected="true">
-      <span>1</span> Through your mother's eyes
-    </button>
-    <button
-      role="tab"
-      id="kt-2"
-      aria-controls="kp-2"
-      aria-selected="false"
-      tabindex="-1"
-    >
-      <span>2</span> Your mountain
-    </button>
-    <button
-      role="tab"
-      id="kt-3"
-      aria-controls="kp-3"
-      aria-selected="false"
-      tabindex="-1"
-    >
-      <span>3</span> Your values
-    </button>
-  </div>
-
-  <!-- 1. Mother's point of view -->
-  <div role="tabpanel" id="kp-1" aria-labelledby="kt-1" class="panel">
-    <p class="how">
-      Imagine your mother – or the mother figure in your life – introducing you
-      to a room of strangers. Answer as her.
-    </p>
-    <div class="fields">
-      <label>
-        Your name{" "}
-        <input
-          data-k="m.name"
-          type="text"
-          autocomplete="off"
-          placeholder="So she can introduce you"
-        />
-      </label>
-      <label>
-        What of me is in them?{" "}
-        <textarea
-          data-k="m.mine"
-          rows="2"
-          placeholder="My stubbornness, my love of music…"
-        ></textarea>
-      </label>
-      <label>
-        What am I proud of? <textarea data-k="m.proud" rows="2"></textarea>
-      </label>
-      <label>
-        What do I hope for their future?{" "}
-        <textarea data-k="m.hope" rows="2"></textarea>
-      </label>
-      <label>
-        One thing I got wrong in raising them – and am sorry for{" "}
-        <textarea data-k="m.sorry" rows="2"></textarea>
-      </label>
+  <div id="kit-body" class="kit-body" hidden data-body>
+    <div class="tabs" role="tablist" aria-label="Exercises">
+      <button role="tab" id="kt-1" aria-controls="kp-1" aria-selected="true">
+        <span>1</span> Through your mother's eyes
+      </button>
+      <button
+        role="tab"
+        id="kt-2"
+        aria-controls="kp-2"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        <span>2</span> Your mountain
+      </button>
+      <button
+        role="tab"
+        id="kt-3"
+        aria-controls="kp-3"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        <span>3</span> Your values
+      </button>
     </div>
-    <div class="out" aria-live="polite">
-      <p class="out-label">Her introduction</p>
-      <p class="intro-text" data-out="intro">
-        Start typing, and her introduction will appear here.
+
+    <!-- 1. Mother's point of view -->
+    <div role="tabpanel" id="kp-1" aria-labelledby="kt-1" class="panel">
+      <p class="how">
+        Imagine your mother – or the mother figure in your life – introducing
+        you to a room of strangers. Answer as her.
       </p>
+      <div class="fields">
+        <label>
+          Your name{" "}
+          <input
+            data-k="m.name"
+            type="text"
+            autocomplete="off"
+            placeholder="So she can introduce you"
+          />
+        </label>
+        <label>
+          What of me is in them?{" "}
+          <textarea
+            data-k="m.mine"
+            rows="2"
+            placeholder="My stubbornness, my love of music…"
+          ></textarea>
+        </label>
+        <label>
+          What am I proud of? <textarea data-k="m.proud" rows="2"></textarea>
+        </label>
+        <label>
+          What do I hope for their future?{" "}
+          <textarea data-k="m.hope" rows="2"></textarea>
+        </label>
+        <label>
+          One thing I got wrong in raising them – and am sorry for{" "}
+          <textarea data-k="m.sorry" rows="2"></textarea>
+        </label>
+      </div>
+      <div class="out" aria-live="polite">
+        <p class="out-label">Her introduction</p>
+        <p class="intro-text" data-out="intro">
+          Start typing, and her introduction will appear here.
+        </p>
+      </div>
+      <p class="prompt">
+        <b>Reflect:</b> what did writing in her voice show you about yourself as
+        a leader?
+      </p>
+      <textarea
+        data-k="m.reflect"
+        rows="3"
+        aria-label="Your reflection on the introduction"
+      ></textarea>
     </div>
-    <p class="prompt">
-      <b>Reflect:</b> what did writing in her voice show you about yourself as a
-      leader?
-    </p>
-    <textarea
-      data-k="m.reflect"
-      rows="3"
-      aria-label="Your reflection on the introduction"
-    ></textarea>
-  </div>
 
-  <!-- 2. Mountain -->
-  <div role="tabpanel" id="kp-2" aria-labelledby="kt-2" class="panel" hidden>
-    <p class="how">
-      Divide your life into stages, from birth to today. For each, give it a
-      name and say how high or low it felt. Then mark the moments that shaped
-      the climb.
-    </p>
-    <div class="stages" data-stages></div>
-    <button type="button" class="ghost" data-add-stage>
-      + Add a stage
-    </button>
+    <!-- 2. Mountain -->
+    <div role="tabpanel" id="kp-2" aria-labelledby="kt-2" class="panel" hidden>
+      <p class="how">
+        Divide your life into stages, from birth to today. For each, give it a
+        name and say how high or low it felt. Then mark the moments that shaped
+        the climb.
+      </p>
+      <div class="stages" data-stages></div>
+      <button type="button" class="ghost" data-add-stage>
+        + Add a stage
+      </button>
 
-    <figure class="mtn">
-      <svg
-        viewBox="0 0 720 340"
-        role="img"
-        aria-label="Your mountain of life"
-        data-mtn
-      ></svg>
-    </figure>
+      <figure class="mtn">
+        <svg
+          viewBox="0 0 720 340"
+          role="img"
+          aria-label="Your mountain of life"
+          data-mtn
+        ></svg>
+      </figure>
 
-    <div class="fields two">
-      <label>
-        When I was held up – by whom, and how{" "}
-        <textarea data-k="t.held" rows="2"></textarea>
-      </label>
-      <label>
-        My lowest point – and why <textarea data-k="t.low" rows="2"></textarea>
-      </label>
-      <label>
-        A risk I took that mattered{" "}
-        <textarea data-k="t.risk" rows="2"></textarea>
-      </label>
-      <label>
-        When I felt on top of the world{" "}
-        <textarea data-k="t.peak" rows="2"></textarea>
-      </label>
-      <label>
-        A time I gave in to pressure{" "}
-        <textarea data-k="t.pressure" rows="2"></textarea>
-      </label>
-      <label>
-        A contradiction I still find hard to live with{" "}
-        <textarea data-k="t.contra" rows="2"></textarea>
+      <div class="fields two">
+        <label>
+          When I was held up – by whom, and how{" "}
+          <textarea data-k="t.held" rows="2"></textarea>
+        </label>
+        <label>
+          My lowest point – and why{" "}
+          <textarea data-k="t.low" rows="2"></textarea>
+        </label>
+        <label>
+          A risk I took that mattered{" "}
+          <textarea data-k="t.risk" rows="2"></textarea>
+        </label>
+        <label>
+          When I felt on top of the world{" "}
+          <textarea data-k="t.peak" rows="2"></textarea>
+        </label>
+        <label>
+          A time I gave in to pressure{" "}
+          <textarea data-k="t.pressure" rows="2"></textarea>
+        </label>
+        <label>
+          A contradiction I still find hard to live with{" "}
+          <textarea data-k="t.contra" rows="2"></textarea>
+        </label>
+      </div>
+      <label class="wide">
+        At C5, today: one sentence about what I see for myself next
+        <textarea data-k="t.next" rows="2"></textarea>
       </label>
     </div>
-    <label class="wide">
-      At C5, today: one sentence about what I see for myself next
-      <textarea data-k="t.next" rows="2"></textarea>
-    </label>
-  </div>
 
-  <!-- 3. Values -->
-  <div role="tabpanel" id="kp-3" aria-labelledby="kt-3" class="panel" hidden>
-    <p class="how">
-      A value is what you are willing to pay a price for. List up to six values
-      you hold. For each, be honest: have you paid a price for it?
-    </p>
-    <div class="values" data-values></div>
-    <button type="button" class="ghost" data-add-value>
-      + Add a value
-    </button>
+    <!-- 3. Values -->
+    <div role="tabpanel" id="kp-3" aria-labelledby="kt-3" class="panel" hidden>
+      <p class="how">
+        A value is what you are willing to pay a price for. List up to six
+        values you hold. For each, be honest: have you paid a price for it?
+      </p>
+      <div class="values" data-values></div>
+      <button type="button" class="ghost" data-add-value>
+        + Add a value
+      </button>
 
-    <div class="out" aria-live="polite">
-      <p class="out-label">Your values at a glance</p>
-      <div data-out="values" class="chips">
-        <span class="muted">Your values will appear here.</span>
+      <div class="out" aria-live="polite">
+        <p class="out-label">Your values at a glance</p>
+        <div data-out="values" class="chips">
+          <span class="muted">Your values will appear here.</span>
+        </div>
+      </div>
+
+      <div class="fields">
+        <label>
+          A "dirty" value I act on but would rather not admit{" "}
+          <textarea
+            data-k="v.dirty"
+            rows="2"
+            placeholder="The need for approval, the fear of conflict…"
+          ></textarea>
+        </label>
+        <label>
+          Who were my biggest value influencers?{" "}
+          <textarea data-k="v.influencers" rows="2"></textarea>
+        </label>
+        <label>
+          One value I will start paying a price for{" "}
+          <textarea data-k="v.commit" rows="2"></textarea>
+        </label>
       </div>
     </div>
 
-    <div class="fields">
-      <label>
-        A "dirty" value I act on but would rather not admit{" "}
-        <textarea
-          data-k="v.dirty"
-          rows="2"
-          placeholder="The need for approval, the fear of conflict…"
-        ></textarea>
-      </label>
-      <label>
-        Who were my biggest value influencers?{" "}
-        <textarea data-k="v.influencers" rows="2"></textarea>
-      </label>
-      <label>
-        One value I will start paying a price for{" "}
-        <textarea data-k="v.commit" rows="2"></textarea>
-      </label>
-    </div>
+    <footer class="kit-foot">
+      <button type="button" class="solid" data-print>
+        Save my reflection as PDF
+      </button>
+      <button type="button" class="ghost" data-clear>
+        Clear everything
+      </button>
+    </footer>
   </div>
-
-  <footer class="kit-foot">
-    <button type="button" class="solid" data-print>
-      Save my reflection as PDF
-    </button>
-    <button type="button" class="ghost" data-clear>
-      Clear everything
-    </button>
-  </footer>
 </section>
 
 <script>
@@ -217,6 +237,18 @@
   };
 
   function init(root: HTMLElement) {
+    const body = root.querySelector<HTMLElement>("[data-body]")!;
+    const openBtn = root.querySelector<HTMLButtonElement>("[data-open]")!;
+    const openLabel = root.querySelector<HTMLElement>("[data-open-label]")!;
+    openBtn.addEventListener("click", () => {
+      const open = body.hidden;
+      body.hidden = !open;
+      openBtn.setAttribute("aria-expanded", String(open));
+      openLabel.textContent = open
+        ? "Close the exercises"
+        : "Open the exercises";
+      if (open) drawMountain();
+    });
     const KEY = "fpa-reflection-kit-v1";
     const blank = (): State => ({
       f: {},
@@ -302,7 +334,7 @@
       if (name) parts.push(`This is ${esc(name)} – my child.`);
       if (clean(f["m.mine"]))
         parts.push(
-          `What of me is in ${name ? esc(name) : "them"}? ${esc(clean(f["m.mine"]))}.`,
+          `${name ? esc(name) : "My child"} carries something of me: ${esc(clean(f["m.mine"]))}.`,
         );
       if (clean(f["m.proud"]))
         parts.push(`I am proud of ${esc(clean(f["m.proud"]))}.`);
@@ -454,6 +486,7 @@
 
     // ---------- footer ----------
     root.querySelector("[data-print]")!.addEventListener("click", () => {
+      body.hidden = false;
       root
         .querySelectorAll<HTMLElement>('[role="tabpanel"]')
         .forEach((p) => (p.hidden = false));
@@ -503,7 +536,28 @@
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
-    margin-bottom: 1.25rem;
+  }
+
+  .kit .kit-open {
+    align-self: flex-start;
+    margin-top: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .kit .kit-open[aria-expanded="true"] svg {
+    transform: rotate(180deg);
+  }
+
+  .kit .kit-body {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .kit .kit-body[hidden] {
+    display: none;
   }
 
   .kit-label {
@@ -860,6 +914,9 @@
     }
     body.printing-kit .kit .panel[hidden] {
       display: flex !important;
+    }
+    body.printing-kit .kit .kit-open {
+      display: none !important;
     }
     .kit .tabs,
     .kit .kit-foot,
