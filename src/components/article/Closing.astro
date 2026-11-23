@@ -9,12 +9,14 @@ interface Props {
   alt: string;
   captionTitle?: string;
   caption?: string;
+  /** "wide": statement above a full-width landscape photo (group shots). */
+  layout?: "side" | "wide";
 }
 
-const { image, alt, captionTitle, caption } = Astro.props;
+const { image, alt, captionTitle, caption, layout = "side" } = Astro.props;
 ---
 
-<section class="closing">
+<section class:list={["closing", layout]}>
   <div class="statement">
     <slot />
   </div>
@@ -24,7 +26,11 @@ const { image, alt, captionTitle, caption } = Astro.props;
         src={image}
         alt={alt}
         widths={[420, 840]}
-        sizes="(max-width: 640px) 100vw, 320px"
+        sizes={
+          layout === "wide"
+            ? "(max-width: 760px) 100vw, 720px"
+            : "(max-width: 640px) 100vw, 320px"
+        }
       />
     </div>
     {(captionTitle || caption) && (
@@ -100,6 +106,14 @@ const { image, alt, captionTitle, caption } = Astro.props;
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
+  }
+
+  .wide {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wide .frame :global(img) {
+    aspect-ratio: auto;
   }
 
   figcaption {
