@@ -66,6 +66,7 @@ const { label, steps } = Astro.props;
 
   ol > li {
     position: relative;
+    margin: 0;
     display: grid;
     grid-template-columns: 2.75rem minmax(0, 1fr);
     gap: 1rem;
@@ -124,6 +125,10 @@ const { label, steps } = Astro.props;
     margin: 0;
     font-size: 1rem;
     color: var(--color-body);
+  }
+
+  ul:empty {
+    display: none;
   }
 
   ul {
