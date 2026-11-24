@@ -1,5 +1,5 @@
 ---
-// Four ideas as a 2×2 grid of cards (e.g. four zones of change, four
+// Ideas as a two-column grid of cards (four makes a 2×2) (e.g. four zones of change, four
 // behaviours in a team). Each card has a short tag, a title and a line.
 interface Item {
   tag?: string;
@@ -20,7 +20,7 @@ const { label, items, note } = Astro.props;
   {label && <p class="label">{label}</p>}
   <ul>
     {items.map((it, i) => (
-      <li class={`q q${i + 1}`}>
+      <li class={`q q${items.length === 4 ? i + 1 : (i % 3) + 1}`}>
         {it.tag && <span class="tag">{it.tag}</span>}
         <span class="title">{it.title}</span>
         <span class="text">{it.text}</span>
