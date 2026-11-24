@@ -104,5 +104,19 @@ const shareAlt = image
       <slot />
     </main>
     <Footer />
+    <script>
+      // On phones, table rows stack into blocks. Copy each column heading
+      // onto its cells so every value keeps its label.
+      document.querySelectorAll(".prose table").forEach((table) => {
+        const labels = [...table.querySelectorAll("thead th")].map((th) =>
+          (th.textContent ?? "").trim(),
+        );
+        table.querySelectorAll("tbody tr").forEach((row) => {
+          row.querySelectorAll("td").forEach((td, i) => {
+            if (labels[i]) td.dataset.label = labels[i];
+          });
+        });
+      });
+    </script>
   </body>
 </html>

@@ -266,12 +266,10 @@ p {
   .prose tbody td:first-child {
     width: 100%;
   }
-  .prose tbody td:nth-child(2)::before {
-    content: "AI can take on: ";
-    font-weight: 600;
-  }
-  .prose tbody td:last-child::before {
-    content: "Stays human: ";
+  /* Each value is labelled with its own column heading (added at build
+     time from the table's header row). */
+  .prose tbody td[data-label]:not(:first-child)::before {
+    content: attr(data-label) ": ";
     font-weight: 600;
   }
 }
