@@ -1,6 +1,6 @@
 ---
 // Where change happens (after Rao & Kelleher, 2005): individual vs systemic
-// on one axis, informal vs formal on the other, with movements spanning all.
+// on one axis, informal vs formal on the other, with collective action spanning all.
 interface Props {
   caption?: string;
 }
@@ -32,8 +32,8 @@ const cells = [
   {
     x: 380,
     y: 200,
-    title: "Laws and policies",
-    text: ["Rules, budgets and", "institutions"],
+    title: "Public institutions",
+    text: ["Programmes, budgets", "and public services"],
     fill: "#e9dfd2",
   },
 ];
@@ -44,9 +44,9 @@ const cells = [
     <title id="cq-title">Where change happens</title>
     <desc id="cq-desc">
       Four boxes. Top row, individual change: inside people (attitudes, values,
-      practices) and access to resources. Bottom row, systemic change: culture
-      and norms, and laws and policies. Left column informal, right column
-      formal. A circle labelled movements overlaps all four.
+      practices) and access to resources. Bottom row, society-wide change: culture
+      and norms, and public institutions. Left column informal, right
+      column formal. A circle labelled collective action overlaps all four.
     </desc>
     <rect width="720" height="400" fill="#f6f1ea"></rect>
     {cells.map((c) => (
@@ -88,26 +88,29 @@ const cells = [
       </g>
     ))}
     <circle cx="370" cy="190" r="50" fill="#0f5257" opacity="0.92"></circle>
-    <text
-      x="370"
-      y="188"
+    <g
       text-anchor="middle"
       font-family="Newsreader, Georgia, serif"
-      font-size="17"
+      font-size="15"
       font-weight="600"
       fill="#f6f1ea"
     >
-      Movements
-    </text>
+      <text x="370" y="180">
+        Collective
+      </text>
+      <text x="370" y="197">
+        action
+      </text>
+    </g>
     <text
       x="370"
-      y="205"
+      y="213"
       text-anchor="middle"
       font-family="Inter, sans-serif"
       font-size="10"
       fill="#c9dedc"
     >
-      reach all four
+      reaches all four
     </text>
     <g
       font-family="Inter, sans-serif"
@@ -126,7 +129,7 @@ const cells = [
         INDIVIDUAL
       </text>
       <text x="40" y="270" text-anchor="middle" transform="rotate(-90 40 270)">
-        SYSTEMIC
+        SOCIETAL
       </text>
     </g>
   </svg>
