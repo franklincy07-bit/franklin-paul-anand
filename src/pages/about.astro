@@ -137,7 +137,15 @@ const years = (from: string | number, to?: string | number) =>
         <ul class="plain">
           {profile.recognition.map((r) => (
             <li>
-              <span class="role">{r.title}</span>
+              <span class="role">
+                {r.url ? (
+                  <a href={r.url} target="_blank" rel="noopener">
+                    {r.title}
+                  </a>
+                ) : (
+                  r.title
+                )}
+              </span>
               {(r.awardedBy || r.year) && (
                 <span class="org">
                   {[r.awardedBy, r.year].filter(Boolean).join(" · ")}

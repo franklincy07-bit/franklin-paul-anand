@@ -133,6 +133,10 @@ education:
 # Awarding organisations and years are not in the source profile yet – add
 # them under awardedBy / year when the owner provides them.
 recognition:
+  - title: Advisory Board Member
+    awardedBy: YIELD Hub
+    year: 2026
+    url: https://yieldhub.global/meet-the-yield-hub-advisory-board-2/
   - title: Youth Champion
   - title: Young Leader
   - title: Values Champion

@@ -151,6 +151,8 @@ The same file also holds:
 - the **Work With Me** wording (`workWithMe`);
 - `beyondTheTitle`: optional. The "Beyond the job title" section on the
   About page stays hidden until you write it;
+- `recognition`: each item has a `title`, and optionally `awardedBy`,
+  `year` and `url` (a web page that confirms it; the title becomes a link);
 - `links.contactForm`: the Formspree address. The contact form appears only
   once this is set. Until then, the page points people to LinkedIn.
 

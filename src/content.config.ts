@@ -163,6 +163,7 @@ const profile = defineCollection({
         title: z.string(),
         year: year.optional(),
         awardedBy: z.string().optional(),
+        url: z.string().url().optional(),
       }),
     ),
     languages: z.array(z.string()),
