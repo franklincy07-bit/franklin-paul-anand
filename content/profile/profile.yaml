@@ -129,20 +129,28 @@ education:
     from: 2006
     to: 2009
 
-# Both Youth Champion and Young Leader are confirmed by the owner (2026-11-20).
-# Awarding organisations and years are not in the source profile yet – add
-# them under awardedBy / year when the owner provides them.
+# Links checked 2026-11-24: YIELD Hub advisory board page; Rise Up Together
+# profile (Youth Champion 2016); Women Deliver Young Leaders class of 2016
+# profile; Women Deliver WCD Ambassadors project page.
 recognition:
   - title: Advisory Board Member
     awardedBy: YIELD Hub
     year: 2026
     url: https://yieldhub.global/meet-the-yield-hub-advisory-board-2/
   - title: Youth Champion
+    awardedBy: Rise Up
+    year: 2016
+    url: https://www.riseuptogether.org/franklin-gnanamuthu/
   - title: Young Leader
+    awardedBy: Women Deliver
+    year: 2016
+    url: https://womendeliver.org/classmember/franklin-anand-gnanamuthu/
   - title: Values Champion
     year: 2015–16
   - title: World Contraception Day Ambassador
+    awardedBy: Women Deliver and Bayer
     year: 2016
+    url: https://womendeliver.org/advocacy-moment/wcd-ambassadors-project-franklin-gnanamuthu-created-powerful-transgender-rights-video/
 
 languages:
   - English
