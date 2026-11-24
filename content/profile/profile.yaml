@@ -131,12 +131,16 @@ education:
 
 # Links checked 2026-11-24: YIELD Hub advisory board page; Rise Up Together
 # profile (Youth Champion 2016); Women Deliver Young Leaders class of 2016
-# profile; Women Deliver WCD Ambassadors project page.
+# profile; Women Deliver WCD Ambassadors project page; EFICOR team page
+# ("Member of Society").
 recognition:
   - title: Advisory Board Member
     awardedBy: YIELD Hub
     year: 2026
     url: https://yieldhub.global/meet-the-yield-hub-advisory-board-2/
+  - title: Society Member
+    awardedBy: EFICOR
+    url: https://eficor.org/team/mr-franklin-paul-anand-gnanamuthu/
   - title: Youth Champion
     awardedBy: Rise Up
     year: 2016
