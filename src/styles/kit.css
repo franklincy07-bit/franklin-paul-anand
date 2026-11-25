@@ -1,0 +1,793 @@
+/* Shared styles for the interactive "Try it yourself" cards in articles.
+   Every rule is scoped under .kit. */
+.kit {
+  margin: 3rem 0 2rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-top: 6px solid var(--color-accent);
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+}
+
+.kit-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.kit .kit-open {
+  align-self: flex-start;
+  margin-top: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.kit .kit-open[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.kit .kit-body {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.kit .kit-body[hidden] {
+  display: none;
+}
+
+.kit-label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-teal);
+}
+
+.kit .kit-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.7rem;
+  color: var(--color-primary);
+  counter-increment: none;
+}
+
+.kit .kit-title::before {
+  content: none;
+}
+
+.kit-intro,
+.kit .how {
+  margin: 0;
+  color: var(--color-body);
+}
+
+.kit-privacy {
+  margin: 0.25rem 0 0;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--color-teal);
+}
+
+.kit .tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.kit [role="tab"] {
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.92rem;
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  padding: 0.6rem 0.75rem 0.55rem;
+  color: var(--color-muted);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.kit [role="tab"] span {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  background: var(--color-sand);
+  color: var(--color-primary);
+}
+
+.kit [role="tab"][aria-selected="true"] {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-accent);
+}
+
+.kit [role="tab"][aria-selected="true"] span {
+  background: var(--color-teal);
+  color: var(--color-on-dark);
+}
+
+.kit .panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.kit .panel[hidden] {
+  display: none;
+}
+
+.kit .fields {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.kit .fields.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.kit label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.kit input[type="text"],
+.kit textarea,
+.kit select {
+  font: inherit;
+  font-weight: 400;
+  font-size: 0.98rem;
+  color: var(--color-ink, var(--color-primary));
+  background: #fff;
+  border: 1px solid var(--color-line-strong);
+  padding: 0.55rem 0.65rem;
+  border-radius: 0;
+  min-width: 0;
+}
+
+.kit textarea {
+  resize: vertical;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+}
+
+.kit input:focus,
+.kit textarea:focus,
+.kit select:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.kit .out {
+  background: var(--color-bg);
+  border-left: 4px solid var(--color-teal);
+  padding: 1rem 1.15rem;
+}
+
+.kit .out-label,
+.kit .prompt {
+  margin: 0 0 0.35rem;
+}
+
+.kit .out-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-teal);
+}
+
+.kit .intro-text {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: var(--color-primary);
+}
+
+.kit .prompt {
+  color: var(--color-body);
+}
+
+.kit .stage,
+.kit .value {
+  display: grid;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.kit .stage {
+  grid-template-columns: 2.5rem minmax(0, 1fr) minmax(0, 1.2fr) 2rem;
+}
+
+.kit .value {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr) 2rem;
+}
+
+.kit .stages,
+.kit .values {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.kit .cn {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--color-teal);
+  color: var(--color-on-dark);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.kit .rng {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.kit .rng input {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--color-accent);
+}
+
+.kit .x {
+  font: inherit;
+  font-size: 1.2rem;
+  line-height: 1;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-line-strong);
+  background: #fff;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.kit .mtn {
+  margin: 0.5rem 0 0;
+}
+
+.kit .mtn svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-bottom: 4px solid var(--color-accent);
+}
+
+.kit .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.kit .chips .chip {
+  padding: 0.35rem 0.75rem;
+  background: #fff;
+  border: 1px solid var(--color-line-strong);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+
+.kit .chips .chip.yes {
+  background: var(--color-teal);
+  border-color: var(--color-teal);
+  color: var(--color-on-dark);
+}
+
+.kit .chips .chip.conflict {
+  border-color: var(--color-accent);
+  border-width: 2px;
+}
+
+.kit .chips .legend {
+  flex-basis: 100%;
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.kit .chips .muted {
+  color: var(--color-muted);
+}
+
+.kit .wide {
+  width: 100%;
+}
+
+.kit-foot {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.kit .solid,
+.kit .ghost {
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 0.7rem 1.1rem;
+  cursor: pointer;
+  border: 1px solid var(--color-primary);
+}
+
+.kit .solid {
+  background: var(--color-primary);
+  color: var(--color-on-dark);
+}
+
+.kit .solid:hover {
+  background: var(--color-teal);
+}
+
+.kit .ghost {
+  background: #fff;
+  color: var(--color-primary);
+  align-self: flex-start;
+}
+
+@media (max-width: 640px) {
+  .kit .fields.two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kit .stage {
+    grid-template-columns: 2.5rem minmax(0, 1fr) 2rem;
+  }
+
+  .kit .stage .rng {
+    grid-column: 2 / 3;
+  }
+
+  .kit .value {
+    grid-template-columns: minmax(0, 1fr) 2rem;
+  }
+
+  .kit .value select,
+  .kit .value input[data-f="note"] {
+    grid-column: 1 / 2;
+  }
+}
+
+/* ---------- Quiz, ratings and checklists (OwnershipKit and others) ---------- */
+.kit .quiz {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.kit .q-row {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-bg);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.kit .q-row legend {
+  float: left;
+  padding: 0;
+  font-size: 0.95rem;
+  color: var(--color-primary);
+}
+
+.kit .q-opts {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.kit .q-opt {
+  flex-direction: row;
+  position: relative;
+}
+
+.kit .q-opt input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.kit .q-opt span {
+  display: inline-block;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--color-line-strong);
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.kit .q-opt input:checked + span {
+  background: var(--color-teal);
+  border-color: var(--color-teal);
+  color: var(--color-on-dark);
+}
+
+.kit .q-opt input:focus-visible + span {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.kit .bars {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.kit .bar-row {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) 2.5rem;
+  gap: 0.6rem;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.kit .bar {
+  height: 0.7rem;
+  background: var(--color-line);
+}
+
+.kit .bar span {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 0.3s ease;
+}
+
+.kit .result {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--color-body);
+}
+
+.kit .result .way {
+  display: inline-block;
+  margin-top: 0.35rem;
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1.08rem;
+  color: var(--color-teal);
+}
+
+.kit .rates {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.kit .rate-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 7rem;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.95rem;
+  color: var(--color-primary);
+}
+
+.kit .rate-row input {
+  accent-color: var(--color-accent);
+  min-width: 0;
+}
+
+.kit .rate-val {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.kit .meter {
+  height: 0.9rem;
+  background: var(--color-line);
+  margin-bottom: 0.6rem;
+}
+
+.kit .meter span {
+  display: block;
+  height: 100%;
+  width: 50%;
+  background: var(--color-teal);
+  transition: width 0.3s ease;
+}
+
+.kit .wolves {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.kit .wolf {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--color-line);
+  display: grid;
+  gap: 0.45rem;
+}
+
+.kit .wolf.fear {
+  border-top: 4px solid var(--color-accent);
+}
+
+.kit .wolf.trust {
+  border-top: 4px solid var(--color-teal);
+}
+
+.kit .wolf legend {
+  padding: 0 0.25rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-primary);
+}
+
+.kit .check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400;
+  font-size: 0.95rem;
+}
+
+.kit .check input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--color-teal);
+}
+
+.kit .tug {
+  display: flex;
+  height: 2rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.kit .tug span {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  padding: 0 0.6rem;
+  transition: flex-grow 0.3s ease;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.kit .t-fear {
+  background: var(--color-accent);
+}
+
+.kit .t-trust {
+  background: var(--color-teal);
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .kit .q-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .kit .rate-row {
+    grid-template-columns: minmax(0, 1fr) 6.5rem;
+  }
+  .kit .rate-row input {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .kit .wolves {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- Polarity map (PolarityMap and PolarityKit) ---------- */
+.pmap-fig {
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pmap-fig figcaption {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.pmap {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  font-family: var(--font-body);
+}
+
+.pmap .pm-cell {
+  padding: 0.9rem 1rem;
+  min-height: 6rem;
+}
+
+.pmap .pm-cell.up {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-top: 4px solid var(--color-teal);
+}
+
+.pmap .pm-cell.down {
+  background: var(--color-sand);
+  border-bottom: 4px solid var(--color-accent);
+}
+
+.pmap .pm-tag {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-teal);
+}
+
+.pmap .down .pm-tag {
+  color: var(--color-accent-ink, #a94a22);
+}
+
+.pmap ul {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+  color: var(--color-body);
+}
+
+.pmap li {
+  margin: 0;
+}
+
+.pmap .pm-poles {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem minmax(0, 1fr);
+  align-items: center;
+  background: var(--color-primary);
+  color: var(--color-on-dark);
+  padding: 0.6rem 1rem;
+}
+
+.pmap .pm-pole {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+.pmap .pm-pole:last-child {
+  text-align: right;
+}
+
+.pmap .pm-loop {
+  width: 100%;
+  height: auto;
+  color: var(--color-accent);
+}
+
+@media (max-width: 560px) {
+  .pmap .pm-poles {
+    grid-template-columns: minmax(0, 1fr) 4rem minmax(0, 1fr);
+  }
+  .pmap .pm-pole {
+    font-size: 1.1rem;
+  }
+  .pmap .pm-cell {
+    padding: 0.7rem 0.75rem;
+  }
+  .pmap ul {
+    font-size: 0.88rem;
+  }
+}
+
+.kit .presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.kit .preset {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.7rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-line-strong);
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.kit .preset:hover {
+  border-color: var(--color-teal);
+  background: #fff;
+}
+
+.kit .lean {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+}
+
+.kit .lean span:last-child {
+  text-align: right;
+}
+
+.kit .lean input {
+  accent-color: var(--color-accent);
+  min-width: 0;
+}
+
+.kit .pmap .ph {
+  list-style: none;
+  color: var(--color-muted);
+}
+
+/* Print: only the reader's reflection. */
+@media print {
+  body.printing-kit * {
+    visibility: hidden;
+  }
+  body.printing-kit .kit,
+  body.printing-kit .kit * {
+    visibility: visible;
+  }
+  body.printing-kit .kit {
+    position: absolute;
+    inset: 0 0 auto 0;
+    border: 0;
+    margin: 0;
+  }
+  body.printing-kit .kit .panel[hidden] {
+    display: flex !important;
+  }
+  body.printing-kit .kit .kit-open {
+    display: none !important;
+  }
+  .kit .tabs,
+  .kit .kit-foot,
+  .kit .ghost,
+  .kit .x {
+    display: none !important;
+  }
+}

@@ -1,0 +1,100 @@
+---
+import { link } from "../lib/paths";
+import { Image } from "astro:assets";
+import headshot from "../assets/franklin-headshot.webp";
+import { getProfile } from "../lib/content";
+
+interface Props {
+  signed?: boolean;
+}
+
+const { signed = false } = Astro.props;
+const profile = await getProfile();
+---
+
+<aside class="author" aria-label="About the author">
+  <Image
+    src={headshot}
+    alt={`Portrait of ${profile.name}`}
+    widths={[96, 192]}
+    sizes="96px"
+    class="photo"
+  />
+  <div class="text">
+    {signed ? (
+      <p class="signature">– Franklin</p>
+    ) : (
+      <p class="name">{profile.name}</p>
+    )}
+    <p>
+      Development leader working at the intersection of strategic leadership,
+      organisational development and social impact. Views are my own.
+    </p>
+    <p class="links">
+      <a href={link("/about/")}>Read my story</a>
+      <a href={link("/contact/")}>Get in touch</a>
+    </p>
+  </div>
+</aside>
+
+<style>
+  .author {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+    border-top: 1px solid var(--color-line);
+    padding-top: 2rem;
+    margin-top: 3rem;
+  }
+
+  .author :global(.photo) {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 15%;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: var(--color-body);
+  }
+
+  .name {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .signature {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .links a {
+    text-decoration: none;
+  }
+
+  @media (max-width: 520px) {
+    .author {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: start;
+    }
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+import Base from "../../../layouts/Base.astro";
+import WritingIndex from "../../../components/WritingIndex.astro";
+import { TOPICS, TOPIC_KEYS, type Topic } from "../../../lib/taxonomy";
+import { getArticles, getProfile } from "../../../lib/content";
+
+export function getStaticPaths() {
+  return TOPIC_KEYS.map((topic) => ({ params: { topic } }));
+}
+
+const topic = Astro.params.topic as Topic;
+const profile = await getProfile();
+const summary = profile.expertise.find((e) => e.topic === topic)?.summary ?? "";
+const articles = (await getArticles()).filter((a) =>
+  a.data.topics.includes(topic),
+);
+---
+
+<Base title={TOPICS[topic]} description={summary} active="writing">
+  <WritingIndex
+    heading={TOPICS[topic]}
+    intro={summary}
+    articles={articles}
+    activeKey={topic}
+  />
+</Base>

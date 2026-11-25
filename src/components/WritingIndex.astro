@@ -1,0 +1,213 @@
+---
+import { link } from "../lib/paths";
+// The Writing page and its filtered views (by type and by topic).
+import type { CollectionEntry } from "astro:content";
+import ArticleListItem from "./ArticleListItem.astro";
+import { ARTICLE_TYPES, THEMES, TOPICS } from "../lib/taxonomy";
+
+interface Props {
+  heading: string;
+  intro: string;
+  articles: CollectionEntry<"articles">[];
+  activeKey?: string; // "all", a type key or a topic key
+}
+
+const { heading, intro, articles, activeKey = "all" } = Astro.props;
+const types = Object.entries(ARTICLE_TYPES) as [string, { label: string }][];
+const topics = Object.entries(TOPICS);
+---
+
+<section class="container head">
+  <p class="kicker">Writing</p>
+  <h1>{heading}</h1>
+  <p class="intro">{intro}</p>
+</section>
+
+<div class="container layout">
+  <nav class="filters" aria-label="Filter writing">
+    <div>
+      <p class="label">Type</p>
+      <ul>
+        <li>
+          <a
+            href={link("/writing/")}
+            aria-current={activeKey === "all" ? "page" : undefined}
+          >
+            All writing
+          </a>
+        </li>
+        {types.map(([key, t]) => (
+          <li>
+            <a
+              href={link(`/writing/type/${key}/`)}
+              aria-current={activeKey === key ? "page" : undefined}
+            >
+              {t.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <p class="label">Topics</p>
+      <ul>
+        {topics.map(([key, label]) => (
+          <li>
+            <a
+              href={link(`/writing/topic/${key}/`)}
+              aria-current={activeKey === key ? "page" : undefined}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+
+  <div class="results">
+    {articles.length > 0 ? (
+      <div class="list">
+        {articles.map((a) => (
+          <div>
+            <ArticleListItem article={a} />
+            {a.data.themes.length > 0 && (
+              <p class="themes">
+                {a.data.themes.map((t) => THEMES[t]).join(" · ")}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="empty">
+        <p>Nothing here yet – new writing is on its way.</p>
+        {activeKey !== "all" && <a href={link("/writing/")}>See all writing</a>}
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+  }
+
+  .intro {
+    max-width: 44rem;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    line-height: 1.55;
+    color: var(--color-body);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+    gap: clamp(2rem, 5vw, 3.5rem);
+    padding-top: 1rem;
+  }
+
+  .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    align-self: start;
+  }
+
+  .label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 0.6rem;
+  }
+
+  .filters ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .filters a {
+    display: block;
+    padding: 0.35rem 0 0.35rem 0.75rem;
+    border-left: 2px solid transparent;
+    color: var(--color-body);
+    text-decoration: none;
+  }
+
+  .filters a:hover {
+    color: var(--color-teal);
+  }
+
+  .filters a[aria-current="page"] {
+    border-left-color: var(--color-accent);
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+  }
+
+  .themes {
+    margin-top: 0.5rem;
+    margin-left: calc(13.75rem + 1.75rem);
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+
+  .empty {
+    background: var(--color-sand);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 860px) {
+    .layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .filters {
+      gap: 1.25rem;
+    }
+    /* Compact, wrapping filter buttons on small screens. */
+    .filters ul {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .filters a {
+      border: 1px solid var(--color-line-strong);
+      border-left-width: 1px;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.9rem;
+    }
+    .filters a[aria-current="page"] {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: var(--color-on-dark);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .themes {
+      margin-left: 0;
+    }
+  }
+</style>

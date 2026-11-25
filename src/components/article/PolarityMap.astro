@@ -1,0 +1,72 @@
+---
+// A polarity map: two poles that need each other, with the upside and the
+// downside of each. The loop in the middle shows the swing between them.
+import "../../styles/kit.css";
+
+interface Props {
+  left: string;
+  right: string;
+  leftUp: string[];
+  rightUp: string[];
+  leftDown: string[];
+  rightDown: string[];
+  caption?: string;
+}
+
+const { left, right, leftUp, rightUp, leftDown, rightDown, caption } =
+  Astro.props;
+---
+
+<figure class="pmap-fig">
+  <div
+    class="pmap"
+    role="group"
+    aria-label={`Polarity map: ${left} and ${right}`}
+  >
+    <div class="pm-cell up l">
+      <span class="pm-tag">+ Upside of {left}</span>
+      <ul>
+        {leftUp.map((t) => (
+          <li>{t}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="pm-cell up r">
+      <span class="pm-tag">+ Upside of {right}</span>
+      <ul>
+        {rightUp.map((t) => (
+          <li>{t}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="pm-poles">
+      <span class="pm-pole">{left}</span>
+      <svg viewBox="0 0 120 40" aria-hidden="true" class="pm-loop">
+        <path
+          d="M60 20 C 40 0, 10 0, 10 20 C 10 40, 40 40, 60 20 C 80 0, 110 0, 110 20 C 110 40, 80 40, 60 20 Z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+        ></path>
+      </svg>
+      <span class="pm-pole">{right}</span>
+    </div>
+    <div class="pm-cell down l">
+      <span class="pm-tag">– Downside of too much {left.toLowerCase()}</span>
+      <ul>
+        {leftDown.map((t) => (
+          <li>{t}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="pm-cell down r">
+      <span class="pm-tag">– Downside of too much {right.toLowerCase()}</span>
+      <ul>
+        {rightDown.map((t) => (
+          <li>{t}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

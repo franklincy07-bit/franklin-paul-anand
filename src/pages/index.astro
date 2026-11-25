@@ -1,17 +1,858 @@
 ---
-// Phase 0 placeholder: proves the build, content pipeline and deployment work.
-// The real site is built in Phase 1.
-import { getCollection } from "astro:content";
+import { link } from "../lib/paths";
+import { Image } from "astro:assets";
+import candid from "../assets/franklin-candid.jpg";
 import Base from "../layouts/Base.astro";
+import ArticleListItem from "../components/ArticleListItem.astro";
+import headshot from "../assets/franklin-headshot.webp";
+import { ARTICLE_TYPES, TOPICS } from "../lib/taxonomy";
+import { areaStyle } from "../lib/areas";
+import {
+  articleUrl,
+  formatDate,
+  getArticles,
+  getProfile,
+  getSeries,
+  getVideos,
+  readingMinutes,
+  moduleLabel,
+  seriesUrl,
+} from "../lib/content";
 
-const pages = await getCollection("pages");
-const projects = await getCollection("projects", ({ data }) => !data.draft);
+const profile = await getProfile();
+const articles = await getArticles();
+const series = await getSeries();
+const videos = await getVideos();
+
+// Featured: the newest article marked `featured: true`, otherwise the newest article.
+const featured = articles.find((a) => a.data.featured) ?? articles[0];
+const rest = articles.filter((a) => a !== featured);
+const secondary = rest[0];
+const latest = rest.slice(1, 5);
+const lessonCount = (id: string) =>
+  videos.filter((v) => v.data.series?.id === id).length;
+// Modules that already have lessons come first.
+const lessonSeries = [...series].sort(
+  (a, b) => Number(lessonCount(b.id) > 0) - Number(lessonCount(a.id) > 0),
+);
 ---
 
-<Base>
-  <h1>Franklin Paul Anand</h1>
-  <p class="muted">Coming soon. This is the Phase 0 foundation page.</p>
-  <p>
-    Content found: {pages.length} page(s), {projects.length} project(s).
-  </p>
+<Base
+  active="home"
+  jsonLd={{
+    "@type": "Person",
+    name: profile.name,
+    url: new URL(link("/"), Astro.site).href,
+    description: profile.anchorLine,
+    sameAs: [profile.links.linkedin, profile.links.youtube].filter(Boolean),
+  }}
+>
+  <!-- Masthead: name, professional descriptor, headline, supporting statement. -->
+  <section class="masthead container">
+    <p class="name">{profile.name}</p>
+    <ul class="positioning" aria-label="Professional focus">
+      {profile.descriptor.map((p) => (
+        <li>{p}</li>
+      ))}
+    </ul>
+    <h1>{profile.anchorLine}</h1>
+    <p class="statement">{profile.supportingStatement}</p>
+  </section>
+
+  <!-- Featured writing and lessons -->
+  {featured ? (
+    <section class="container feature-grid" aria-label="Featured">
+      <a class="feature" href={articleUrl(featured)}>
+        {featured.data.cover && (
+          <Image
+            src={featured.data.cover}
+            alt=""
+            widths={[720, 1200]}
+            sizes="(max-width: 860px) 100vw, 760px"
+            class="feature-cover"
+          />
+        )}
+        <span class="tag">
+          {ARTICLE_TYPES[featured.data.type].label}
+          {featured.data.draft && <span class="example-badge">Example</span>}
+        </span>
+        <span class="feature-title">{featured.data.title}</span>
+        <span class="feature-meta">
+          {formatDate(featured.data.date)} · {readingMinutes(featured.body)} min
+          read
+        </span>
+      </a>
+
+      <a class="tile tile-photo" href={link("/lessons/")}>
+        <Image
+          src={candid}
+          alt="Franklin at a youth conference"
+          widths={[400, 800]}
+          sizes="(max-width: 860px) 100vw, 380px"
+        />
+        <span class="tile-overlay">
+          <span class="tag">Lessons</span>
+          <span class="tile-title">
+            Short, practical lessons on YouTube – coming soon
+          </span>
+        </span>
+      </a>
+
+      {secondary && secondary.data.cover ? (
+        <a class="tile tile-photo" href={articleUrl(secondary)}>
+          <Image
+            src={secondary.data.cover}
+            alt=""
+            widths={[400, 800]}
+            sizes="(max-width: 860px) 100vw, 380px"
+          />
+          <span class="tile-overlay">
+            <span class="tag">
+              {ARTICLE_TYPES[secondary.data.type].label}
+              {secondary.data.draft && (
+                <span class="example-badge">Example</span>
+              )}
+            </span>
+            <span class="tile-title">{secondary.data.title}</span>
+          </span>
+        </a>
+      ) : secondary ? (
+        <a class="tile tile-sand" href={articleUrl(secondary)}>
+          <span class="tag tag-dark">
+            {ARTICLE_TYPES[secondary.data.type].label}
+            {secondary.data.draft && <span class="example-badge">Example</span>}
+          </span>
+          <span class="tile-title dark">{secondary.data.title}</span>
+        </a>
+      ) : (
+        <a class="tile tile-sand" href={link("/about/")}>
+          <span class="tag tag-dark">About</span>
+          <span class="tile-title dark">
+            From community programmes to organisational leadership – read my
+            story
+          </span>
+        </a>
+      )}
+    </section>
+  ) : (
+    <section class="container empty" aria-label="Writing">
+      <p class="kicker">Writing</p>
+      <p>
+        The first articles are being written. In the meantime,{" "}
+        <a href={link("/about/")}>read my story</a>.
+      </p>
+    </section>
+  )}
+
+  <!-- Where I contribute: the five areas of expertise -->
+  <section class="levels-band" aria-labelledby="levels-title">
+    <div class="container">
+      <div class="levels-intro">
+        <p class="kicker light">Expertise</p>
+        <h2 id="levels-title">Where I contribute</h2>
+      </div>
+      <ol class="levels">
+        {profile.expertise.map((area, i) => {
+          const style = areaStyle(area.topic);
+          return (
+            <li style={`--area: ${style.color}`}>
+              <span class="level-top">
+                <span class="level-icon" aria-hidden="true">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="26"
+                    height="26"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    {style.icon.map((d) => (
+                      <path d={d} />
+                    ))}
+                  </svg>
+                </span>
+                <span class="level-no">0{i + 1}</span>
+              </span>
+              <h3>
+                <a href={link(`/writing/topic/${area.topic}/`)}>
+                  {TOPICS[area.topic]}
+                </a>
+              </h3>
+              <p>{area.summary}</p>
+              <span class="level-more" aria-hidden="true">
+                Writing on this →
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Latest writing + about sidebar -->
+  <div class="container main-grid">
+    <section aria-labelledby="latest-title">
+      <div class="section-title">
+        <h2 id="latest-title">Latest writing</h2>
+      </div>
+      {latest.length > 0 ? (
+        <div class="list">
+          {latest.map((a) => (
+            <ArticleListItem article={a} />
+          ))}
+        </div>
+      ) : (
+        <p class="muted-note">More articles are on their way.</p>
+      )}
+      <a class="more" href={link("/writing/")}>
+        All writing →
+      </a>
+    </section>
+
+    <aside class="sidebar" aria-label="About Franklin">
+      <div class="bio">
+        <Image
+          src={headshot}
+          alt={`Portrait of ${profile.name}`}
+          widths={[220, 440]}
+          sizes="220px"
+          class="portrait"
+        />
+        {profile.shortBio.map((para) => (
+          <p>{para}</p>
+        ))}
+        <a class="caps-link" href={link("/about/")}>
+          Read my story
+        </a>
+      </div>
+
+      <div class="topics">
+        <p class="kicker dark">Topics</p>
+        <ul>
+          {Object.entries(TOPICS).map(([key, label]) => (
+            <li>
+              <a href={link(`/writing/topic/${key}/`)}>{label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="yt">
+        <p class="yt-title">Watch &amp; learn</p>
+        <p>
+          Short training lessons on leadership, organisations and social impact.
+        </p>
+        {profile.links.youtube ? (
+          <a class="btn" href={profile.links.youtube} rel="me noopener">
+            Subscribe on YouTube
+          </a>
+        ) : (
+          <p class="soon">YouTube channel coming soon</p>
+        )}
+      </div>
+    </aside>
+  </div>
+
+  <!-- Lessons -->
+  <section class="container lessons" aria-labelledby="lessons-title">
+    <div class="section-title">
+      <h2 id="lessons-title">Lessons</h2>
+    </div>
+    {series.length > 0 ? (
+      <div class="lesson-grid">
+        {lessonSeries.slice(0, 3).map((s, i) => (
+          <a class="lesson" href={seriesUrl(s)}>
+            <span class="lesson-thumb" data-shade={i % 3}>
+              <svg
+                width="52"
+                height="52"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polygon points="10 8 16 12 10 16 10 8" />
+              </svg>
+            </span>
+            <span class="kicker">
+              {s.data.module ? moduleLabel(s.data.module) : "Series"} ·{" "}
+              {lessonCount(s.id) > 0
+                ? `${lessonCount(s.id)} ${lessonCount(s.id) === 1 ? "lesson" : "lessons"}`
+                : "Coming soon"}
+              {s.data.draft && <span class="example-badge">Example</span>}
+            </span>
+            <span class="lesson-title">{s.data.title}</span>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p class="muted-note">
+        Lesson series will appear here once the YouTube channel launches.
+      </p>
+    )}
+  </section>
 </Base>
+
+<style>
+  /* ---------- Masthead ---------- */
+  .masthead {
+    padding-block: clamp(3rem, 7vw, 5rem) clamp(2.25rem, 5vw, 3.5rem);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+  }
+
+  .name {
+    font-family: var(--font-heading);
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    font-weight: 600;
+    color: var(--color-teal);
+    letter-spacing: 0.01em;
+  }
+
+  .masthead h1 {
+    max-width: 52rem;
+    font-size: clamp(2.1rem, 5vw, 3.6rem);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+
+  .masthead h1::after {
+    content: "";
+    display: block;
+    width: 4.5rem;
+    height: 3px;
+    background: var(--color-accent);
+    margin: 1.4rem auto 0;
+  }
+
+  .statement {
+    max-width: 46rem;
+    font-size: clamp(1.02rem, 1.6vw, 1.15rem);
+    line-height: 1.65;
+    color: var(--color-body);
+  }
+
+  .positioning {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .positioning li + li::before {
+    content: "·";
+    margin-inline: 0.75rem;
+    color: var(--color-line-strong);
+  }
+
+  /* ---------- Featured grid ---------- */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(15rem, auto));
+    gap: 4px;
+  }
+
+  .feature,
+  .tile {
+    position: relative;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    overflow: hidden;
+  }
+
+  .feature {
+    grid-column: span 2;
+    grid-row: span 2;
+    min-height: 34rem;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    background: var(--color-teal);
+    color: var(--color-on-dark);
+  }
+
+  .feature-cover {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .feature:has(:global(.feature-cover))::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      var(--color-teal) 0%,
+      rgba(15, 82, 87, 0.92) 34%,
+      rgba(15, 82, 87, 0) 70%
+    );
+  }
+
+  .feature > *:not(.feature-cover) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .feature-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.9rem, 4vw, 2.9rem);
+    font-weight: 600;
+    line-height: 1.1;
+    max-width: 34rem;
+  }
+
+  .feature:hover .feature-title {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+
+  .feature-meta {
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    color: var(--color-on-dark-muted);
+  }
+
+  .tag {
+    align-self: flex-start;
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    background: var(--color-surface);
+    color: var(--color-primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .tag-dark {
+    background: var(--color-primary);
+    color: var(--color-on-dark);
+  }
+
+  .tile {
+    min-height: 16.5rem;
+  }
+
+  .tile-photo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+  }
+
+  .tile-overlay {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.1rem 1.4rem 1.3rem;
+    background: rgba(18, 52, 59, 0.9);
+  }
+
+  .tile-title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-on-dark);
+  }
+
+  .tile-title.dark {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+  }
+
+  .tile-sand {
+    background: var(--color-sand);
+    padding: 1.5rem;
+  }
+
+  .tile:hover .tile-title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .empty {
+    background: var(--color-sand);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    max-width: calc(var(--content-width) - 6rem);
+  }
+
+  /* ---------- Three levels ---------- */
+  .levels-band {
+    margin-top: clamp(3.5rem, 7vw, 5rem);
+    background: var(--color-primary);
+    color: var(--color-on-dark);
+    padding-block: clamp(2.75rem, 6vw, 4rem);
+  }
+
+  .levels-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .kicker.light {
+    color: var(--color-accent);
+  }
+
+  .levels-intro h2 {
+    color: var(--color-on-dark);
+    font-size: clamp(1.7rem, 3vw, 2.2rem);
+  }
+
+  /* Five cards, each with its own colour (--area) and icon. */
+  .levels {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .levels li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 1.4rem 1.25rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid var(--area);
+    transition:
+      background-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .levels li:hover,
+  .levels li:focus-within {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px);
+  }
+
+  .level-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .level-icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    color: var(--area);
+    background: color-mix(in srgb, var(--area) 16%, transparent);
+  }
+
+  .level-no {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--area);
+    line-height: 1;
+  }
+
+  .levels h3 {
+    color: var(--color-on-dark);
+    font-size: 1.3rem;
+  }
+
+  /* The whole card is the link to that area's writing. */
+  .levels h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .levels h3 a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  .levels p {
+    color: var(--color-on-dark-muted);
+    font-size: 0.97rem;
+  }
+
+  .level-more {
+    margin-top: auto;
+    padding-top: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--area);
+  }
+
+  .levels li:hover .level-more {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Mid widths: three cards then two, both rows filling the width. */
+  @media (max-width: 1100px) {
+    .levels {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+    .levels li {
+      grid-column: span 2;
+    }
+    .levels li:nth-child(n + 4) {
+      grid-column: span 3;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .levels li {
+      transition: none;
+    }
+    .levels li:hover,
+    .levels li:focus-within {
+      transform: none;
+    }
+  }
+
+  /* ---------- Latest writing + sidebar ---------- */
+  .main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 5vw, 4rem);
+    padding-top: clamp(3.5rem, 7vw, 5rem);
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+  }
+
+  .more,
+  .caps-link {
+    display: inline-block;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .muted-note {
+    color: var(--color-muted);
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .bio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .bio :global(.portrait) {
+    width: 13.75rem;
+    height: 13.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 15%;
+  }
+
+  .bio p {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+
+  .bio .caps-link {
+    margin-top: 0;
+  }
+
+  .topics {
+    border-top: 1px solid var(--color-line);
+    padding-top: 1.5rem;
+  }
+
+  .kicker.dark {
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .topics ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .topics a {
+    display: inline-block;
+    border: 1px solid var(--color-line-strong);
+    color: var(--color-fg);
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+
+  .topics a:hover {
+    border-color: var(--color-teal);
+    color: var(--color-teal);
+  }
+
+  .yt {
+    background: var(--color-primary);
+    color: var(--color-on-dark-muted);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .yt-title {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-on-dark);
+  }
+
+  .btn {
+    align-self: flex-start;
+    background: var(--color-accent);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.1rem;
+    text-decoration: none;
+  }
+
+  .soon {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-on-dark);
+  }
+
+  /* ---------- Lessons ---------- */
+  .lessons {
+    padding-top: clamp(3.5rem, 7vw, 5rem);
+  }
+
+  .lesson-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+
+  .lesson {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+
+  .lesson-thumb {
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: var(--color-fg);
+  }
+
+  .lesson-thumb[data-shade="1"] {
+    background: var(--color-teal);
+  }
+
+  .lesson-thumb[data-shade="2"] {
+    background: var(--color-muted);
+  }
+
+  .lesson-title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--color-fg);
+  }
+
+  .lesson:hover .lesson-title {
+    color: var(--color-teal);
+  }
+
+  /* ---------- Small screens ---------- */
+  @media (max-width: 640px) {
+    .positioning {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .positioning li + li::before {
+      content: none;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .feature-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: none;
+    }
+    .feature {
+      grid-column: auto;
+      grid-row: auto;
+      min-height: 22rem;
+    }
+    .tile-sand {
+      min-height: 11rem;
+    }
+    .levels,
+    .lesson-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .levels li,
+    .levels li:nth-child(n + 4) {
+      grid-column: auto;
+    }
+    .main-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

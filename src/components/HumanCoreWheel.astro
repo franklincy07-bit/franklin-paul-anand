@@ -1,0 +1,523 @@
+---
+// "What AI cannot replace": three circles. The environment we live in
+// (outer, dashed) presses in on the machinery of our work (middle, where AI
+// can assist), which surrounds the human core (centre). Animated gently when
+// it scrolls into view; still for visitors who prefer reduced motion.
+// Readers can choose a layer to focus on it.
+
+const C = 300;
+const at = (deg: number, r: number) => {
+  const a = (deg * Math.PI) / 180;
+  return {
+    x: Math.round((C + r * Math.cos(a)) * 10) / 10,
+    y: Math.round((C + r * Math.sin(a)) * 10) / 10,
+  };
+};
+
+const machinery = [
+  ["Project", "management"],
+  ["Monitoring &", "evaluation"],
+  ["Finance &", "compliance"],
+  ["Fundraising &", "proposals"],
+  ["Research &", "knowledge"],
+  ["Learning &", "training"],
+  ["Admin &", "HR"],
+  ["Communication", "& design"],
+].map((lines, i) => ({ lines, ...at(-90 + i * 45, 158) }));
+
+const environment = [
+  { lines: ["Technology", "& media"], ...at(-125, 243) },
+  { lines: ["Funding", "pressure"], ...at(-55, 243) },
+  { lines: ["Regulation &", "registration"], ...at(8, 248) },
+  { lines: ["Markets", "& CSR"], ...at(90, 246) },
+  { lines: ["Politics &", "civic space"], ...at(172, 248) },
+];
+
+// Arrows pressing inward from the environment.
+const arrows = [-150, -30, 40, 140].map((deg) => {
+  const from = at(deg, 282);
+  const to = at(deg, 226);
+  const a = (deg * Math.PI) / 180;
+  // Arrowhead: a small triangle pointing towards the centre.
+  const tip = to;
+  const back = at(deg, 238);
+  const px = -Math.sin(a) * 6;
+  const py = Math.cos(a) * 6;
+  const head = `${tip.x},${tip.y} ${Math.round((back.x + px) * 10) / 10},${Math.round((back.y + py) * 10) / 10} ${Math.round((back.x - px) * 10) / 10},${Math.round((back.y - py) * 10) / 10}`;
+  return { from, line: at(deg, 236), head };
+});
+
+const core = [
+  "Relationship",
+  "Trust",
+  "Emotion",
+  "Empathy",
+  "Care",
+  "Respect & dignity",
+  "Values & conscience",
+  "Moral courage",
+];
+
+const layers = [
+  {
+    key: "environment",
+    label: "The environment",
+    text: "Funding, regulation, markets, politics and technology press in on how we feel and think, and over time can reshape the core itself.",
+  },
+  {
+    key: "machinery",
+    label: "The machinery",
+    text: "Reports, budgets, dashboards, proposals and communications: where AI is a growing advantage.",
+  },
+  {
+    key: "core",
+    label: "The human core",
+    text: "Relationship, trust, empathy, care and courage: what only people can give. AI can support it, never replace it.",
+  },
+];
+---
+
+<figure class="wheel" data-wheel>
+  <div class="stage">
+    <svg
+      viewBox="0 0 600 600"
+      role="img"
+      aria-labelledby="wheel-title wheel-desc"
+      class="svg"
+    >
+      <title id="wheel-title">What AI cannot replace</title>
+      <desc id="wheel-desc">
+        Three circles. At the centre, the human core: relationship, trust,
+        emotion, empathy, care, respect and dignity, values and conscience, and
+        moral courage. Around it, the machinery of our work, where AI can
+        assist: project management, monitoring and evaluation, finance and
+        compliance, fundraising and proposals, research and knowledge, learning
+        and training, admin and HR, and communication and design. Around both,
+        the environment we live in: technology and media, funding pressure,
+        regulation and registration, markets and CSR, and politics and civic
+        space, pressing inward.
+      </desc>
+
+      <!-- Environment -->
+      <g class="layer env" data-layer="environment">
+        <circle class="env-ring" cx="300" cy="300" r="284"></circle>
+        <text class="ring-title" x="300" y="34" text-anchor="middle">
+          THE ENVIRONMENT WE LIVE IN
+        </text>
+        {environment.map((e) => (
+          <text class="env-label" x={e.x} y={e.y - 6} text-anchor="middle">
+            {e.lines.map((l, i) => (
+              <tspan x={e.x} dy={i === 0 ? 0 : 14}>
+                {l}
+              </tspan>
+            ))}
+          </text>
+        ))}
+        {arrows.map((a, i) => (
+          <g class="arrow" style={`--i: ${i}`}>
+            <line x1={a.from.x} y1={a.from.y} x2={a.line.x} y2={a.line.y} />
+            <polygon points={a.head} />
+          </g>
+        ))}
+      </g>
+
+      <!-- Machinery -->
+      <g class="layer mach" data-layer="machinery">
+        <circle class="mach-disc" cx="300" cy="300" r="208"></circle>
+        <text class="ring-title" x="300" y="112" text-anchor="middle">
+          WHERE AI CAN ASSIST
+        </text>
+        {machinery.map((m, i) => (
+          <g class="fn" style={`--i: ${i}`}>
+            <circle class="fn-dot" cx={m.x} cy={m.y - 24} r="3.5" />
+            <text class="fn-label" x={m.x} y={m.y - 3} text-anchor="middle">
+              {m.lines.map((l, j) => (
+                <tspan x={m.x} dy={j === 0 ? 0 : 15}>
+                  {l}
+                </tspan>
+              ))}
+            </text>
+          </g>
+        ))}
+      </g>
+
+      <!-- Human core -->
+      <g class="layer core" data-layer="core">
+        <circle class="core-glow" cx="300" cy="300" r="112"></circle>
+        <circle class="core-disc" cx="300" cy="300" r="104"></circle>
+        <circle class="core-ring" cx="300" cy="300" r="98"></circle>
+        <text class="core-title" x="300" y="236" text-anchor="middle">
+          Human core
+        </text>
+        {core.map((q, i) => (
+          <text
+            class="core-item"
+            x="300"
+            y={262 + i * 16.5}
+            text-anchor="middle"
+          >
+            {q}
+          </text>
+        ))}
+      </g>
+    </svg>
+  </div>
+
+  <figcaption class="key">
+    <p class="key-label">Choose a circle</p>
+    <div class="key-buttons" role="group" aria-label="Focus on a circle">
+      {layers.map((l) => (
+        <button
+          type="button"
+          class={`key-btn key-${l.key}`}
+          data-focus={l.key}
+          aria-pressed="false"
+        >
+          <span class="swatch" aria-hidden="true" />
+          {l.label}
+        </button>
+      ))}
+    </div>
+    <p class="key-text" data-key-text aria-live="polite">
+      The simplest way to picture civil society in the age of AI: three circles,
+      from the environment outside to the human core at the centre.
+    </p>
+    <template data-texts>
+      {layers.map((l) => (
+        <p data-for={l.key}>{l.text}</p>
+      ))}
+    </template>
+  </figcaption>
+</figure>
+
+<script>
+  for (const wheel of document.querySelectorAll<HTMLElement>("[data-wheel]")) {
+    const svg = wheel.querySelector("svg");
+    const text = wheel.querySelector<HTMLElement>("[data-key-text]");
+    const intro = text?.textContent ?? "";
+    const texts = new Map(
+      [
+        ...(wheel.querySelector<HTMLTemplateElement>("[data-texts]")?.content
+          .children ?? []),
+      ].map((p) => [p.getAttribute("data-for"), p.textContent ?? ""]),
+    );
+    const buttons = [
+      ...wheel.querySelectorAll<HTMLButtonElement>("[data-focus]"),
+    ];
+
+    // Focus on one circle (or none).
+    let current: string | null = null;
+    const focus = (key: string | null) => {
+      current = key;
+      if (key) svg?.setAttribute("data-focus", key);
+      else svg?.removeAttribute("data-focus");
+      for (const b of buttons)
+        b.setAttribute("aria-pressed", String(b.dataset.focus === key));
+      if (text) text.textContent = key ? (texts.get(key) ?? intro) : intro;
+    };
+    for (const b of buttons)
+      b.addEventListener("click", () =>
+        focus(current === b.dataset.focus ? null : (b.dataset.focus ?? null)),
+      );
+
+    // Draw the circles in, layer by layer, when the wheel scrolls into view.
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (still || !("IntersectionObserver" in window)) continue;
+    wheel.classList.add("ready");
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          wheel.classList.add("in-view");
+          io.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(wheel);
+  }
+</script>
+
+<style>
+  .wheel {
+    margin: 2.25rem 0;
+    padding: clamp(1rem, 3vw, 1.75rem);
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1rem, 3vw, 2rem);
+    align-items: center;
+    font-family: var(--font-body);
+  }
+
+  .stage {
+    min-width: 0;
+    max-width: 36rem;
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* ----- Shapes and text ----- */
+  .env-ring {
+    fill: none;
+    stroke: var(--color-line-strong);
+    stroke-width: 1.5;
+    stroke-dasharray: 5 7;
+  }
+
+  .ring-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    fill: var(--color-muted);
+  }
+
+  .env-label {
+    font-size: 13.5px;
+    fill: var(--color-fg);
+  }
+
+  .arrow line {
+    stroke: var(--color-accent);
+    stroke-width: 2;
+  }
+
+  .arrow polygon {
+    fill: var(--color-accent);
+  }
+
+  .mach-disc {
+    fill: var(--color-sand);
+  }
+
+  .fn-label {
+    font-size: 14px;
+    fill: var(--color-fg);
+  }
+
+  .fn-dot {
+    fill: var(--color-line-strong);
+  }
+
+  .core-glow {
+    fill: var(--color-accent);
+    opacity: 0;
+  }
+
+  .core-disc {
+    fill: #f7e1d3;
+  }
+
+  .core-ring {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+  }
+
+  .core-title {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 600;
+    fill: var(--color-primary);
+  }
+
+  .core-item {
+    font-size: 14px;
+    fill: var(--color-primary);
+  }
+
+  .layer {
+    transition: opacity 0.35s ease;
+  }
+
+  /* Focus on one circle: the others step back. */
+  .svg[data-focus="environment"] .layer:not(.env),
+  .svg[data-focus="machinery"] .layer:not(.mach),
+  .svg[data-focus="core"] .layer:not(.core) {
+    opacity: 0.25;
+  }
+
+  /* ----- Key ----- */
+  .key {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .key-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .key-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .key-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex: 1 1 10rem;
+    text-align: left;
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: var(--color-bg);
+    border: 1px solid var(--color-line);
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+  }
+
+  .key-btn:hover {
+    border-color: var(--color-teal);
+  }
+
+  .key-btn[aria-pressed="true"] {
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+    box-shadow: inset 3px 0 0 var(--color-accent);
+  }
+
+  .swatch {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .key-environment .swatch {
+    border: 1.5px dashed var(--color-line-strong);
+  }
+
+  .key-machinery .swatch {
+    background: var(--color-sand);
+  }
+
+  .key-core .swatch {
+    background: #f7e1d3;
+    border: 2px solid var(--color-accent);
+  }
+
+  .key-text {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--color-body);
+    min-height: 3.2em;
+  }
+
+  /* ----- Motion (only when JavaScript has set it up) ----- */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Entrance: environment, then machinery, then core. */
+    .wheel.ready .layer {
+      opacity: 0;
+      transform: scale(0.94);
+      transform-box: view-box;
+      transform-origin: 300px 300px;
+      transition:
+        opacity 0.7s ease,
+        transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .wheel.in-view .layer {
+      opacity: 1;
+      transform: none;
+    }
+
+    .wheel.in-view .mach {
+      transition-delay: 0.35s;
+    }
+
+    .wheel.in-view .core {
+      transition-delay: 0.75s;
+    }
+
+    .wheel.in-view .svg[data-focus="environment"] .layer:not(.env),
+    .wheel.in-view .svg[data-focus="machinery"] .layer:not(.mach),
+    .wheel.in-view .svg[data-focus="core"] .layer:not(.core) {
+      opacity: 0.25;
+      transition-delay: 0s;
+    }
+
+    /* The outer ring drifts slowly. */
+    .wheel.in-view .env-ring {
+      animation: drift 30s linear infinite;
+    }
+
+    /* Pressure: arrows press inward, one after another. */
+    .wheel.in-view .arrow {
+      transform-box: view-box;
+      transform-origin: 300px 300px;
+      animation: press 4s ease-in-out infinite;
+      animation-delay: calc(1.2s + var(--i) * 1s);
+    }
+
+    /* AI assists one task after another around the machinery ring. */
+    .wheel.in-view .fn-dot {
+      animation: assist 8s ease-in-out infinite;
+      animation-delay: calc(1.2s + var(--i) * 1s);
+    }
+
+    /* The core breathes. */
+    .wheel.in-view .core-glow {
+      transform-box: view-box;
+      transform-origin: 300px 300px;
+      animation: breathe 4.5s ease-in-out infinite 1.6s;
+    }
+  }
+
+  @keyframes drift {
+    to {
+      stroke-dashoffset: -120;
+    }
+  }
+
+  @keyframes press {
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    45% {
+      transform: scale(0.965);
+      opacity: 0.55;
+    }
+  }
+
+  @keyframes assist {
+    0%,
+    18%,
+    100% {
+      fill: var(--color-line-strong);
+      r: 3.5px;
+    }
+    6% {
+      fill: var(--color-teal);
+      r: 6px;
+    }
+  }
+
+  @keyframes breathe {
+    0%,
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.18;
+      transform: scale(1.06);
+    }
+  }
+</style>

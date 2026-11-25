@@ -1,0 +1,164 @@
+# Franklin Paul Anand – profile used across the website.
+# Facts come from the owner's LinkedIn profile (shared on 2026-11-20) and the
+# owner's confirmations. Wording approved by the owner on 2026-11-20.
+# Do not add achievements, credentials or figures that are not confirmed.
+
+name: Franklin Paul Anand
+
+# Homepage headline (approved).
+anchorLine: Building organisations and movements that enable young people and communities to thrive.
+
+# Professional descriptor shown above the headline (approved).
+descriptor:
+  - Strategic Leadership
+  - Organisational Development
+  - Social Impact
+
+# Homepage supporting statement (approved, owner's wording).
+supportingStatement: I'm a development leader working at the intersection of strategic leadership, organisational development and social impact. More than 15 years of experience in programme leadership, organisational performance, monitoring and learning, youth development and partnerships have shaped my approach to strengthening organisations and enabling meaningful social impact.
+
+# Short bio for the home page sidebar.
+shortBio:
+  - I'm Franklin. For over 15 years I've worked in international development – from community-level programme work in Bihar to my current role as Head of Country for India and Nepal.
+  - Youth leadership has been at the heart of that journey, and it shapes how I think about building organisations that deliver.
+
+# About page introduction (three paragraphs).
+aboutIntro:
+  - I'm a development leader working at the intersection of strategic leadership, organisational development and social impact. As Head of Country for India and Nepal, I lead strategic planning, operational planning and organisational performance across my country leadership responsibilities, working closely with the leadership team and the organisation's governance structures.
+  - My perspective was built from the ground up. I began with community-level programme work in Bihar, recruiting and supporting community volunteers. I then spent a decade building monitoring, evaluation and learning systems across several Indian states and multi-country programmes in Asia and Africa, before moving into strategic and organisational leadership. Along the way I've worked with government, UN agencies, the private sector, NGOs and research institutions, and supported programme partners to strengthen their monitoring and learning practices.
+  - Working alongside young people taught me that lasting impact needs more than good programmes. It needs clear strategy, strong organisations, sound evidence and partnerships that outlast any single project. That is the work I care about most – helping organisations strengthen their capabilities and turn strategy into meaningful change, with youth leadership as a distinctive part of it.
+
+# The five areas of expertise (approved). `topic` must match a topic key.
+expertise:
+  - topic: strategic-leadership
+    summary: Turning strategy into action through planning, performance and leadership.
+    details:
+      - points:
+          - Annual strategic planning and review against country strategy
+          - Leading and working with the leadership team
+          - Organisational performance reporting to leadership and governance structures
+          - Contributing to organisational strategy at a global level
+  - topic: organisational-development
+    summary: Strengthening the systems, processes and teams that help organisations deliver.
+    details:
+      - heading: Within my own organisation
+        points:
+          - Operational plans across business units
+          - Performance dashboards covering quality assurance, risk, management accounts and internal audit
+          - Programme management, risk, safety and security systems
+          - Team development, mentoring and building capacity
+      - heading: With programme partners
+        points:
+          - Technical support to strengthen monitoring, evaluation and learning practices
+      - heading: Digital systems and tools
+        points:
+          - Digital platforms, real-time dashboards and mobile applications
+  - topic: social-impact
+    summary: Designing programmes and partnerships that create change beyond any single project.
+    details:
+      - points:
+          - Programme strategy informed by evidence and learning
+          - Multi-country initiatives across Asia and Africa
+          - Partnerships with government, UN agencies, the private sector, NGOs and research institutions
+  - topic: youth-leadership
+    summary: Advancing young people as leaders, decision-makers and agents of change.
+    details:
+      - points:
+          - Over 15 years in youth-led development
+          - Youth-led monitoring tools and youth-led reviews
+          - Test-learn-adapt cycles led by young people
+  - topic: evidence-learning
+    summary: Using evidence to improve decisions, accountability and results.
+    details:
+      - points:
+          - Monitoring, evaluation and learning frameworks, baselines and evaluations
+          - Outcome mapping, adaptive management and value-for-money assessment
+          - Results reporting and research partnerships
+
+# Optional "Beyond the job title" paragraphs for the About page. Hidden until written.
+# beyondTheTitle:
+#   - A few lines about what drives you and life beyond work.
+
+# Contact page.
+contact:
+  intro: I'm glad to hear from people working on youth leadership, organisational development and social impact – whether you want to exchange ideas or explore working together.
+  topics:
+    - title: Speaking and writing
+      text: Conferences, panels, articles and conversations on leadership, organisations and social impact.
+    - title: Learning, training and facilitation
+      text: Workshops and facilitated sessions on strategy, organisational development, monitoring, evaluation and learning, and youth leadership.
+    - title: Advisory conversations
+      text: Focused conversations on strategy and planning, organisational systems and performance, and monitoring, evaluation and learning.
+    - title: Collaborations
+      text: Partnerships and shared work with organisations and networks that put young people and communities at the centre.
+  note: Any engagement depends on my current commitments and is agreed case by case.
+
+links:
+  linkedin: https://www.linkedin.com/in/franklin-paul-95a2294a/
+  # youtube: add the channel address once it exists
+  contactForm: https://formspree.io/f/mjywewrr # Formspree form address (not secret; messages go to Formspree, never to this repository)
+
+career:
+  - role: Head of Country, India & Nepal
+    organisation: Restless Development
+    from: 2022
+  - role: Senior Monitoring, Evaluation & Learning Manager
+    organisation: Restless Development
+    from: 2019
+    to: 2022
+  - role: Monitoring, Evaluation & Research Manager
+    organisation: Restless Development
+    from: 2016
+    to: 2019
+  - role: Monitoring & Evaluation Coordinator
+    organisation: Student Partnership Worldwide India Project Trust
+    from: 2012
+    to: 2016
+  - role: Assistant Programme Coordinator
+    organisation: Student Partnership Worldwide India Project Trust
+    from: 2011
+    to: 2011
+
+education:
+  - qualification: Master of Social Work, Community Development
+    institution: Sacred Heart College
+    from: 2009
+    to: 2011
+  - qualification: BSc, Microbiology
+    institution: V.P. & R.P.T.P. Science College
+    from: 2006
+    to: 2009
+
+# Links checked 2026-11-24: YIELD Hub advisory board page; Rise Up Together
+# profile (Youth Champion 2016); Women Deliver Young Leaders class of 2016
+# profile; Women Deliver WCD Ambassadors project page; EFICOR team page
+# ("Member of Society").
+recognition:
+  - title: Advisory Board Member
+    awardedBy: YIELD Hub
+    year: 2026
+    url: https://yieldhub.global/meet-the-yield-hub-advisory-board-2/
+  - title: Society Member
+    awardedBy: EFICOR
+    url: https://eficor.org/team/mr-franklin-paul-anand-gnanamuthu/
+  - title: Youth Champion
+    awardedBy: Rise Up
+    year: 2016
+    url: https://www.riseuptogether.org/franklin-gnanamuthu/
+  - title: Young Leader
+    awardedBy: Women Deliver
+    year: 2016
+    url: https://womendeliver.org/classmember/franklin-anand-gnanamuthu/
+  - title: Values Champion
+    awardedBy: Restless Development
+    year: 2015–16
+  - title: World Contraception Day Ambassador
+    awardedBy: Women Deliver and Bayer
+    year: 2016
+    url: https://womendeliver.org/advocacy-moment/wcd-ambassadors-project-franklin-gnanamuthu-created-powerful-transgender-rights-video/
+
+languages:
+  - English
+  - Hindi
+  - Gujarati
+  - Tamil

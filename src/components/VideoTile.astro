@@ -1,0 +1,59 @@
+---
+// One video card: typographic tile, label, title and summary.
+import type { CollectionEntry } from "astro:content";
+import VideoThumb from "./VideoThumb.astro";
+import { lessonLabel, videoUrl } from "../lib/content";
+
+interface Props {
+  video: CollectionEntry<"videos">;
+  /** Small line above the title, e.g. the series name or a topic. */
+  kicker: string;
+}
+
+const { video, kicker } = Astro.props;
+const { data } = video;
+const label = data.series && data.lesson ? lessonLabel(data.lesson) : "Video";
+---
+
+<a href={videoUrl(video)} class="card">
+  <VideoThumb
+    label={label}
+    duration={data.duration}
+    published={!!data.youtubeId}
+  />
+  <span class="kicker">
+    {kicker}
+    {data.draft && <span class="example-badge">Example</span>}
+  </span>
+  <span class="title">{data.title}</span>
+  <span class="summary">{data.summary}</span>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    text-decoration: none;
+  }
+
+  .kicker {
+    margin-top: 0.4rem;
+  }
+
+  .title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    line-height: 1.25;
+    color: var(--color-fg);
+  }
+
+  .card:hover .title {
+    color: var(--color-teal);
+  }
+
+  .summary {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+  }
+</style>

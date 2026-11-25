@@ -1,0 +1,180 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { ARTICLE_TYPES, TOPICS } from "../lib/taxonomy";
+import { articleUrl } from "../lib/content";
+
+interface Props {
+  article: CollectionEntry<"articles">;
+}
+
+const { article } = Astro.props;
+const { data } = article;
+const topic = data.topics[0] ? TOPICS[data.topics[0]] : undefined;
+// Without a cover image, the tile is a small typographic "plate": the type,
+// a mark for that type and the main topic – never an empty coloured block.
+const mark = {
+  "field-notes": data.entry
+    ? `No. ${String(data.entry).padStart(2, "0")}`
+    : "Notes",
+  insight: "\u201C",
+  "how-to": "1 · 2 · 3",
+}[data.type];
+---
+
+<article class="item">
+  <a
+    href={articleUrl(article)}
+    class:list={["thumb", { plate: !data.cover }]}
+    data-type={data.type}
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    {data.cover ? (
+      <Image src={data.cover} alt="" widths={[240, 480]} sizes="220px" />
+    ) : (
+      <>
+        <span class="plate-type">{ARTICLE_TYPES[data.type].label}</span>
+        <span class="plate-mark">{mark}</span>
+        <span class="plate-topic">{topic ?? "Franklin Paul Anand"}</span>
+      </>
+    )}
+  </a>
+  <div class="text">
+    <p class="kicker">
+      {ARTICLE_TYPES[data.type].label}
+      {topic && <span class="topic"> · {topic}</span>}
+      {data.draft && <span class="example-badge">Example</span>}
+    </p>
+    <h3>
+      <a href={articleUrl(article)}>{data.title}</a>
+    </h3>
+    <p class="summary">{data.summary}</p>
+  </div>
+</article>
+
+<style>
+  .item {
+    display: grid;
+    grid-template-columns: 13.75rem minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: center;
+  }
+
+  .thumb {
+    display: block;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    text-decoration: none;
+  }
+
+  /* Typographic plate used when an article has no image. */
+  .plate {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.4rem;
+    padding: 0.85rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-top: 3px solid var(--color-teal);
+  }
+
+  .plate[data-type="field-notes"] {
+    border-top-color: var(--color-accent);
+  }
+
+  .plate[data-type="how-to"] {
+    border-top-color: var(--color-primary);
+  }
+
+  .plate-type {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .plate-mark {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 2.3rem;
+    line-height: 1;
+    color: var(--color-primary);
+  }
+
+  .plate[data-type="insight"] .plate-mark {
+    font-style: normal;
+    font-size: 5.5rem;
+    line-height: 0.75;
+    height: 2.6rem;
+    margin-top: 0.2rem;
+    color: var(--color-teal);
+  }
+
+  .plate[data-type="how-to"] .plate-mark {
+    font-style: normal;
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+  }
+
+  .plate-topic {
+    font-family: var(--font-heading);
+    font-size: 0.98rem;
+    line-height: 1.25;
+    color: var(--color-body);
+    border-top: 1px solid var(--color-line);
+    padding-top: 0.45rem;
+  }
+
+  .thumb :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .topic {
+    color: var(--color-muted);
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 1.55rem;
+    line-height: 1.2;
+  }
+
+  h3 a {
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  h3 a:hover {
+    color: var(--color-teal);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .summary {
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 640px) {
+    .item {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.9rem;
+    }
+    /* On phones the plate repeats the line above the title, so skip it. */
+    .thumb.plate {
+      display: none;
+    }
+  }
+</style>

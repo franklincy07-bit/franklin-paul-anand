@@ -1,0 +1,523 @@
+---
+// "Try it yourself": three reflection exercises readers can fill in –
+// introducing themselves as their mother would, drawing the mountain of
+// their life, and listing their values. Everything stays in the reader's
+// browser (saved in localStorage on this device only); nothing is sent.
+import "../../styles/kit.css";
+---
+
+<section class="kit" aria-labelledby="kit-title" data-kit>
+  <header class="kit-head">
+    <p class="kit-label">Try it yourself</p>
+    <h2 id="kit-title" class="kit-title">
+      Your own reflection
+    </h2>
+    <p class="kit-intro">
+      Three short exercises: introduce yourself through your mother's eyes, draw
+      the mountain of your life, and name your values.
+    </p>
+    <p class="kit-privacy">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <path
+          d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+      Private: what you write stays on this device. Nothing is sent or stored on
+      this website.
+    </p>
+    <button
+      type="button"
+      class="solid kit-open"
+      aria-expanded="false"
+      aria-controls="kit-body"
+      data-open
+    >
+      <span data-open-label>Open the exercises</span>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path
+          d="M6 9l6 6 6-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+        ></path>
+      </svg>
+    </button>
+  </header>
+
+  <div id="kit-body" class="kit-body" hidden data-body>
+    <div class="tabs" role="tablist" aria-label="Exercises">
+      <button role="tab" id="kt-1" aria-controls="kp-1" aria-selected="true">
+        <span>1</span> Through your mother's eyes
+      </button>
+      <button
+        role="tab"
+        id="kt-2"
+        aria-controls="kp-2"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        <span>2</span> Your mountain
+      </button>
+      <button
+        role="tab"
+        id="kt-3"
+        aria-controls="kp-3"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        <span>3</span> Your values
+      </button>
+    </div>
+
+    <!-- 1. Mother's point of view -->
+    <div role="tabpanel" id="kp-1" aria-labelledby="kt-1" class="panel">
+      <p class="how">
+        Imagine your mother – or the mother figure in your life – introducing
+        you to a room of strangers. Answer as her.
+      </p>
+      <div class="fields">
+        <label>
+          Your name{" "}
+          <input
+            data-k="m.name"
+            type="text"
+            autocomplete="off"
+            placeholder="So she can introduce you"
+          />
+        </label>
+        <label>
+          What of me is in them?{" "}
+          <textarea
+            data-k="m.mine"
+            rows="2"
+            placeholder="My stubbornness, my love of music…"
+          ></textarea>
+        </label>
+        <label>
+          What am I proud of? <textarea data-k="m.proud" rows="2"></textarea>
+        </label>
+        <label>
+          What do I hope for their future?{" "}
+          <textarea data-k="m.hope" rows="2"></textarea>
+        </label>
+        <label>
+          One thing I got wrong in raising them – and am sorry for{" "}
+          <textarea data-k="m.sorry" rows="2"></textarea>
+        </label>
+      </div>
+      <div class="out" aria-live="polite">
+        <p class="out-label">Her introduction</p>
+        <p class="intro-text" data-out="intro">
+          Start typing, and her introduction will appear here.
+        </p>
+      </div>
+      <p class="prompt">
+        <b>Reflect:</b> what did writing in her voice show you about yourself as
+        a leader?
+      </p>
+      <textarea
+        data-k="m.reflect"
+        rows="3"
+        aria-label="Your reflection on the introduction"
+      ></textarea>
+    </div>
+
+    <!-- 2. Mountain -->
+    <div role="tabpanel" id="kp-2" aria-labelledby="kt-2" class="panel" hidden>
+      <p class="how">
+        Divide your life into stages, from birth to today. For each, give it a
+        name and say how high or low it felt. Then mark the moments that shaped
+        the climb.
+      </p>
+      <div class="stages" data-stages></div>
+      <button type="button" class="ghost" data-add-stage>
+        + Add a stage
+      </button>
+
+      <figure class="mtn">
+        <svg
+          viewBox="0 0 720 340"
+          role="img"
+          aria-label="Your mountain of life"
+          data-mtn
+        ></svg>
+      </figure>
+
+      <div class="fields two">
+        <label>
+          When I was held up – by whom, and how{" "}
+          <textarea data-k="t.held" rows="2"></textarea>
+        </label>
+        <label>
+          My lowest point – and why{" "}
+          <textarea data-k="t.low" rows="2"></textarea>
+        </label>
+        <label>
+          A risk I took that mattered{" "}
+          <textarea data-k="t.risk" rows="2"></textarea>
+        </label>
+        <label>
+          When I felt on top of the world{" "}
+          <textarea data-k="t.peak" rows="2"></textarea>
+        </label>
+        <label>
+          A time I gave in to pressure{" "}
+          <textarea data-k="t.pressure" rows="2"></textarea>
+        </label>
+        <label>
+          A contradiction I still find hard to live with{" "}
+          <textarea data-k="t.contra" rows="2"></textarea>
+        </label>
+      </div>
+      <label class="wide">
+        At C5, today: one sentence about what I see for myself next
+        <textarea data-k="t.next" rows="2"></textarea>
+      </label>
+    </div>
+
+    <!-- 3. Values -->
+    <div role="tabpanel" id="kp-3" aria-labelledby="kt-3" class="panel" hidden>
+      <p class="how">
+        A value is what you are willing to pay a price for. List up to six
+        values you hold. For each, be honest: have you paid a price for it?
+      </p>
+      <div class="values" data-values></div>
+      <button type="button" class="ghost" data-add-value>
+        + Add a value
+      </button>
+
+      <div class="out" aria-live="polite">
+        <p class="out-label">Your values at a glance</p>
+        <div data-out="values" class="chips">
+          <span class="muted">Your values will appear here.</span>
+        </div>
+      </div>
+
+      <div class="fields">
+        <label>
+          A "dirty" value I act on but would rather not admit{" "}
+          <textarea
+            data-k="v.dirty"
+            rows="2"
+            placeholder="The need for approval, the fear of conflict…"
+          ></textarea>
+        </label>
+        <label>
+          Who were my biggest value influencers?{" "}
+          <textarea data-k="v.influencers" rows="2"></textarea>
+        </label>
+        <label>
+          One value I will start paying a price for{" "}
+          <textarea data-k="v.commit" rows="2"></textarea>
+        </label>
+      </div>
+    </div>
+
+    <footer class="kit-foot">
+      <button type="button" class="solid" data-print>
+        Save my reflection as PDF
+      </button>
+      <button type="button" class="ghost" data-clear>
+        Clear everything
+      </button>
+    </footer>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-kit]");
+  if (root) init(root);
+
+  type Stage = { name: string; h: number };
+  type Value = { name: string; paid: string; note: string };
+  type State = {
+    f: Record<string, string>;
+    stages: Stage[];
+    values: Value[];
+  };
+
+  function init(root: HTMLElement) {
+    const body = root.querySelector<HTMLElement>("[data-body]")!;
+    const openBtn = root.querySelector<HTMLButtonElement>("[data-open]")!;
+    const openLabel = root.querySelector<HTMLElement>("[data-open-label]")!;
+    openBtn.addEventListener("click", () => {
+      const open = body.hidden;
+      body.hidden = !open;
+      openBtn.setAttribute("aria-expanded", String(open));
+      openLabel.textContent = open
+        ? "Close the exercises"
+        : "Open the exercises";
+      if (open) drawMountain();
+    });
+    const KEY = "fpa-reflection-kit-v1";
+    const blank = (): State => ({
+      f: {},
+      stages: [
+        { name: "Childhood", h: 5 },
+        { name: "", h: 5 },
+        { name: "", h: 5 },
+        { name: "", h: 5 },
+        { name: "Today", h: 6 },
+      ],
+      values: [
+        { name: "", paid: "", note: "" },
+        { name: "", paid: "", note: "" },
+        { name: "", paid: "", note: "" },
+      ],
+    });
+
+    let state: State = blank();
+    try {
+      const saved = localStorage.getItem(KEY);
+      if (saved) state = { ...blank(), ...JSON.parse(saved) };
+    } catch {
+      /* storage unavailable: the tool still works for this visit */
+    }
+    const save = () => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(state));
+      } catch {
+        /* ignore */
+      }
+    };
+
+    const esc = (s: string) =>
+      s.replace(
+        /[&<>"]/g,
+        (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!,
+      );
+
+    // ---------- tabs ----------
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const select = (i: number) => {
+      tabs.forEach((t, j) => {
+        const on = i === j;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        root.querySelector<HTMLElement>(
+          "#" + t.getAttribute("aria-controls"),
+        )!.hidden = !on;
+      });
+      if (i === 1) drawMountain();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          const n =
+            (i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+          select(n);
+          tabs[n].focus();
+        }
+      });
+    });
+
+    // ---------- simple fields ----------
+    root
+      .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-k]")
+      .forEach((el) => {
+        el.value = state.f[el.dataset.k!] ?? "";
+        el.addEventListener("input", () => {
+          state.f[el.dataset.k!] = el.value;
+          save();
+          renderIntro();
+        });
+      });
+
+    // ---------- 1. introduction ----------
+    const introEl = root.querySelector<HTMLElement>('[data-out="intro"]')!;
+    function renderIntro() {
+      const f = state.f;
+      const name = (f["m.name"] || "").trim();
+      const parts: string[] = [];
+      const clean = (s?: string) => (s || "").trim().replace(/\.$/, "");
+      if (name) parts.push(`This is ${esc(name)} – my child.`);
+      if (clean(f["m.mine"]))
+        parts.push(
+          `${name ? esc(name) : "My child"} carries something of me: ${esc(clean(f["m.mine"]))}.`,
+        );
+      if (clean(f["m.proud"]))
+        parts.push(`I am proud of ${esc(clean(f["m.proud"]))}.`);
+      if (clean(f["m.hope"]))
+        parts.push(`For the future, I hope ${esc(clean(f["m.hope"]))}.`);
+      if (clean(f["m.sorry"]))
+        parts.push(
+          `And if I am honest, I got one thing wrong: ${esc(clean(f["m.sorry"]))}. I am sorry for that.`,
+        );
+      introEl.innerHTML = parts.length
+        ? "“" + parts.join(" ") + "”"
+        : "Start typing, and her introduction will appear here.";
+    }
+
+    // ---------- 2. mountain ----------
+    const stagesEl = root.querySelector<HTMLElement>("[data-stages]")!;
+    const svg = root.querySelector<SVGSVGElement>("[data-mtn]")!;
+    function renderStages() {
+      stagesEl.innerHTML = state.stages
+        .map(
+          (s, i) => `
+        <div class="stage">
+          <span class="cn">C${i + 1}</span>
+          <input type="text" aria-label="Name of stage ${i + 1}" placeholder="${i === 0 ? "e.g. Childhood" : i === state.stages.length - 1 ? "e.g. Today" : "Name this stage"}" value="${esc(s.name)}" data-i="${i}" data-f="name" />
+          <label class="rng"><span>Low</span>
+            <input type="range" min="1" max="10" value="${s.h}" aria-label="How high did stage ${i + 1} feel?" data-i="${i}" data-f="h" />
+            <span>High</span></label>
+          ${state.stages.length > 2 ? `<button type="button" class="x" aria-label="Remove stage ${i + 1}" data-rm="${i}">×</button>` : ""}
+        </div>`,
+        )
+        .join("");
+    }
+    stagesEl.addEventListener("input", (e) => {
+      const t = e.target as HTMLInputElement;
+      const i = Number(t.dataset.i);
+      if (Number.isNaN(i)) return;
+      if (t.dataset.f === "name") state.stages[i].name = t.value;
+      else state.stages[i].h = Number(t.value);
+      save();
+      drawMountain();
+    });
+    stagesEl.addEventListener("click", (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>(
+        "[data-rm]",
+      );
+      if (!b) return;
+      state.stages.splice(Number(b.dataset.rm), 1);
+      save();
+      renderStages();
+      drawMountain();
+    });
+    root.querySelector("[data-add-stage]")!.addEventListener("click", () => {
+      if (state.stages.length >= 8) return;
+      state.stages.splice(state.stages.length - 1, 0, { name: "", h: 5 });
+      save();
+      renderStages();
+      drawMountain();
+    });
+
+    function drawMountain() {
+      const W = 720,
+        H = 340,
+        pad = 50,
+        base = 300;
+      const n = state.stages.length;
+      const pts = state.stages.map((s, i) => [
+        pad + (i * (W - 2 * pad)) / Math.max(1, n - 1),
+        base - s.h * 20,
+      ]);
+      const line = pts.map((p) => p.join(" ")).join(" L ");
+      const hi = pts.reduce((a, p, i) => (p[1] < pts[a][1] ? i : a), 0);
+      const lo = pts.reduce((a, p, i) => (p[1] > pts[a][1] ? i : a), 0);
+      const label = (s: Stage, i: number) =>
+        esc(s.name || (i === 0 ? "Birth" : `Stage ${i + 1}`)).slice(0, 22);
+      svg.innerHTML = `
+        <rect width="${W}" height="${H}" fill="#fbe9e0"></rect>
+        <circle cx="${W - 70}" cy="60" r="30" fill="#f2c6a8"></circle>
+        <path d="M 0 ${base + 20} L ${line} L ${W} ${base + 20} L ${W} ${H} L 0 ${H} Z" fill="#0f5257"></path>
+        <path d="M ${line}" fill="none" stroke="#e07a4f" stroke-width="3" stroke-dasharray="7 7" stroke-linecap="round"></path>
+        ${pts
+          .map(
+            (p, i) => `
+          <circle cx="${p[0]}" cy="${p[1]}" r="7" fill="#f6f1ea"></circle>
+          <text x="${p[0]}" y="${p[1] - 16}" text-anchor="middle" font-family="Inter, sans-serif" font-size="15" font-weight="700" fill="#12343b">C${i + 1}</text>
+          <line x1="${p[0]}" y1="${p[1] + 8}" x2="${p[0]}" y2="${H - 34}" stroke="#f6f1ea" stroke-opacity="0.25" stroke-dasharray="2 4"></line><text x="${p[0]}" y="${H - 14}" text-anchor="middle" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#f6f1ea">${label(state.stages[i], i)}</text>`,
+          )
+          .join("")}
+        ${n > 1 ? `<text x="${Math.min(W - 70, Math.max(70, pts[hi][0]))}" y="${pts[hi][1] - 36}" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#a94a22">THE PEAK</text>` : ""}
+        ${n > 1 && lo !== hi ? `<text x="${Math.min(W - 90, Math.max(90, pts[lo][0]))}" y="${pts[lo][1] + 30}" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="700" letter-spacing="1" fill="#f2c6a8">THE LOWEST POINT</text>` : ""}`;
+    }
+
+    // ---------- 3. values ----------
+    const valuesEl = root.querySelector<HTMLElement>("[data-values]")!;
+    const chipsEl = root.querySelector<HTMLElement>('[data-out="values"]')!;
+    function renderValues() {
+      valuesEl.innerHTML = state.values
+        .map(
+          (v, i) => `
+        <div class="value">
+          <input type="text" aria-label="Value ${i + 1}" placeholder="A value, e.g. honesty" value="${esc(v.name)}" data-i="${i}" data-f="name" />
+          <select aria-label="Have you paid a price for value ${i + 1}?" data-i="${i}" data-f="paid">
+            <option value="" ${v.paid === "" ? "selected" : ""}>Paid a price for it?</option>
+            <option value="yes" ${v.paid === "yes" ? "selected" : ""}>Yes, I have</option>
+            <option value="not-yet" ${v.paid === "not-yet" ? "selected" : ""}>Not yet</option>
+            <option value="conflict" ${v.paid === "conflict" ? "selected" : ""}>It clashes with another value</option>
+          </select>
+          <input type="text" aria-label="When or how, for value ${i + 1}" placeholder="When, or how?" value="${esc(v.note)}" data-i="${i}" data-f="note" />
+          ${state.values.length > 1 ? `<button type="button" class="x" aria-label="Remove value ${i + 1}" data-rm="${i}">×</button>` : ""}
+        </div>`,
+        )
+        .join("");
+      renderChips();
+    }
+    function renderChips() {
+      const named = state.values.filter((v) => v.name.trim());
+      chipsEl.innerHTML = named.length
+        ? named
+            .map(
+              (v) =>
+                `<span class="chip ${v.paid}">${esc(v.name.trim())}${v.paid === "yes" ? " ✓" : v.paid === "conflict" ? " ⇄" : ""}</span>`,
+            )
+            .join("") +
+          `<p class="legend">✓ paid a price for it · ⇄ in conflict with another value</p>`
+        : `<span class="muted">Your values will appear here.</span>`;
+    }
+    valuesEl.addEventListener("input", (e) => {
+      const t = e.target as HTMLInputElement;
+      const i = Number(t.dataset.i);
+      if (Number.isNaN(i)) return;
+      (state.values[i] as any)[t.dataset.f!] = t.value;
+      save();
+      renderChips();
+    });
+    valuesEl.addEventListener("click", (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>(
+        "[data-rm]",
+      );
+      if (!b) return;
+      state.values.splice(Number(b.dataset.rm), 1);
+      save();
+      renderValues();
+    });
+    root.querySelector("[data-add-value]")!.addEventListener("click", () => {
+      if (state.values.length >= 6) return;
+      state.values.push({ name: "", paid: "", note: "" });
+      save();
+      renderValues();
+    });
+
+    // ---------- footer ----------
+    root.querySelector("[data-print]")!.addEventListener("click", () => {
+      body.hidden = false;
+      root
+        .querySelectorAll<HTMLElement>('[role="tabpanel"]')
+        .forEach((p) => (p.hidden = false));
+      drawMountain();
+      document.body.classList.add("printing-kit");
+      window.print();
+      document.body.classList.remove("printing-kit");
+      select(tabs.findIndex((t) => t.getAttribute("aria-selected") === "true"));
+    });
+    root.querySelector("[data-clear]")!.addEventListener("click", () => {
+      if (!confirm("Clear everything you have written in this exercise?"))
+        return;
+      state = blank();
+      try {
+        localStorage.removeItem(KEY);
+      } catch {
+        /* ignore */
+      }
+      root
+        .querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-k]")
+        .forEach((el) => (el.value = ""));
+      renderStages();
+      renderValues();
+      renderIntro();
+      drawMountain();
+    });
+
+    renderStages();
+    renderValues();
+    renderIntro();
+    drawMountain();
+  }
+</script>

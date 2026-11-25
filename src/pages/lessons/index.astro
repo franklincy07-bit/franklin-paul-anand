@@ -1,0 +1,168 @@
+---
+import Base from "../../layouts/Base.astro";
+import { TOPICS } from "../../lib/taxonomy";
+import {
+  getSeries,
+  getVideos,
+  lessonsInSeries,
+  moduleLabel,
+  seriesUrl,
+} from "../../lib/content";
+
+const series = await getSeries();
+const videos = await getVideos();
+const items = series.map((s, i) => ({
+  s,
+  number: String(s.data.module ?? i + 1).padStart(2, "0"),
+  lessons: lessonsInSeries(videos, s.id),
+}));
+---
+
+<Base
+  title="Lessons"
+  description="Non-profit management: a free course in short videos, from strategy and compliance to finance, monitoring, communication and fundraising."
+  active="lessons"
+>
+  <section class="container head">
+    <p class="kicker">Lessons</p>
+    <h1>Non-profit management</h1>
+    <p class="intro">
+      A free course in six modules on setting up, running and growing a
+      non-profit. Each module is a set of short videos, with notes and exercises
+      you can use with your team. Modules are added as they are recorded.
+    </p>
+  </section>
+
+  <section class="container" aria-label="Lesson series">
+    {items.length > 0 ? (
+      <ol class="list">
+        {items.map(({ s, number, lessons }) => (
+          <li>
+            <a href={seriesUrl(s)} class="row">
+              <span class="num" aria-hidden="true">
+                {number}
+              </span>
+              <span class="text">
+                <span class="kicker">
+                  {s.data.module ? moduleLabel(s.data.module) : "Series"} ·{" "}
+                  {lessons.length > 0
+                    ? `${lessons.length} ${lessons.length === 1 ? "lesson" : "lessons"}`
+                    : "Coming soon"}
+                  {s.data.topics[0] && (
+                    <span class="topic"> · {TOPICS[s.data.topics[0]]}</span>
+                  )}
+                  {s.data.draft && <span class="example-badge">Example</span>}
+                </span>
+                <span class="title">{s.data.title}</span>
+                <span class="summary">{s.data.summary}</span>
+              </span>
+              <span class="go" aria-hidden="true">
+                →
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <div class="empty">
+        <p>Lesson series will appear here once the YouTube channel launches.</p>
+      </div>
+    )}
+  </section>
+</Base>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+  }
+
+  .intro {
+    max-width: 44rem;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    line-height: 1.55;
+    color: var(--color-body);
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+    gap: 1.5rem;
+    align-items: start;
+    padding-block: 1.75rem;
+    border-bottom: 1px solid var(--color-line);
+    text-decoration: none;
+  }
+
+  .num {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--color-accent);
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .topic {
+    color: var(--color-muted);
+  }
+
+  .title {
+    font-family: var(--font-heading);
+    font-size: 1.7rem;
+    line-height: 1.2;
+    color: var(--color-fg);
+  }
+
+  .row:hover .title {
+    color: var(--color-teal);
+  }
+
+  .summary {
+    max-width: 42rem;
+    color: var(--color-muted);
+  }
+
+  .go {
+    font-size: 1.5rem;
+    color: var(--color-teal);
+    padding-top: 1.6rem;
+  }
+
+  .empty {
+    background: var(--color-sand);
+    padding: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .row {
+      grid-template-columns: 3rem minmax(0, 1fr);
+      gap: 1rem;
+    }
+    .num {
+      font-size: 2.2rem;
+    }
+    .go {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+import { link } from "../../lib/paths";
+import { getEntry, render, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import ArticleJournal from "../../components/ArticleJournal.astro";
+import ArticleFeature from "../../components/ArticleFeature.astro";
+import { ARTICLE_TYPES } from "../../lib/taxonomy";
+import { fieldNotesInOrder, getArticles } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article, articles },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<"articles">;
+  articles: CollectionEntry<"articles">[];
+}
+
+const { article, articles } = Astro.props;
+const { Content, headings } = await render(article);
+const video = article.data.video
+  ? await getEntry(article.data.video)
+  : undefined;
+const layout = ARTICLE_TYPES[article.data.type].layout;
+const pageUrl = new URL(Astro.url.pathname, Astro.site);
+
+// Field Journal: previous/next follow the permanent entry numbers.
+const journalEntries = fieldNotesInOrder(articles);
+const position = journalEntries.findIndex((a) => a.id === article.id);
+
+// Feature: up to three related articles sharing a topic, then the newest others.
+const others = articles.filter((a) => a.id !== article.id);
+const sharesTopic = (a: CollectionEntry<"articles">) =>
+  a.data.topics.some((t) => article.data.topics.includes(t));
+const related = [
+  ...others.filter(sharesTopic),
+  ...others.filter((a) => !sharesTopic(a)),
+].slice(0, 3);
+---
+
+<Base
+  title={article.data.title}
+  description={article.data.summary}
+  active="writing"
+  type="article"
+  published={article.data.date}
+  image={article.data.cover}
+  imageAlt={article.data.coverAlt}
+  jsonLd={{
+    "@type": "Article",
+    headline: article.data.title,
+    description: article.data.summary,
+    datePublished: article.data.date.toISOString(),
+    url: pageUrl.href,
+    author: {
+      "@type": "Person",
+      name: "Franklin Paul Anand",
+      url: new URL(link("/about/"), Astro.site).href,
+    },
+  }}
+>
+  {layout === "journal" ? (
+    <ArticleJournal
+      article={article}
+      entryNumber={article.data.entry ?? undefined}
+      Content={Content}
+      video={video}
+      previous={journalEntries[position - 1]}
+      next={journalEntries[position + 1]}
+    />
+  ) : (
+    <ArticleFeature
+      article={article}
+      headings={headings}
+      Content={Content}
+      video={video}
+      related={related}
+      pageUrl={pageUrl}
+    />
+  )}
+</Base>

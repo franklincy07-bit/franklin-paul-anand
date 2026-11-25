@@ -1,0 +1,519 @@
+---
+// "Try it yourself" for the lesson on understanding monitoring: sort
+// statements into monitoring or evaluation, then build a simple monitoring
+// plan. Everything stays in the reader's browser.
+import "../../styles/kit.css";
+
+// [statement, answer, why]
+const SORT: [string, "m" | "e", string][] = [
+  [
+    "Checking every week whether training sessions happened as planned",
+    "m",
+    "Continuous and routine – it tells you whether you are on track.",
+  ],
+  [
+    "Asking at the end of three years whether the programme reduced dropouts",
+    "e",
+    "A judgement about results at one point in time.",
+  ],
+  [
+    "Comparing monthly attendance sheets across schools",
+    "m",
+    "Routine data used to spot gaps while there is still time to act.",
+  ],
+  [
+    "Deciding whether the programme was the right approach in the first place",
+    "e",
+    "“Are we doing the right things?” is an evaluation question.",
+  ],
+  [
+    "Tracking whether the budget is being spent as planned each quarter",
+    "m",
+    "Financial monitoring – ongoing, and it feeds day-to-day decisions.",
+  ],
+  [
+    "A mid-term review commissioned by the funder",
+    "e",
+    "Periodic, and it assesses performance against goals.",
+  ],
+  [
+    "Noticing that vaccination rates are lower in rural areas than in towns",
+    "m",
+    "Monitoring picks up disparities early, so you can respond.",
+  ],
+  [
+    "Assessing whether the changes will last after funding ends",
+    "e",
+    "Sustainability is a judgement about value – an evaluation question.",
+  ],
+];
+
+const COLS = [
+  ["output", "Expected output", "e.g. 500 students trained in life skills"],
+  ["activities", "Activities", "e.g. Training sessions, group discussions"],
+  ["group", "Target group", "e.g. Students in grades 6–8"],
+  ["tool", "Monitoring tool", "e.g. Attendance sheets, pre and post tests"],
+  ["freq", "How often", "e.g. Every session, monthly"],
+  ["user", "Who uses it, for what decision", "e.g. Project lead, to follow up"],
+];
+---
+
+<section class="kit" aria-labelledby="mkit-title" data-mkit>
+  <header class="kit-head">
+    <p class="kit-label">Try it yourself</p>
+    <h2 id="mkit-title" class="kit-title">
+      Practise with monitoring
+    </h2>
+    <p class="kit-intro">
+      Test whether you can tell monitoring from evaluation, then build a simple
+      monitoring plan for a programme you know.
+    </p>
+    <p class="kit-privacy">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+        <path
+          d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"
+          fill="currentColor"
+        ></path>
+      </svg>
+      Private: what you write stays on this device. Nothing is sent or stored on
+      this website.
+    </p>
+    <button
+      type="button"
+      class="solid kit-open"
+      aria-expanded="false"
+      aria-controls="mkit-body"
+      data-open
+    >
+      <span data-open-label>Open the exercises</span>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path
+          d="M6 9l6 6 6-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+        ></path>
+      </svg>
+    </button>
+  </header>
+
+  <div id="mkit-body" class="kit-body" hidden data-body>
+    <div class="tabs" role="tablist" aria-label="Exercises">
+      <button role="tab" id="mt-1" aria-controls="mp-1" aria-selected="true">
+        <span>1</span> Monitoring or evaluation?
+      </button>
+      <button
+        role="tab"
+        id="mt-2"
+        aria-controls="mp-2"
+        aria-selected="false"
+        tabindex="-1"
+      >
+        <span>2</span> Build a monitoring plan
+      </button>
+    </div>
+
+    <!-- 1. Sort -->
+    <div role="tabpanel" id="mp-1" aria-labelledby="mt-1" class="panel">
+      <p class="how">
+        For each statement, choose whether it is mainly monitoring or
+        evaluation.
+      </p>
+      <div class="quiz">
+        {SORT.map(([text, answer, why], i) => (
+          <fieldset class="q-row" data-row={i} data-a={answer} data-why={why}>
+            <legend>{text}</legend>
+            <div class="q-opts">
+              {[
+                ["m", "Monitoring"],
+                ["e", "Evaluation"],
+              ].map(([v, label]) => (
+                <label class="q-opt">
+                  <input type="radio" name={`me-${i}`} value={v} data-q={i} />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+            <p class="fb" data-fb aria-live="polite"></p>
+          </fieldset>
+        ))}
+      </div>
+      <div class="out" aria-live="polite">
+        <p class="out-label">Your score</p>
+        <p class="result" data-out="score">
+          Answer the statements to see how you did.
+        </p>
+      </div>
+    </div>
+
+    <!-- 2. Plan -->
+    <div role="tabpanel" id="mp-2" aria-labelledby="mt-2" class="panel" hidden>
+      <p class="how">
+        Pick a programme you know – or load the example – and fill in one row
+        for each output you expect. Keep asking:{" "}
+        <em>what will we check, how often, and who will act on it?</em>
+      </p>
+      <div class="presets">
+        <button type="button" class="preset" data-example>
+          Load an example: life skills in schools
+        </button>
+      </div>
+      <label class="wide">
+        Programme name
+        <input
+          type="text"
+          data-name
+          placeholder="e.g. Scholarship for girls in secondary school"
+        />
+      </label>
+      <div class="plan-rows" data-rows></div>
+      <div class="presets">
+        <button type="button" class="ghost" data-add>
+          + Add another output
+        </button>
+      </div>
+      <div class="out">
+        <p class="out-label">Your monitoring plan</p>
+        <div data-out="plan"></div>
+      </div>
+    </div>
+
+    <footer class="kit-foot">
+      <button type="button" class="solid" data-print>
+        Save my plan as PDF
+      </button>
+      <button type="button" class="ghost" data-clear>
+        Clear everything
+      </button>
+    </footer>
+  </div>
+</section>
+
+<script define:vars={{ COLS }}>
+  const root = document.querySelector("[data-mkit]");
+  if (root) init(root);
+
+  function init(root) {
+    const KEY = "fpa-monitoring-kit-v1";
+    const blankRow = () => Object.fromEntries(COLS.map(([k]) => [k, ""]));
+    const blank = () => ({ q: {}, name: "", rows: [blankRow()] });
+    let state = blank();
+    try {
+      const s = localStorage.getItem(KEY);
+      if (s) state = { ...blank(), ...JSON.parse(s) };
+      if (!Array.isArray(state.rows) || !state.rows.length)
+        state.rows = [blankRow()];
+    } catch {
+      /* storage unavailable */
+    }
+    const save = () => {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(state));
+      } catch {
+        /* ignore */
+      }
+    };
+    const $ = (sel) => root.querySelector(sel);
+    const $$ = (sel) => [...root.querySelectorAll(sel)];
+    const esc = (s) =>
+      String(s).replace(
+        /[&<>"]/g,
+        (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+      );
+
+    // open / close
+    const body = $("[data-body]");
+    const openBtn = $("[data-open]");
+    openBtn.addEventListener("click", () => {
+      const open = body.hidden;
+      body.hidden = !open;
+      openBtn.setAttribute("aria-expanded", String(open));
+      $("[data-open-label]").textContent = open
+        ? "Close the exercises"
+        : "Open the exercises";
+    });
+
+    // tabs
+    const tabs = $$('[role="tab"]');
+    const select = (i) =>
+      tabs.forEach((t, j) => {
+        t.setAttribute("aria-selected", String(i === j));
+        t.tabIndex = i === j ? 0 : -1;
+        $("#" + t.getAttribute("aria-controls")).hidden = i !== j;
+      });
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        const n =
+          (i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+        select(n);
+        tabs[n].focus();
+      });
+    });
+
+    // 1. sort
+    const rows = $$("[data-row]");
+    function renderQuiz() {
+      let answered = 0,
+        right = 0;
+      rows.forEach((row) => {
+        const i = row.dataset.row;
+        const v = state.q[i];
+        row.querySelectorAll("input").forEach((inp) => {
+          inp.checked = inp.value === v;
+        });
+        const fb = row.querySelector("[data-fb]");
+        if (!v) {
+          fb.textContent = "";
+          fb.className = "fb";
+          return;
+        }
+        answered++;
+        const ok = v === row.dataset.a;
+        if (ok) right++;
+        fb.className = "fb " + (ok ? "ok" : "no");
+        fb.textContent =
+          (ok
+            ? "Yes – "
+            : "Not quite – this is mainly " +
+              (row.dataset.a === "m" ? "monitoring" : "evaluation") +
+              ". ") + row.dataset.why;
+      });
+      $('[data-out="score"]').innerHTML = !answered
+        ? "Answer the statements to see how you did."
+        : `<b>${right} of ${answered}</b> correct so far.` +
+          (answered === rows.length
+            ? right === rows.length
+              ? " You can tell them apart. Remember the short version: monitoring asks <em>are we doing things right?</em> Evaluation asks <em>are we doing the right things?</em>"
+              : " Look again at the ones you missed: is it continuous and routine (monitoring), or a judgement at one point in time (evaluation)?"
+            : "");
+    }
+    root.querySelectorAll("[data-q]").forEach((inp) =>
+      inp.addEventListener("change", () => {
+        state.q[inp.dataset.q] = inp.value;
+        save();
+        renderQuiz();
+      }),
+    );
+
+    // 2. plan
+    const nameEl = $("[data-name]");
+    nameEl.addEventListener("input", () => {
+      state.name = nameEl.value;
+      save();
+      renderPlan();
+    });
+    const rowsEl = $("[data-rows]");
+    function drawRows() {
+      nameEl.value = state.name || "";
+      rowsEl.innerHTML = state.rows
+        .map(
+          (r, i) => `
+        <fieldset class="plan-row" data-i="${i}">
+          <legend>Output ${i + 1}</legend>
+          <div class="fields two">
+            ${COLS.map(
+              ([k, label, ph]) =>
+                `<label>${esc(label)}<textarea rows="2" data-c="${k}" placeholder="${esc(ph)}">${esc(r[k] || "")}</textarea></label>`,
+            ).join("")}
+          </div>
+          ${state.rows.length > 1 ? `<button type="button" class="ghost x-row" data-del="${i}">Remove this output</button>` : ""}
+        </fieldset>`,
+        )
+        .join("");
+      rowsEl.querySelectorAll("[data-c]").forEach((el) =>
+        el.addEventListener("input", () => {
+          const i = Number(el.closest("[data-i]").dataset.i);
+          state.rows[i][el.dataset.c] = el.value;
+          save();
+          renderPlan();
+        }),
+      );
+      rowsEl.querySelectorAll("[data-del]").forEach((b) =>
+        b.addEventListener("click", () => {
+          state.rows.splice(Number(b.dataset.del), 1);
+          save();
+          drawRows();
+          renderPlan();
+        }),
+      );
+    }
+    function renderPlan() {
+      const filled = state.rows.filter((r) =>
+        COLS.some(([k]) => (r[k] || "").trim()),
+      );
+      const title = (state.name || "").trim();
+      if (!filled.length) {
+        $('[data-out="plan"]').innerHTML =
+          '<p class="result">Fill in a row to see your plan take shape.</p>';
+        return;
+      }
+      const gaps = [];
+      filled.forEach((r, i) => {
+        if (!(r.tool || "").trim())
+          gaps.push(`output ${i + 1} has no monitoring tool`);
+        if (!(r.freq || "").trim())
+          gaps.push(`output ${i + 1} has no frequency`);
+        if (!(r.user || "").trim())
+          gaps.push(
+            `nobody is named to use the information for output ${i + 1}`,
+          );
+      });
+      $('[data-out="plan"]').innerHTML =
+        (title ? `<p class="plan-title">${esc(title)}</p>` : "") +
+        `<div class="plan-table"><table><thead><tr>${COLS.map(([, l]) => `<th>${esc(l)}</th>`).join("")}</tr></thead><tbody>` +
+        filled
+          .map(
+            (r) =>
+              `<tr>${COLS.map(([k]) => `<td>${esc(r[k] || "–").replace(/\n/g, "<br>")}</td>`).join("")}</tr>`,
+          )
+          .join("") +
+        `</tbody></table></div>` +
+        `<p class="result">${
+          gaps.length
+            ? "Check before you start: " + esc(gaps.join("; ")) + "."
+            : "Every output has a tool, a frequency and someone who will act on it. That is the heart of a monitoring plan."
+        }</p>`;
+    }
+    $("[data-add]").addEventListener("click", () => {
+      state.rows.push(blankRow());
+      save();
+      drawRows();
+      renderPlan();
+    });
+    $("[data-example]").addEventListener("click", () => {
+      const hasText =
+        (state.name || "").trim() ||
+        state.rows.some((r) => COLS.some(([k]) => (r[k] || "").trim()));
+      if (
+        hasText &&
+        !confirm("Replace what you have written with the example?")
+      )
+        return;
+      state.name = "Life skills in government schools";
+      state.rows = [
+        {
+          output: "500 students trained in life skills",
+          activities: "Training sessions, group discussions, role plays",
+          group: "Students in grades 6–8",
+          tool: "Attendance sheets, pre and post tests, training reports",
+          freq: "Every session; summary each month",
+          user: "Facilitators and project lead – to follow up with schools where attendance drops",
+        },
+        {
+          output: "Teachers equipped with new methods",
+          activities:
+            "Training workshops, peer-learning circles, classroom visits",
+          group: "School teachers",
+          tool: "Feedback forms, observation checklists, workshop reports",
+          freq: "After each training; classroom visits each quarter",
+          user: "Programme manager – to decide which teachers need extra support",
+        },
+      ];
+      save();
+      drawRows();
+      renderPlan();
+    });
+
+    // footer
+    $("[data-print]").addEventListener("click", () => {
+      body.hidden = false;
+      $$('[role="tabpanel"]').forEach((p) => (p.hidden = false));
+      document.body.classList.add("printing-kit");
+      window.print();
+      document.body.classList.remove("printing-kit");
+      select(tabs.findIndex((t) => t.getAttribute("aria-selected") === "true"));
+    });
+    $("[data-clear]").addEventListener("click", () => {
+      if (!confirm("Clear everything you have written in these exercises?"))
+        return;
+      state = blank();
+      try {
+        localStorage.removeItem(KEY);
+      } catch {
+        /* ignore */
+      }
+      drawRows();
+      renderQuiz();
+      renderPlan();
+    });
+
+    drawRows();
+    renderQuiz();
+    renderPlan();
+  }
+</script>
+
+<style is:global>
+  .kit .q-row .fb {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+  .kit .q-row .fb:empty {
+    display: none;
+  }
+  .kit .q-row .fb.ok {
+    color: var(--color-teal);
+  }
+  .kit .q-row .fb.no {
+    color: #a2461f;
+  }
+  .kit .plan-rows {
+    display: grid;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  .kit .plan-row {
+    margin: 0;
+    border: 1px solid var(--color-line);
+    background: var(--color-bg);
+    padding: 0.9rem 1rem 1rem;
+  }
+  .kit .plan-row legend {
+    padding: 0 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+  .kit .x-row {
+    margin-top: 0.75rem;
+  }
+  .kit .plan-title {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--color-primary);
+  }
+  .kit .plan-table {
+    overflow-x: auto;
+    margin-bottom: 0.75rem;
+  }
+  .kit .plan-table table {
+    width: 100%;
+    min-width: 40rem;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+  .kit .plan-table th {
+    text-align: left;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    border-bottom: 2px solid var(--color-primary);
+    padding: 0 0.6rem 0.45rem 0;
+    vertical-align: bottom;
+  }
+  .kit .plan-table td {
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.55rem 0.6rem 0.55rem 0;
+    vertical-align: top;
+  }
+</style>

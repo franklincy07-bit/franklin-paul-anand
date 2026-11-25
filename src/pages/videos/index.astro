@@ -1,0 +1,238 @@
+---
+import { link } from "../../lib/paths";
+import Base from "../../layouts/Base.astro";
+import VideoTile from "../../components/VideoTile.astro";
+import { TOPICS } from "../../lib/taxonomy";
+import {
+  getProfile,
+  getSeries,
+  getVideos,
+  lessonsInSeries,
+  seriesUrl,
+} from "../../lib/content";
+
+const profile = await getProfile();
+const videos = await getVideos(); // newest first
+const series = await getSeries();
+
+// 1. Latest: the newest few videos, for visitors looking for something recent.
+const latest = videos.slice(0, 3);
+// 2. Series: every series with its lessons in teaching order.
+const groups = series
+  .map((s) => ({ s, lessons: lessonsInSeries(videos, s.id) }))
+  .filter((g) => g.lessons.length > 0);
+// 3. Other videos that are not part of a series, newest first.
+const inSeries = new Set(groups.map((g) => g.s.id));
+const standalone = videos.filter(
+  (v) => !v.data.series || !inSeries.has(v.data.series.id),
+);
+
+const seriesTitle = (id?: string) =>
+  series.find((s) => s.id === id)?.data.title;
+const kickerFor = (v: (typeof videos)[number]) => {
+  const t = seriesTitle(v.data.series?.id);
+  if (t) return t;
+  const topic = v.data.topics[0];
+  return topic ? TOPICS[topic] : "Video";
+};
+// Only show a separate "Latest" strip when it adds something: with three or
+// fewer videos in total, the full list below already shows everything.
+const showLatest = videos.length > 3;
+---
+
+<Base
+  title="Videos"
+  description="Short videos on strategic leadership, organisational development and social impact."
+  active="videos"
+>
+  <section class="container head">
+    <p class="kicker">Videos</p>
+    <h1>Videos</h1>
+    <p class="intro">
+      Short videos on leadership, organisations and social impact – practical
+      ideas you can use with your team.
+    </p>
+    <p class="channel">
+      {profile.links.youtube ? (
+        <a class="btn" href={profile.links.youtube} rel="me noopener">
+          Subscribe on YouTube
+        </a>
+      ) : (
+        <span class="soon">YouTube channel coming soon</span>
+      )}
+      <a href={link("/lessons/")}>Browse lesson series →</a>
+    </p>
+  </section>
+
+  {videos.length === 0 && (
+    <section class="container">
+      <div class="empty">
+        <p>
+          Videos will appear here once the YouTube channel launches. In the
+          meantime, the <a href={link("/writing/")}>writing</a> covers the same
+          themes.
+        </p>
+      </div>
+    </section>
+  )}
+
+  {showLatest && (
+    <section class="container block" aria-labelledby="latest-title">
+      <div class="section-title">
+        <h2 id="latest-title">Latest videos</h2>
+      </div>
+      <ul class="grid">
+        {latest.map((v) => (
+          <li>
+            <VideoTile video={v} kicker={kickerFor(v)} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {groups.map(({ s, lessons }) => (
+    <section class="container block" aria-labelledby={`series-${s.id}`}>
+      <div class="group-head">
+        <div>
+          <p class="kicker">
+            Series · {lessons.length}{" "}
+            {lessons.length === 1 ? "lesson" : "lessons"}
+            {s.data.draft && <span class="example-badge">Example</span>}
+          </p>
+          <h2 id={`series-${s.id}`}>{s.data.title}</h2>
+        </div>
+        <a href={seriesUrl(s)} class="all">
+          View the series →
+        </a>
+      </div>
+      <ol class="grid">
+        {lessons.map((v) => (
+          <li>
+            <VideoTile
+              video={v}
+              kicker={
+                v.data.topics[0] ? TOPICS[v.data.topics[0]] : s.data.title
+              }
+            />
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+
+  {standalone.length > 0 && (
+    <section class="container block" aria-labelledby="other-title">
+      <div class="section-title">
+        <h2 id="other-title">
+          {groups.length > 0 ? "More videos" : "All videos"}
+        </h2>
+      </div>
+      <ul class="grid">
+        {standalone.map((v) => (
+          <li>
+            <VideoTile video={v} kicker={kickerFor(v)} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Base>
+
+<style>
+  .head {
+    padding-block: clamp(2.5rem, 6vw, 4rem) 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+  }
+
+  .intro {
+    max-width: 44rem;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    line-height: 1.55;
+    color: var(--color-body);
+  }
+
+  .channel {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    font-weight: 600;
+  }
+
+  .btn {
+    background: var(--color-accent);
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.1rem;
+    text-decoration: none;
+  }
+
+  .soon {
+    display: inline-block;
+    border: 1px dashed var(--color-line-strong);
+    padding: 0.5rem 0.85rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    font-weight: 500;
+  }
+
+  .block {
+    padding-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .group-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem 2rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--color-line);
+    padding-bottom: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .group-head h2 {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    margin-top: 0.35rem;
+  }
+
+  .all {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem 1.75rem;
+  }
+
+  .empty {
+    background: var(--color-sand);
+    padding: 2rem;
+  }
+
+  @media (max-width: 960px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

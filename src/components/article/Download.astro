@@ -1,0 +1,115 @@
+---
+// A download card for a file in public/downloads/.
+import { link } from "../../lib/paths";
+
+interface Props {
+  file: string; // e.g. "/downloads/microsite-cheatsheet.pdf"
+  title: string;
+  description: string;
+  meta?: string; // e.g. "PDF · 2 pages"
+}
+
+const { file, title, description, meta } = Astro.props;
+---
+
+<aside class="download">
+  <div class="icon" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      width="30"
+      height="30"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 3v5h5" />
+      <path d="M12 12v6" />
+      <path d="m9 15 3 3 3-3" />
+    </svg>
+  </div>
+  <div class="text">
+    <p class="label">Free download</p>
+    <p class="title">{title}</p>
+    <p class="desc">{description}</p>
+  </div>
+  <a class="btn" href={link(file)} download>
+    Download{meta ? ` (${meta})` : ""}
+  </a>
+</aside>
+
+<style>
+  .download {
+    margin: 2.5rem 0;
+    padding: 1.5rem 1.75rem;
+    background: var(--color-primary);
+    color: var(--color-on-dark-muted);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 1rem 1.5rem;
+    align-items: center;
+    font-family: var(--font-body);
+    border-top: 4px solid var(--color-accent);
+  }
+
+  .icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-accent);
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-on-dark);
+  }
+
+  .desc {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .btn {
+    background: var(--color-accent);
+    color: var(--color-primary);
+    font-weight: 700;
+    padding: 0.8rem 1.1rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .btn:hover {
+    background: var(--color-surface);
+    color: var(--color-primary);
+  }
+
+  @media (max-width: 640px) {
+    .download {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .btn {
+      justify-self: start;
+    }
+  }
+</style>

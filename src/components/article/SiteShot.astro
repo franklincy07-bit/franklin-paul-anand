@@ -1,0 +1,120 @@
+---
+// A website screenshot in a simple browser frame, with the address, a short
+// caption and a link to the live site.
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  image: ImageMetadata;
+  alt: string;
+  url: string; // e.g. "https://climatelabs.info/"
+  name: string;
+  caption?: string;
+}
+
+const { image, alt, url, name, caption } = Astro.props;
+const host = new URL(url).host;
+---
+
+<figure class="shot">
+  <a class="frame" href={url} rel="noopener" target="_blank">
+    <span class="bar" aria-hidden="true">
+      <span class="dots">
+        <i></i>
+        <i></i>
+        <i></i>
+      </span>
+      <span class="address">{host}</span>
+    </span>
+    <Image
+      src={image}
+      alt={alt}
+      widths={[720, 1440]}
+      sizes="(max-width: 760px) 100vw, 720px"
+    />
+  </a>
+  <figcaption>
+    <span class="name">{name}</span>
+    {caption && <span class="cap">{caption}</span>}
+    <a class="visit" href={url} rel="noopener" target="_blank">
+      Visit {host} ↗
+    </a>
+  </figcaption>
+</figure>
+
+<style>
+  .shot {
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-family: var(--font-body);
+  }
+
+  .frame {
+    display: block;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-surface);
+    box-shadow: 0 18px 36px -28px rgba(18, 52, 59, 0.7);
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0.75rem;
+    background: var(--color-sand);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-line-strong);
+  }
+
+  .address {
+    font-size: 0.78rem;
+    color: var(--color-muted);
+    background: var(--color-bg);
+    padding: 0.15rem 0.6rem;
+  }
+
+  .frame :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--color-body);
+  }
+
+  .name {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .visit {
+    font-weight: 600;
+    color: var(--color-teal);
+    align-self: flex-start;
+  }
+</style>
