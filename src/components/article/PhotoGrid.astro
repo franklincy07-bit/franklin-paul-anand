@@ -1,6 +1,6 @@
 ---
 // Real photos in a grid (2, 3 or 4), each with a short label, a line of
-// text and a photo credit, plus an optional caption for the whole set.
+// text and an optional photo credit, plus an optional caption for the whole set.
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
@@ -9,7 +9,7 @@ interface Item {
   alt: string;
   label: string;
   text?: string;
-  credit: string;
+  credit?: string;
 }
 
 interface Props {
@@ -32,7 +32,7 @@ const { items, caption } = Astro.props;
         />
         <span class="lab">{it.label}</span>
         {it.text && <span class="txt">{it.text}</span>}
-        <span class="cr">{it.credit}</span>
+        {it.credit && <span class="cr">{it.credit}</span>}
       </li>
     ))}
   </ul>
