@@ -79,18 +79,18 @@ expertise:
 # beyondTheTitle:
 #   - A few lines about what drives you and life beyond work.
 
-# Work With Me page (structure approved; wording based on the approved draft).
-workWithMe:
-  intro: I'm interested in roles and collaborations where I can help organisations strengthen their capabilities and turn strategy into meaningful social impact.
-  opportunities:
-    - title: Leadership opportunities
-      text: Senior and strategic leadership roles in organisations working for social impact – especially where strategy, organisational performance and youth leadership come together.
-    - title: Advisory support
-      text: Focused conversations and advice on strategy and planning, organisational systems and performance, and monitoring, evaluation and learning.
+# Contact page.
+contact:
+  intro: I'm glad to hear from people working on youth leadership, organisational development and social impact – whether you want to exchange ideas or explore working together.
+  topics:
+    - title: Speaking and writing
+      text: Conferences, panels, articles and conversations on leadership, organisations and social impact.
     - title: Learning, training and facilitation
       text: Workshops and facilitated sessions on strategy, organisational development, monitoring, evaluation and learning, and youth leadership.
-    - title: Speaking, writing and thought leadership
-      text: Conferences, panels, articles and collaborations on leadership, organisations and social impact.
+    - title: Advisory conversations
+      text: Focused conversations on strategy and planning, organisational systems and performance, and monitoring, evaluation and learning.
+    - title: Collaborations
+      text: Partnerships and shared work with organisations and networks that put young people and communities at the centre.
   note: Any engagement depends on my current commitments and is agreed case by case.
 
 links:

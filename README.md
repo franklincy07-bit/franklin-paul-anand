@@ -43,6 +43,6 @@ pnpm check    # formatting, tests, type checks and a full build
 
 ## Contact form
 
-The Work With Me form sends messages directly from the visitor's browser to
+The contact form (on the Contact page) sends messages directly from the visitor's browser to
 [Formspree](https://formspree.io). Nothing is stored on this site or in this
 repository. See the Privacy page for details.

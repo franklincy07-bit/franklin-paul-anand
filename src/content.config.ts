@@ -92,7 +92,7 @@ const series = defineCollection({
 
 const year = z.union([z.number().int(), z.string()]);
 
-/** Profile facts used by the home, About and Work With Me pages. */
+/** Profile facts used by the home, About and Contact pages. */
 const profile = defineCollection({
   loader: glob({ pattern: "profile.yaml", base: `${CONTENT}/profile` }),
   schema: z.object({
@@ -126,9 +126,9 @@ const profile = defineCollection({
     // Optional "Beyond the job title" text for the About page. The section
     // stays hidden until this is written by the owner.
     beyondTheTitle: z.array(z.string()).optional(),
-    workWithMe: z.object({
+    contact: z.object({
       intro: z.string(),
-      opportunities: z.array(z.object({ title: z.string(), text: z.string() })),
+      topics: z.array(z.object({ title: z.string(), text: z.string() })),
       note: z.string(),
     }),
     links: z.object({
@@ -165,7 +165,7 @@ const profile = defineCollection({
         title: z.string(),
         year: year.optional(),
         awardedBy: z.string().optional(),
-        url: z.string().url().optional(),
+        url: z.url().optional(),
       }),
     ),
     languages: z.array(z.string()),
