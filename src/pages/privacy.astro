@@ -6,12 +6,13 @@ import { getProfile } from "../lib/content";
 const profile = await getProfile();
 const hasForm = !!profile.links.contactForm;
 // Update this date whenever the wording below changes.
-const updated = "21 November 2026";
+const updated = "25 November 2026";
 const policies = {
   github:
     "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
   formspree: "https://formspree.io/legal/privacy-policy/",
   google: "https://policies.google.com/privacy",
+  gaOptOut: "https://tools.google.com/dlpage/gaoptout",
 };
 ---
 
@@ -35,10 +36,29 @@ const policies = {
         own.
       </p>
 
-      <h2>No tracking or advertising</h2>
+      <h2>Analytics</h2>
       <p>
-        This website does not use analytics, advertising or tracking tools, and
-        it does not set cookies of its own. The fonts are served from this
+        This website uses Google Analytics to understand how many people visit
+        and which pages they read. Google Analytics sets cookies in your browser
+        and collects information such as the pages you view, how you arrived,
+        your approximate location, and your device and browser type. I see this
+        only as summary figures; I can't identify individual visitors, and I
+        don't use it for advertising.
+      </p>
+      <p>
+        You can block these cookies in your browser settings, or install
+        Google's{" "}
+        <a href={policies.gaOptOut} rel="noopener">
+          Google Analytics opt-out add-on
+        </a>
+        . More information:{" "}
+        <a href={policies.google} rel="noopener">
+          Google's privacy policy
+        </a>
+        .
+      </p>
+      <p>
+        There is no advertising on this website. The fonts are served from this
         website itself, not from a third party.
       </p>
 
@@ -47,7 +67,7 @@ const policies = {
         The website is hosted by GitHub Pages, a service of GitHub. Like any web
         host, GitHub processes technical information such as your IP address and
         browser type to deliver pages and keep the service secure. GitHub Pages
-        does not set cookies on this website.
+        does not set cookies of its own on this website.
       </p>
       <p>
         More information:{" "}

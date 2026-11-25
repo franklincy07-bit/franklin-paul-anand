@@ -12,3 +12,10 @@ export const DEFAULT_DESCRIPTION =
  * (tests/content-guard.test.mjs checks it until then).
  */
 export const ALLOW_INDEXING = false;
+
+/**
+ * Google Analytics (Google tag) measurement ID. Loaded on every page of the
+ * built site, never in local development. Set it to an empty string to
+ * switch analytics off, and update the Privacy page if you do.
+ */
+export const GA_MEASUREMENT_ID = "G-40RP127LCS";
