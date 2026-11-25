@@ -143,6 +143,19 @@ const profile = defineCollection({
             "contactForm must be a Formspree form address like https://formspree.io/f/abcd1234",
         })
         .optional(),
+      // Google Apps Script web app that saves each message to a Google Sheet
+      // (https://script.google.com/macros/s/.../exec). When set, the contact
+      // form sends messages here instead of Formspree.
+      contactSheet: z
+        .string()
+        .regex(
+          /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/,
+          {
+            message:
+              "contactSheet must be an Apps Script web app address ending in /exec",
+          },
+        )
+        .optional(),
     }),
     career: z.array(
       z.object({
