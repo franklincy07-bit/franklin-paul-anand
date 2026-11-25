@@ -11,7 +11,12 @@ import Footer from "../components/Footer.astro";
 
 import { getImage } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import { ALLOW_INDEXING, DEFAULT_DESCRIPTION, SITE_NAME } from "../lib/site";
+import {
+  ALLOW_INDEXING,
+  DEFAULT_DESCRIPTION,
+  GA_MEASUREMENT_ID,
+  SITE_NAME,
+} from "../lib/site";
 
 interface Props {
   title?: string;
@@ -57,6 +62,24 @@ const shareAlt = image
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Google tag (Google Analytics). See GA_MEASUREMENT_ID in src/lib/site.ts. */}
+    {import.meta.env.PROD && GA_MEASUREMENT_ID && (
+      <>
+        <script
+          is:inline
+          async
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        ></script>
+        <script is:inline define:vars={{ id: GA_MEASUREMENT_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag("js", new Date());
+          gtag("config", id);
+        </script>
+      </>
+    )}
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     {/* Not launched yet: ALLOW_INDEXING in src/lib/site.ts keeps the site out of search engines. */}
