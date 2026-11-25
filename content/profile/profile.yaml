@@ -98,7 +98,7 @@ links:
   # youtube: add the channel address once it exists
   contactForm: https://formspree.io/f/mjywewrr # Formspree form address (not secret; messages go to Formspree, never to this repository)
   # Messages are saved to the Google Sheet "Website contact form – franklinpaulanand.com" in Drive.
-  contactSheet: https://script.google.com/macros/s/AKfycbyx6ezVzdKylEF6jACYtQ5JMpAxB0bh3SwLRZY7zcTNYRUYxMsVYaooYhbDD3YKp4KgEQ/exec
+  contactSheet: https://script.google.com/macros/s/AKfycbzWtUZJJ-0_Y22ifFKswKzKYx3uTH3loZABnDkDOdrrcklH-OUQKcAatSzknTbryEHB9g/exec
 
 career:
   - role: Head of Country, India & Nepal
