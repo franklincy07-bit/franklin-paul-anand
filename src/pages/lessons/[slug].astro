@@ -9,6 +9,7 @@ import {
   getVideos,
   lessonLabel,
   lessonsInSeries,
+  moduleLabel,
   videoUrl,
 } from "../../lib/content";
 
@@ -36,9 +37,17 @@ const hasIntro = (series.body ?? "").trim().length > 0;
   <header class="container head">
     <p class="kicker">
       <a href={link("/lessons/")}>Lessons</a>
+      {data.module && (
+        <>
+          <span class="sep">/</span>
+          <span>{moduleLabel(data.module)}</span>
+        </>
+      )}
       <span class="sep">/</span>
       <span class="muted">
-        {lessons.length} {lessons.length === 1 ? "lesson" : "lessons"}
+        {lessons.length > 0
+          ? `${lessons.length} ${lessons.length === 1 ? "lesson" : "lessons"}`
+          : "Coming soon"}
       </span>
       {data.draft && <span class="example-badge">Example</span>}
     </p>
@@ -89,7 +98,7 @@ const hasIntro = (series.body ?? "").trim().length > 0;
       </ol>
     ) : (
       <div class="empty">
-        <p>The first lesson in this series is on its way.</p>
+        <p>The first lesson in this module is on its way.</p>
       </div>
     )}
   </section>

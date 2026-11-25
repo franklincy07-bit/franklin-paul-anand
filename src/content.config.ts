@@ -83,6 +83,8 @@ const series = defineCollection({
     title: z.string(),
     summary: z.string(),
     topics,
+    // Module number in the Non-profit management course (1–6).
+    module: z.number().int().positive().nullish(),
     order: z.number().int().default(100),
     draft: z.boolean().default(false),
   }),

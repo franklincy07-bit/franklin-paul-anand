@@ -15,6 +15,7 @@ import {
   getSeries,
   getVideos,
   readingMinutes,
+  moduleLabel,
   seriesUrl,
 } from "../lib/content";
 
@@ -30,6 +31,10 @@ const secondary = rest[0];
 const latest = rest.slice(1, 5);
 const lessonCount = (id: string) =>
   videos.filter((v) => v.data.series?.id === id).length;
+// Modules that already have lessons come first.
+const lessonSeries = [...series].sort(
+  (a, b) => Number(lessonCount(b.id) > 0) - Number(lessonCount(a.id) > 0),
+);
 ---
 
 <Base
@@ -257,7 +262,7 @@ const lessonCount = (id: string) =>
     </div>
     {series.length > 0 ? (
       <div class="lesson-grid">
-        {series.slice(0, 3).map((s, i) => (
+        {lessonSeries.slice(0, 3).map((s, i) => (
           <a class="lesson" href={seriesUrl(s)}>
             <span class="lesson-thumb" data-shade={i % 3}>
               <svg
@@ -274,8 +279,10 @@ const lessonCount = (id: string) =>
               </svg>
             </span>
             <span class="kicker">
-              Series · {lessonCount(s.id)}{" "}
-              {lessonCount(s.id) === 1 ? "lesson" : "lessons"}
+              {s.data.module ? moduleLabel(s.data.module) : "Series"} ·{" "}
+              {lessonCount(s.id) > 0
+                ? `${lessonCount(s.id)} ${lessonCount(s.id) === 1 ? "lesson" : "lessons"}`
+                : "Coming soon"}
               {s.data.draft && <span class="example-badge">Example</span>}
             </span>
             <span class="lesson-title">{s.data.title}</span>

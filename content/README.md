@@ -125,6 +125,9 @@ unless a developer has set something up for you.
 - **Each YouTube video** gets a file in `videos/`, made from the
   `video.md` template. Put the 11-character ID from the YouTube address in
   `youtubeId`. Until then, leave it empty and the site shows a placeholder.
+- **The Lessons section is a Non-profit management course** in six
+  modules. Each module is a file in `series/`, with `module` set to its
+  number (1–6). A module with no lessons yet shows as "Coming soon".
 - **A lesson series** is a file in `series/`, made from the `series.md`
   template. To add a video to a series, set its `series` field to the
   series file name, without `.md`, and its `lesson` field to the lesson's

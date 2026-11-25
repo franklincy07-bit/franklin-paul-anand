@@ -118,5 +118,7 @@ export function lessonsInSeries(
 }
 
 /** "Lesson 01" style label. */
+export const moduleLabel = (n: number) => `Module ${n}`;
+
 export const lessonLabel = (n: number) =>
   `Lesson ${String(n).padStart(2, "0")}`;
