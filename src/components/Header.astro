@@ -16,7 +16,7 @@ const { active } = Astro.props;
 const links: { key: NavKey; href: string; label: string; quiet?: boolean }[] = [
   { key: "home", href: link("/"), label: "Home" },
   { key: "writing", href: link("/writing/"), label: "Writing" },
-  { key: "videos", href: link("/videos/"), label: "Videos" },
+  // Videos is hidden from the menu until there are recordings to show.
   { key: "lessons", href: link("/lessons/"), label: "Lessons" },
   { key: "about", href: link("/about/"), label: "About" },
   {
