@@ -7,6 +7,8 @@ import teaching from "../assets/photos/franklin-teaching.jpg";
 
 const profile = await getProfile();
 const { contact, links } = profile;
+// The Google Sheet takes priority over Formspree when both are set.
+const formAction = links.contactSheet ?? links.contactForm;
 ---
 
 <Base
@@ -58,8 +60,14 @@ const { contact, links } = profile;
       )}
     </div>
 
-    {links.contactForm ? (
-      <form class="form" action={links.contactForm} method="post">
+    {formAction ? (
+      <form
+        class="form"
+        action={formAction}
+        method="post"
+        data-sheet={links.contactSheet ? "" : undefined}
+      >
+        <input type="hidden" name="page" value="Contact page" />
         <div class="field">
           <label for="name">Name</label>
           <input
@@ -118,6 +126,7 @@ const { contact, links } = profile;
           </span>
           <button type="submit">Send message</button>
         </div>
+        <p class="sent" role="status" aria-live="polite" hidden data-status></p>
       </form>
     ) : (
       <div class="form-soon">
@@ -140,7 +149,50 @@ const { contact, links } = profile;
   </section>
 </Base>
 
+<script>
+  // Messages to the Google Sheet are sent in the background, so the visitor
+  // stays on this page and sees a thank-you note.
+  const form = document.querySelector<HTMLFormElement>("form[data-sheet]");
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const status = form.querySelector<HTMLElement>("[data-status]")!;
+    const button = form.querySelector<HTMLButtonElement>(
+      'button[type="submit"]',
+    )!;
+    button.disabled = true;
+    button.textContent = "Sending…";
+    try {
+      await fetch(form.action, {
+        method: "POST",
+        mode: "no-cors",
+        body: new URLSearchParams(
+          new FormData(form) as unknown as Record<string, string>,
+        ),
+      });
+      form.reset();
+      status.textContent =
+        "Thank you – your message has been sent. I'll reply as soon as I can.";
+      button.textContent = "Sent";
+    } catch {
+      status.textContent =
+        "Sorry, the message couldn't be sent. Please try again, or reach me on LinkedIn.";
+      button.disabled = false;
+      button.textContent = "Send message";
+    }
+    status.hidden = false;
+  });
+</script>
+
 <style>
+  .sent {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 0.85rem 1rem;
+    background: var(--color-surface);
+    border-left: 4px solid var(--color-teal);
+    color: var(--color-primary);
+  }
+
   .intro {
     padding-block: clamp(2.5rem, 6vw, 4.5rem) 2.5rem;
     display: flex;

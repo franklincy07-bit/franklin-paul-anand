@@ -4,7 +4,8 @@ import Base from "../layouts/Base.astro";
 import { getProfile } from "../lib/content";
 
 const profile = await getProfile();
-const hasForm = !!profile.links.contactForm;
+const toSheet = !!profile.links.contactSheet;
+const hasForm = toSheet || !!profile.links.contactForm;
 // Update this date whenever the wording below changes.
 const updated = "25 November 2026";
 const policies = {
@@ -80,14 +81,24 @@ const policies = {
       <h2>Contact form</h2>
       {hasForm ? (
         <>
-          <p>
-            If you use the contact form, what you enter (your name, email
-            address, organisation if you give one, the topic and your message)
-            is sent to Formspree, an external form service, together with
-            technical information such as your IP address, which Formspree uses
-            to filter spam. Formspree emails the message to me and keeps a copy
-            in my Formspree account.
-          </p>
+          {toSheet ? (
+            <p>
+              If you use the contact form, what you enter (your name, email
+              address, organisation if you give one, the topic and your message)
+              is sent to Google and saved in a private Google Sheet in my Google
+              Drive, which only I can open. Google also emails me a copy of the
+              message.
+            </p>
+          ) : (
+            <p>
+              If you use the contact form, what you enter (your name, email
+              address, organisation if you give one, the topic and your message)
+              is sent to Formspree, an external form service, together with
+              technical information such as your IP address, which Formspree
+              uses to filter spam. Formspree emails the message to me and keeps
+              a copy in my Formspree account.
+            </p>
+          )}
           <p>
             I use your details only to reply to you. I don't add you to a
             mailing list, and I don't share or sell your details. Messages are
@@ -96,9 +107,15 @@ const policies = {
           </p>
           <p>
             More information:{" "}
-            <a href={policies.formspree} rel="noopener">
-              Formspree's privacy policy
-            </a>
+            {toSheet ? (
+              <a href={policies.google} rel="noopener">
+                Google's privacy policy
+              </a>
+            ) : (
+              <a href={policies.formspree} rel="noopener">
+                Formspree's privacy policy
+              </a>
+            )}
             .
           </p>
         </>
