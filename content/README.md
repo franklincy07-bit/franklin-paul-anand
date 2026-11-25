@@ -18,7 +18,7 @@ written in **Markdown**, a simple way of formatting text.
 | `articles/`   | Field Notes, Insights and How-To articles       | Writing             |
 | `videos/`     | One file per YouTube video                      | Videos              |
 | `series/`     | Lesson series (groups of videos)                | Lessons             |
-| `profile/`    | Your career, education, awards, short bio       | Home, About, Work With Me |
+| `profile/`    | Your career, education, awards, short bio       | Home, About, Contact |
 | `_templates/` | Templates to copy (never published)             | Nowhere             |
 
 ## Adding something new (in the GitHub website)
@@ -148,7 +148,7 @@ The same file also holds:
 
 - the **About** introduction (`aboutIntro`) and the five areas of expertise
   (`expertise`);
-- the **Work With Me** wording (`workWithMe`);
+- the **Contact** page wording (`contact`);
 - `beyondTheTitle`: optional. The "Beyond the job title" section on the
   About page stays hidden until you write it;
 - `recognition`: each item has a `title`, and optionally `awardedBy`,
