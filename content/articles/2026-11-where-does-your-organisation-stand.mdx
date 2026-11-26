@@ -15,16 +15,13 @@ takeaways:
 draft: false
 ---
 
-import PhotoGrid from "../../src/components/article/PhotoGrid.astro";
-import stonecutter from "../../src/assets/reflections/stonecutter.jpg";
-import cathedralCranes from "../../src/assets/reflections/cathedral-cranes.jpg";
-import well from "../../src/assets/reflections/well.jpg";
 import Highlight from "../../src/components/article/Highlight.astro";
 import Quadrants from "../../src/components/article/Quadrants.astro";
 import ChangeQuadrants from "../../src/components/article/ChangeQuadrants.astro";
 import Photo from "../../src/components/article/Photo.astro";
 import community from "../../src/assets/reflections/community.jpg";
 import Sidenote from "../../src/components/article/Sidenote.astro";
+import StoryArt from "../../src/components/article/StoryArt.astro";
 
 _Part 4 of 5 in a series of my reflections from a leadership training I attended – the FMSF Leadership Development Programme, February 2026._
 
@@ -46,9 +43,9 @@ The Truth and the Lie go bathing together in a well. The Lie climbs out first, p
 
 In a post-truth age, one of civil society's jobs is to help people face the naked truth – and to tell stories strong enough to compete with the well-dressed lie.
 
-</Sidenote>
+<StoryArt story="well" />
 
-<Photo image={well} alt="Looking down into a deep stone well, with green water far below." caption="Where the truth hides. Photo: joegoauk73, CC BY-SA 2.0, via Flickr." />
+</Sidenote>
 
 ## From projects to overall transformation
 
@@ -107,15 +104,10 @@ A traveller asks three stonecutters what they are doing. The first says, "Can't 
 
 Overall transformation needs all three – the skill, the precision and the bigger picture. But teams only keep going through the hard years when they can see the cathedral.
 
+<StoryArt story="stonecutters" />
+
 </Sidenote>
 
-<PhotoGrid
-  items={[
-    { image: stonecutter, alt: "A stonecutter in India shaping blocks of red sandstone by hand with a hammer and chisel.", label: "“I am cutting a stone.”", text: "The skill and the daily work.", credit: "Photo: string_bass_dave, CC BY-SA 2.0" },
-    { image: cathedralCranes, alt: "A Gothic cathedral tower rising behind several construction cranes.", label: "“I am building a cathedral.”", text: "The bigger picture that keeps us going.", credit: "Photo: JT Graphics, CC BY-SA 2.0" },
-  ]}
-  caption="Same work, different meaning. Teams keep going through the hard years when they can see the cathedral."
-/>
 
 ## Strategy as craft
 
@@ -140,4 +132,4 @@ That feels like the right description of leadership for lasting change.
 
 ---
 
-_Image credits: cover – National Cathedral, Bucharest, under construction, by fusion-of-horizons, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Stonecutter by string_bass_dave, cathedral and cranes by JT Graphics, well by joegoauk73, and self-help group meeting by EU Civil Protection and Humanitarian Aid, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/). All via Flickr. Diagram: Franklin Paul Anand._
+_Image credits: cover – National Cathedral, Bucharest, under construction, by fusion-of-horizons, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Self-help group meeting by EU Civil Protection and Humanitarian Aid, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/). Both via Flickr. Diagram and illustrations: Franklin Paul Anand._
