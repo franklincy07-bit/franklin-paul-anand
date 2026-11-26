@@ -21,7 +21,8 @@ import ChangeQuadrants from "../../src/components/article/ChangeQuadrants.astro"
 import Photo from "../../src/components/article/Photo.astro";
 import community from "../../src/assets/reflections/community.jpg";
 import Sidenote from "../../src/components/article/Sidenote.astro";
-import StoryArt from "../../src/components/article/StoryArt.astro";
+import StoryImage from "../../src/components/article/StoryImage.astro";
+import stonecutters from "../../src/assets/reflections/stonecutters-illustration.png";
 
 _Part 4 of 5 in a series of my reflections from a leadership training I attended – the FMSF Leadership Development Programme, February 2026._
 
@@ -42,8 +43,6 @@ When I think about misinformation, I think of a 19th-century legend behind Jean-
 The Truth and the Lie go bathing together in a well. The Lie climbs out first, puts on the Truth's clothes and runs away. When the naked Truth climbs out to chase her, the world turns away in contempt. The Truth goes back into the well, ashamed – and ever since, the Lie has travelled the world dressed as the Truth, because the world has no wish to meet the naked Truth.
 
 In a post-truth age, one of civil society's jobs is to help people face the naked truth – and to tell stories strong enough to compete with the well-dressed lie.
-
-<StoryArt story="well" />
 
 </Sidenote>
 
@@ -104,7 +103,15 @@ A traveller asks three stonecutters what they are doing. The first says, "Can't 
 
 Overall transformation needs all three – the skill, the precision and the bigger picture. But teams only keep going through the hard years when they can see the cathedral.
 
-<StoryArt story="stonecutters" />
+<StoryImage
+  image={stonecutters}
+  alt="Three stages from left to right: hands cutting a rough stone with a hammer and chisel, hands setting a squared block into a wall, and a cathedral under construction with that same block in its walls."
+  parts={[
+    { heading: "The skill", text: "“I am cutting a stone.”", width: 33 },
+    { heading: "The precision", text: "“It fits in its place in the wall.”", width: 28 },
+    { heading: "The bigger picture", text: "“I am building a cathedral.”", width: 39 },
+  ]}
+/>
 
 </Sidenote>
 
@@ -132,4 +139,4 @@ That feels like the right description of leadership for lasting change.
 
 ---
 
-_Image credits: cover – National Cathedral, Bucharest, under construction, by fusion-of-horizons, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Self-help group meeting by EU Civil Protection and Humanitarian Aid, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/). Both via Flickr. Diagram and illustrations: Franklin Paul Anand._
+_Image credits: cover – National Cathedral, Bucharest, under construction, by fusion-of-horizons, [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/). Self-help group meeting by EU Civil Protection and Humanitarian Aid, [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/). Both via Flickr. Diagram: Franklin Paul Anand._

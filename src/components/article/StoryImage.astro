@@ -1,0 +1,99 @@
+---
+// An illustration inside a Sidenote story box, with an optional row of
+// short headings underneath (one per part of the picture, left to right).
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Part {
+  heading: string;
+  text?: string;
+  /** Share of the picture's width this part covers (default: equal). */
+  width?: number;
+}
+
+interface Props {
+  image: ImageMetadata;
+  alt: string;
+  parts?: Part[];
+}
+
+const { image, alt, parts = [] } = Astro.props;
+const columns = parts.map((p) => `${p.width ?? 1}fr`).join(" ");
+---
+
+<figure class="story-image">
+  <Image
+    src={image}
+    alt={alt}
+    widths={[480, 800, 1200]}
+    sizes="(max-width: 760px) 100vw, 720px"
+  />
+  {parts.length > 0 && (
+    <ol class="parts" style={`grid-template-columns: ${columns}`}>
+      {parts.map((p) => (
+        <li>
+          <span class="h">{p.heading}</span>
+          {p.text && <span class="t">{p.text}</span>}
+        </li>
+      ))}
+    </ol>
+  )}
+</figure>
+
+<style>
+  .story-image {
+    margin: 0.25rem 0 0;
+    background: #f6efe8;
+    border: 1px solid var(--color-line);
+  }
+
+  .story-image :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+
+  .parts {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0.75rem 1rem;
+    display: grid;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .parts li {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .h {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .t {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.35;
+    color: var(--color-primary);
+  }
+
+  @media (max-width: 520px) {
+    .t {
+      font-size: 0.88rem;
+    }
+    .h {
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+    }
+  }
+</style>
